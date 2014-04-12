@@ -1,50 +1,62 @@
-<div class="contain-to-grid nav-wrapper">
-	<div class=​"large-12 columns dashboard_wrap">
-		<nav class="top-bar" data-topbar>
-			<ul class="title-area">
-			    <li class="name"><h1><img src="img/logo.png"></h1></li>
-			    <li class="toggle-topbar menu-icon" id="menu"><a href="#"><span>Menu</span></a></li>
-			</ul>
+<div class="nav-wrapper">
+	<div class="row">
+		<div class=​"large-12 small-12 columns dashboard_wrap">
+			<nav class="top-bar" data-topbar>
+				<ul class="title-area">
+				    <li class="name"><h1><a href="dashboard.php"><img src="img/logo.png"></a></h1></li>
+				    <li class="toggle-topbar menu-icon" id="menu"><a href="#"><span>Menu</span></a></li>
+				</ul>
 
-			<section class="top-bar-section">
-				<!-- Left Nav Section -->
-				<ul class="left"></ul>
+				<section class="top-bar-section">
+					<!-- Left Nav Section -->
+					<ul class="left"></ul>
 
-    			<!-- Right Nav Section -->
-    			<ul class="right">
-     				<li><a href="#">Ervaringen</a></li>
-     				<li><a href="#">Algemene info</a></li>
-     				<li><a href="#">Evenementen</a></li>
-     				<!--<li class="has-form">
-  						<div class="row collapse">
-    						<div class="large-8 small-9 columns">
-      							<input type="text" placeholder="zoek naar tags" style="height: 30px;">
-    						</div>
-    						<div class="large-4 small-3 columns">
-      							<a href="#" class="alert button expand">Search</a>
-   							</div>
-  						</div>
-					</li>-->
-					<ul class="inline-list">
-						<li><img src="img/profile_img.png" id="profile_img" 
-						<?php 
-						if ($user_privilege == 'true')
-						{
-						?>
+	    			<!-- Right Nav Section -->
+	    			<ul class="right">
+	     				<li><a href="ervaring.php"><img src="img/icons/ervaringen.png" onmouseover="this.src='img/icons/ervaringen_selected.png'" onmouseout="this.src='img/icons/ervaringen.png'" class="nav_icon">Ervaringen</a></li>
+	     				<li><a href="#"><img src="img/icons/info.png" onmouseover="this.src='img/icons/info_selected.png'" onmouseout="this.src='img/icons/info.png'" class="nav_icon">Algemene info</a></li>
+	     				<li><a href="#"><img src="img/icons/evenementen.png" onmouseover="this.src='img/icons/evenementen_selected.png'" onmouseout="this.src='img/icons/evenementen.png'" class="nav_icon">Evenementen</a></li>
+	     				<!--<li class="has-form">
+	  						<div class="row collapse">
+	    						<div class="large-8 small-9 columns">
+	      							<input type="text" placeholder="zoek naar tags" style="height: 30px;">
+	    						</div>
+	    						<div class="large-4 small-3 columns">
+	      							<a href="#" class="alert button expand">Search</a>
+	   							</div>
+	  						</div>
+						</li>-->
+						<!--<ul>
+							<li><img src="img/profile_img.png" id="profile_img" 
+							<?php 
+							/*if ($user_privilege == 'true')*/
+							{
+							?>
 
-						style="border: 3px solid #5db0c6;"
+							style="border: 3px solid #5db0c6;"
 
-						<?php 
-						} 
-						else
-						{
+							<?php 
+							} 
+							/*else*/
+							{
 
-						}?>
-						></li>
-						<li><a href="#"><?php echo $username ?></a></li>
-					</ul>
-    			</ul>
-  			</section>
-		</nav>
+							}?>
+							></li>
+							<li><a href="#"><?php /*echo*/ $username ?></a></li>
+						</ul>-->
+						<li class="has-dropdown not-click" style="padding-right: 0px;">
+							<a>
+								<img src="img/profile_img.png" id="profile_img" style="margin-right: 10px; margin-top: 0px; margin-bottom: 2px;">
+								<span style="background-color: #ffffff;"><?php echo $username ?></span>
+							</a>
+							<ul class="dropdown">
+								<li><a href="#">Profile settings</a></li>
+								<li><a href="#">Sign out</a></li>
+							</ul>
+						</li>
+	    			</ul>
+	  			</section>
+			</nav>
+		</div>
 	</div>
 </div>

@@ -1,18 +1,18 @@
 
 $(document).ready(function(){
    
-      $("#slidingDiv_bugform").hide();
-      $(".show_hide_bugform").show();
+      $("#slidingDiv_ervaringform").hide();
+      $(".show_hide_ervaring_form").show();
 
-      $("#slidingDiv_projectform").hide();
-      $(".show_hide_projectform").show();
+      $("#slidingDiv_categorieform").hide();
+      $(".show_hide_categorie_form").show();
 
-   
-      $('.show_hide_bugform').click(function(){
-      $("#slidingDiv_bugform").slideToggle();
+      $('.show_hide_ervaring_form').click(function(){
+      $("#slidingDiv_ervaringform").slideToggle();
+      });
+      
+      $('.show_hide_categorie_form').click(function(){
+      $("#slidingDiv_categorieform").slideToggle();
       });
 
-      $('.show_hide_projectform').click(function(){
-      $("#slidingDiv_projectform").slideToggle();
-      });
   });

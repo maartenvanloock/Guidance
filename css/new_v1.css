@@ -56,13 +56,11 @@ footer
 	padding-bottom: 10px;
 	background-color: #ffffff;
 }
-.row
+.text-center
 {
-	margin-left: auto;
-  	margin-right: auto;
-  	margin-top: 0;
-  	margin-bottom: 0;
-	max-width: 1260px;
+	margin-bottom: 0;
+	padding-bottom: 10px;
+	padding-top: 10px;
 }
 
 /*-----------------------------top bar-------------------------------------*/
@@ -115,13 +113,6 @@ footer
 	margin-right: 10px;
 	background-color: transparent !important;
 	background: transparent !important;
-}
-a.menu-icon span {
--webkit-box-shadow: 0 10px 0 1px #7b868c, 0 16px 0 1px #7b868c, 0 22px 0 1px #7b868c;
-box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px #7b868c;
-}
-.top-bar-section .has-dropdown > a:after {
-    border-style: none;
 }
 
 /*-----------------------------sign up-------------------------------------*/
@@ -270,7 +261,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	/*border-style: none;*/
 	border-radius: 3px;
-	/*border-bottom: 12px solid #5db0c6;*/
+	border-bottom: 12px solid #5db0c6;
 	background-color: #ffffff;
 }
 
@@ -317,7 +308,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
     height: auto;
 }
-.show_hide_ervaring_form
+.show_hide_ervaring_form 
 {
     display:none;
 }
@@ -332,21 +323,6 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	padding: 10px;
 }
 #ervaring_title, #ervaring_description
-{
-	margin-bottom: 0;
-}
-
-/*-----------------------------nieuwe categorie form-------------------------------------*/
-
-#slidingDiv_categorieform
-{
-    height: auto;
-}
-.show_hide_categorie_form
-{
-    display:none;
-}
-#categorie_title
 {
 	margin-bottom: 0;
 }
