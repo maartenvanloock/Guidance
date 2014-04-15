@@ -98,6 +98,163 @@ if(isset($_POST['btnSubmitCategorie']))
   }
 }
 
+/*---------------------aanmaken van pagination----------------------*/
+
+$item_per_page = 9;
+
+if (isset($_GET["filter"]))
+{ 
+
+  $filter  = $_GET["filter"]; 
+
+  $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
+  $result = $db->query($sql);
+
+  $get_all_rows = mysqli_fetch_array($result);
+
+  $pages = ceil($get_all_rows[0]/$item_per_page);
+
+  $pagination = '';
+
+  if($pages > 1)
+  {
+      $pagination .= '<div class="row">
+                          <div class="large-12 columns">
+                              <div class="pagination-centered">
+                                  <ul class="pagination">';
+      for($i = 1; $i<=$pages; $i++)
+      {
+          $pagination .= '<li><a href="ervaring.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+      }
+
+      $pagination .= '</ul>
+                  </div>
+              </div>
+        </div>';
+  }
+
+  if (isset($_GET["page"]))
+  { 
+    $page  = $_GET["page"]; 
+  } 
+  else 
+  { 
+    $page = 1; 
+  }
+
+  $start_from = ($page-1) * $item_per_page;
+}
+else if (isset($_GET["filter_e"]))
+{
+
+  $filter_e = $_GET["filter_e"];
+
+  if($filter_e == "eigen_ervaringen")
+  {
+    $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
+    $result = $db->query($sql);
+  }
+  else if($filter_e == "beantwoord")
+  {
+    $sql = "select count(*) from tbl_ervaringen where ervaring_solved=1";
+    $result = $db->query($sql);
+  }
+  else if($filter_e == "onbeantwoord")
+  {
+    $sql = "select count(*) from tbl_ervaringen where ervaring_solved=0";
+    $result = $db->query($sql);
+  }
+  else
+  {
+
+  }
+
+  $get_all_rows = mysqli_fetch_array($result);
+
+  $pages = ceil($get_all_rows[0]/$item_per_page);
+
+  $pagination = '';
+
+  if($pages > 1)
+  {
+      $pagination .= '<div class="row">
+                          <div class="large-12 columns">
+                              <div class="pagination-centered">
+                                  <ul class="pagination">';
+      for($i = 1; $i<=$pages; $i++)
+      {
+          $pagination .= '<li><a href="ervaring.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+      }
+
+      $pagination .= '</ul>
+                  </div>
+              </div>
+        </div>';
+  }
+
+  if (isset($_GET["page"]))
+  { 
+    $page  = $_GET["page"]; 
+  } 
+  else 
+  { 
+    $page = 1; 
+  }
+
+  $start_from = ($page-1) * $item_per_page;
+}
+else
+{
+
+  $sql = "select count(*) from tbl_ervaringen";
+  $result = $db->query($sql);
+
+  $get_all_rows = mysqli_fetch_array($result);
+
+  $pages = ceil($get_all_rows[0]/$item_per_page);
+
+  if($pages > 1)
+  {
+      $pagination = '';
+      $pagination .= '<div class="row">
+                          <div class="large-12 columns">
+                              <div class="pagination-centered">
+                                  <ul class="pagination">';
+      for($i = 1; $i<=$pages; $i++)
+      {
+          $pagination .= '<li><a href="ervaring.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+      }
+
+      $pagination .= '</ul>
+                  </div>
+              </div>
+        </div>';
+  }
+
+  if (isset($_GET["page"]))
+  { 
+    $page  = $_GET["page"]; 
+  } 
+  else 
+  { 
+    $page = 1; 
+  }
+
+  $start_from = ($page-1) * $item_per_page;
+}  
+
+/*---------------------aanmaken van filters----------------------*/
+
+/*if (isset($_GET["filter"]))
+{ 
+  $filter  = $_GET["filter"]; 
+} 
+else 
+{ 
+  
+}
+
+echo $filter;*/
 
 /*$sql_color = "select categorie_color from tbl_categorie_ervaringen where categorie_name = $row['fk_categorie_name']";
 $result_color = $db->query($sql_color);
@@ -140,15 +297,21 @@ echo $result_color;*/
     <br/>
         <div class="large-12 small-12 columns">
             <div class="row">
-                <div class="large-8 columns">
+                <div class="large-9 columns">
                     <dl class="sub-nav">
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="#">Eigen ervaringen</a></dd>
+                      <dd><a href="ervaring.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                             onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Eigen ervaringen</a></dd>
                       <?php } ?>
-                      <dd><a href="#">Beantwoord</a></dd>
-                      <dd><a href="#">Onbeantwoord</a></dd>
+                      <dd><a href="ervaring.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                             onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Beantwoord</a></dd>
+                      <dd><a href="ervaring.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                             onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Onbeantwoord</a></dd>
                       <?php  
                           $sql = "select * from tbl_categorie_ervaringen";
                           $result = $db->query($sql);
@@ -157,7 +320,11 @@ echo $result_color;*/
                           {
                             while ($row = mysqli_fetch_assoc($result))
                             { ?>
-                              <dd><a href="#" style="color: <?php echo $row['categorie_color']; ?>;"><?php echo $row['categorie_name']; ?></a></dd>
+            
+                              <dd><a href="ervaring.php?filter=<?php echo $row['categorie_name']; ?>" onMouseOver="this.style.backgroundColor='<?php echo $row['categorie_color'] ?>', this.style.color='#ffffff'" 
+                                     onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='<?php echo $row['categorie_color'] ?>'" 
+                                     style="color: <?php echo $row['categorie_color']; ?>; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;"> 
+                              <?php echo $row['categorie_name']; ?></a></dd>
                       <?php  
                             }
                           }?>
@@ -166,13 +333,13 @@ echo $result_color;*/
 
                 <?php if($user_privilege == 'false')
                 {?>
-                <div class="large-4 columns">
+                <div class="large-3 columns" style="width: auto; height: auto;">
                     <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
                 </div>
                 <?php } 
                 else
                 {?>
-                <div class="large-4 columns">
+                <div class="large-3 columns" style="width: auto; height: auto;">
                     <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
                 </div>
                 <?php } ?>
@@ -180,10 +347,32 @@ echo $result_color;*/
         </div>
     </div>
 
+    <!--feedback for both forms-->
+
+    <?php require ("require/feedback_form.php"); ?>
+
+    <div class="row" id="conf" style="margin-top: 0; padding: 0; height: auto; text-align: center; display: none;">
+        <div class="large-12 columns">
+            <div data-alert="" class="alert-box success radius">
+              <p id="conf_message" style="font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600;"></p>
+              <a class="close" href="#">×</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
+        <div class="large-12 columns">
+            <div data-alert="" class="alert-box alert radius">
+              <p id="feedback_message" style="font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600;"></p>
+              <a class="close" href="#">×</a>
+            </div>
+        </div>
+    </div>
+
     <!--nieuwe ervaring toevoegen-->
 
     <div class="row" id="slidingDiv_ervaringform">
-        <div class="large-12 small-12 columns" style="border-radius: 3px; background-color: #ffffff; padding: 10px; margin-bottom: 10px; border: 1px solid #d8d8d8;">
+        <div class="large-12 columns" style="border-radius: 3px; background-color: #ffffff; padding: 10px; margin-bottom: 20px; border: 1px solid #d8d8d8;">
                 <form action="" method="post" id="ervaring_form" data-abide>
                     <div class="large-12 small-12 columns">
                         <h4>Voeg een nieuwe ervaring toe</h4>
@@ -205,6 +394,11 @@ echo $result_color;*/
                           </select>
                       </div>
 
+                      <div class="large-4 columns hide">
+                          <input type="text" id="user_name" name="user_name" value="<?php echo $username; ?>">
+                          <input type="text" id="user_id" name="user_id" value="<?php echo $userid; ?>">
+                      </div>
+
                       <div class="large-8 columns">
                         <textarea type="text" placeholder="Geef hier wat meer informatie over je ervaring en je bijbehorende vraag" id="ervaring_description" name="ervaring_description" 
                         style="resize: vertical; height: 100px; border-radius: 3px;" required></textarea>
@@ -218,7 +412,7 @@ echo $result_color;*/
                       <div class="large-4 columns">
                         <input type="text" placeholder="Geef hier een aantal tags in die je ervaring en vragen beschrijven, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
                         <small class="error">Geef een aantal tags in die je ervaring of vraag beschrijven</small>
-                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitErvaring" name="btnSubmitErvaring" 
+                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitErvaring" name="btnSubmitErvaring"
                                     style="height: 47px;
                                            width: 100%;
                                            border-radius: 3px;
@@ -288,22 +482,60 @@ echo $result_color;*/
         </div>
     </div>
 
+    <!--pagination-->
+
+    <?php echo $pagination; ?>
+
     <!--overzicht van ervaringen-->
 
     <div class="row">
-        <div class="large-12 small-12 columns ervaringen">
+        <div class="large-12 small-12 columns ervaringen" id="results">
 
             <?php 
-              $sql = "select * from tbl_ervaringen";
-              $result = $db->query($sql);
 
-              if(mysqli_num_rows($result) > 0)
+              if (isset($_GET["filter"]))
+              { 
+                $filter  = $_GET["filter"];
+                $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' LIMIT $start_from, $item_per_page";
+                $results = $db->query($sql); 
+              } 
+              else if (isset($_GET["filter_e"]))
+              { 
+                $filter_e  = $_GET["filter_e"];
+
+                if($filter_e == "eigen_ervaringen")
+                {
+                  $sql = "select * from tbl_ervaringen where fk_user_id=$userid LIMIT $start_from, $item_per_page";
+                  $results = $db->query($sql);
+                }
+                else if($filter_e == "beantwoord")
+                {
+                  $sql = "select * from tbl_ervaringen where ervaring_solved=1 LIMIT $start_from, $item_per_page";
+                  $results = $db->query($sql);
+                }
+                else if($filter_e == "onbeantwoord")
+                {
+                  $sql = "select * from tbl_ervaringen where ervaring_solved=0 LIMIT $start_from, $item_per_page";
+                  $results = $db->query($sql);
+                }
+                else
+                {
+
+                }
+              }
+              else 
+              { 
+                $sql = "select * from tbl_ervaringen LIMIT $start_from, $item_per_page";
+                $results = $db->query($sql);
+              }
+              
+              if(mysqli_num_rows($results) > 0)
               {
-                while ($row = mysqli_fetch_assoc($result))
+                while ($row = mysqli_fetch_assoc($results))
                 { ?>
                     <div class="large-4 columns dashboard_container">
-                            <div class="panel ervaring_panel" 
-                                 style="border-bottom: 12px solid <?php echo $row['fk_categorie_color']; ?>;">
+                            <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                 style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>;">
                                 <ul class="small-block-grid-2 profile_info">
                                     <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
                                     <li style="width:88%; padding-left: 10; padding-bottom: 0;">
@@ -317,17 +549,17 @@ echo $result_color;*/
                                         <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row['ervaring_reacties']; ?>
                                     </li>
                                 </ul>
-                            </div>
+                            </div></a>
                     </div>
                 <?php 
                 } 
               }
               else
               {?>
-                <div class="small-6 large-centered columns" style="margin-top: 25%;">
+                <div class="small-6 large-centered columns" style="margin-top: 25%; text-align: center;">
                     <p>er zijn geen ervaringen</p>
                 </div>
-              <?php 
+              <?php
               } ?>
 
         <!--<div class="large-4 columns dashboard_container">
@@ -402,6 +634,9 @@ echo $result_color;*/
         });
     </script>
 
+    <script src="js/save_ervaring.js"></script>
+    <script src="js/save_categorie_ervaring.js"></script>
+    <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

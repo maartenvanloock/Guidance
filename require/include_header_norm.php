@@ -44,10 +44,22 @@
 							></li>
 							<li><a href="#"><?php /*echo*/ $username ?></a></li>
 						</ul>-->
-						<li class="has-dropdown not-click" style="padding-right: 0px;">
-							<a>
-								<img src="img/profile_img.png" id="profile_img" style="margin-right: 10px; margin-top: 0px; margin-bottom: 2px;">
-								<span style="background-color: #ffffff;"><?php echo $username ?></span>
+						<li class="has-dropdown not-click">
+							<a style="padding-left: 20px; padding: 0px;">
+								<img src="img/profile_img.png" id="profile_img" 
+								<?php 
+								if ($user_privilege == 'true')
+								{
+								?>
+									style="border: 3px solid #5db0c6;"
+								<?php 
+								} 
+								else
+								{
+									
+								} ?>
+								>
+								<span style="padding-right: 0px;"><?php echo $username ?></span>
 							</a>
 							<ul class="dropdown">
 								<li><a href="#">Profile settings</a></li>

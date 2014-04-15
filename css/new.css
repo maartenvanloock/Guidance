@@ -63,6 +63,7 @@ footer
   	margin-top: 0;
   	margin-bottom: 0;
 	max-width: 1260px;
+	height: auto;
 }
 
 /*-----------------------------top bar-------------------------------------*/
@@ -107,8 +108,10 @@ footer
 	border-radius: 20px;
 	width: 40px;
 	height: 40px;
-	margin-top: 2px;
+	margin-top: 0px;
+	margin-bottom: 2px;
 	margin-left: 10px;
+	margin-right: 10px;
 }
 .nav_icon
 {
@@ -283,7 +286,6 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	border-radius: 3px;
 	background-color: #5db0c6;
 	color: white;
-	margin-bottom: 10px;
 	padding: 2px;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 16px;
@@ -294,6 +296,11 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	padding-bottom: 4px;
 	padding-right: 10px;
+}
+.a_ervaring
+{
+	font-family: 'Open Sans', sans-serif;
+	font-style: inherit;
 }
 .ervaringen
 {
@@ -385,4 +392,119 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	font-size: 16px;
 	font-style: inherit;
 	font-weight: 600;
+}
+.reactie
+{
+	padding: 10px; 
+	background-color: #ffffff; 
+	border-radius: 3px;
+	text-decoration: none;
+}
+
+/*--------------------------- feedback ---------------------------*/
+
+.feedback
+{
+  padding-top: 1%;
+  padding-bottom: 1%;
+  text-align: center;
+}
+.conf
+{
+  padding-top: 1%;
+  padding-bottom: 1%;
+  text-align: center;
+}
+.alert-box.alert
+{
+  background-color: #f0594e;
+  border-color: #bd4239;
+  text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+.alert-box.success
+{
+  background-color: #43b39d;
+  border-color: #3a9d8a;
+  text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+#profile_img_comment
+{
+	border-radius: 20px; 
+	margin-top: 5px;
+}
+
+/*--------------------------- pagination ervaringen ---------------------------*/
+
+#ervaring_profile_img
+{
+	width: 12%; 
+	padding-bottom: 0; 
+	padding-right: 0;
+}
+#ervaring_in
+{
+	width:88%; 
+	padding-left: 10; 
+	padding-bottom: 0;
+}
+#ervaring_titel
+{
+	padding-bottom: 0px; 
+	margin-bottom: 5px; 
+	color: #7b868c; 
+	font-family: "Open Sans", sans-serif; 
+	font-weight: 600;
+}
+#ervaring_user
+{
+	padding-bottom: 10px; 
+	margin-bottom:0; 
+	color: #7b868c; 
+	font-family: "Open Sans", sans-serif; 
+	font-size: 14px;
+}
+#ervaring_inf
+{
+	margin-bottom: 5; 
+	color: #a5b1b8; 
+	font-family: "Open Sans", sans-serif; 
+	font-size: 16px; 
+	font-style: italic;
+}
+#ervaring_left
+{
+	padding-bottom: 0; 
+	width: 100px; 
+	height: 25px; 
+	color: #7b868c; 
+	font-family: "Open Sans", sans-serif; 
+	font-size: 16px; 
+	font-weight: 600;
+}
+#ervaring_right
+{
+	padding-bottom:0; 
+	width: auto; 
+	color: #7b868c; 
+	font-family: "Open Sans", sans-serif; 
+	font-size: 16px; 
+	font-weight: 600;
+}
+
+/*--------------------------- filter ---------------------------*/
+
+.sub-nav dt.active a, .sub-nav dd.active a, .sub-nav li.active a 
+{
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: normal;
+    background: #5db0c6;
+    padding: 0.1875rem 1rem;
+    cursor: default;
+    color: #ffffff; 
 }
