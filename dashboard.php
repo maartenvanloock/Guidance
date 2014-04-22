@@ -13,7 +13,12 @@ if(!empty($username))
     $sql = "select * from tbl_users where user_name='$username'";
     $result = $db->query($sql);
     $row = mysqli_fetch_assoc($result);
+
     $user_privilege = $row['user_privilege'];
+    $userid = $row['user_id'];
+
+    $_SESSION['userprivilege'] = $user_privilege;
+    $_SESSION['userid'] = $userid;
 }
 else if(empty($username))
 {
@@ -67,7 +72,7 @@ else if(empty($username))
         <div class="large-12 small-12 columns">
             <div class="row">
                 <div class="large-8 columns">
-                <div class="row">
+                <div class="row" style="margin-bottom: 10px;">
                     <h4 style="color: #7b868c; margin-top: 0px; margin-left: 20px; padding-top: 0px;">Recente ervaringen</h4>
                 </div>
                 
@@ -81,7 +86,7 @@ else if(empty($username))
                       while ($row = mysqli_fetch_assoc($result))
                       { ?>
                           <div class="large-6 columns dashboard_container">
-                                  <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                  <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
                                           <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>

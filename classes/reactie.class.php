@@ -8,6 +8,7 @@ Class Reactie {
 	private $m_iEvenement_id;
 	private $m_iUser_id;
 	private $m_sUser;
+	private $m_sUser_privilege;
 
 	public function __set($p_sProperty, $p_vValue)
 	{
@@ -35,6 +36,10 @@ Class Reactie {
 
 			case "User":
 			$this->m_sUser = $p_vValue;
+			break;
+
+			case "User_privilege":
+			$this->m_sUser_privilege = $p_vValue;
 			break;
 		}	   
 	}
@@ -66,6 +71,10 @@ Class Reactie {
 			case "User": 
 			return $this->m_sUser;
 			break;
+
+			case "User_privilege": 
+			return $this->m_sUser_privilege;
+			break;
         }
 	}
 
@@ -73,8 +82,8 @@ Class Reactie {
 	{	
 		require ("connection.class.php");
 
-		$sql = "insert into tbl_reacties(reactie_description, reactie_date, reactie_likes, fk_ervaring_id, fk_evenement_id, fk_user_id, fk_user_name) 
-				values ('$this->Description', '$this->Date', 0, '$this->Ervaring_id', '$this->Evenement_id', '$this->User_id', '$this->User');
+		$sql = "insert into tbl_reacties(reactie_description, reactie_date, reactie_likes, fk_ervaring_id, fk_evenement_id, fk_user_id, fk_user_name, fk_user_privilege) 
+				values ('$this->Description', '$this->Date', 0, '$this->Ervaring_id', '$this->Evenement_id', '$this->User_id', '$this->User', '$this->User_privilege');
 
 				update tbl_ervaringen set ervaring_reacties = ervaring_reacties+1 where ervaring_id = $this->Ervaring_id;";
 		$db->multi_query($sql);

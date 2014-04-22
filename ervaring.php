@@ -7,18 +7,12 @@ require ("classes/ervaring.class.php");
 require ("classes/ervaring_categorie.class.php");
 
 $username = $_SESSION['username'];
+$user_privilege = $_SESSION['userprivilege'];
+$userid = $_SESSION['userid'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
-if(!empty($username))
-{
-    $sql = "select * from tbl_users where user_name='$username'";
-    $result = $db->query($sql);
-    $row = mysqli_fetch_assoc($result);
-    $user_privilege = $row['user_privilege'];
-    $userid = $row['user_id'];
-}
-else if(empty($username))
+if(empty($username))
 {
     header("Location:login.php");
 }
@@ -58,14 +52,32 @@ if(isset($_POST['btnSubmitErvaring']))
       $ervaring_date = $current_day.' '.$month_name;
       $e->Date = $ervaring_date;
 
-      $e->Save();
+      $last_ervaring_id = $e->Save();
 
+      $tag_string = $_POST['ervaring_tags'];
+      $tags = preg_split("/[\s,]+/", $tag_string);
+      $result = array_unique($tags);
+      $tags_lim = count($result);
+
+      if ($tags_lim > 5)
+      {
+        echo 'only max 5 tags allowed';
+      }
+      else
+      {
+        for ($x = 0; $x < $tags_lim; $x++)
+        {
+            $sql = "insert into tbl_tags(tag_name, fk_ervaring_id) values ('".$tags[$x]."', '".$last_ervaring_id."')";
+            $result_q = $db->query($sql);
+        }
+      }
     }
     catch (Exception $e)
     {
       $feedback = $e->getMessage();
-    }
+    } 
 }
+
 
 /*---------------------aanmaken van een nieuwe categorie----------------------*/
 
@@ -82,7 +94,7 @@ if(isset($_POST['btnSubmitCategorie']))
 {
   try
   {
-    $ec = new Ervaring_categorie;
+    $ec = new Ervaring_categorie();
 
     $categorie_title = mysql_real_escape_string($_POST['categorie_title']);
     $ec->Title = htmlspecialchars($categorie_title);
@@ -104,144 +116,81 @@ $item_per_page = 9;
 
 if (isset($_GET["filter"]))
 { 
+    $filter  = $_GET["filter"]; 
 
-  $filter  = $_GET["filter"]; 
-
-  $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
-  $result = $db->query($sql);
-
-  $get_all_rows = mysqli_fetch_array($result);
-
-  $pages = ceil($get_all_rows[0]/$item_per_page);
-
-  $pagination = '';
-
-  if($pages > 1)
-  {
-      $pagination .= '<div class="row">
-                          <div class="large-12 columns">
-                              <div class="pagination-centered">
-                                  <ul class="pagination">';
-      for($i = 1; $i<=$pages; $i++)
-      {
-          $pagination .= '<li><a href="ervaring.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-      }
-
-      $pagination .= '</ul>
-                  </div>
-              </div>
-        </div>';
-  }
-
-  if (isset($_GET["page"]))
-  { 
-    $page  = $_GET["page"]; 
-  } 
-  else 
-  { 
-    $page = 1; 
-  }
-
-  $start_from = ($page-1) * $item_per_page;
+    $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
+    $result = $db->query($sql);
 }
 else if (isset($_GET["filter_e"]))
 {
+    $filter_e = $_GET["filter_e"];
 
-  $filter_e = $_GET["filter_e"];
-
-  if($filter_e == "eigen_ervaringen")
-  {
-    $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
-    $result = $db->query($sql);
-  }
-  else if($filter_e == "beantwoord")
-  {
-    $sql = "select count(*) from tbl_ervaringen where ervaring_solved=1";
-    $result = $db->query($sql);
-  }
-  else if($filter_e == "onbeantwoord")
-  {
-    $sql = "select count(*) from tbl_ervaringen where ervaring_solved=0";
-    $result = $db->query($sql);
-  }
-  else
-  {
-
-  }
-
-  $get_all_rows = mysqli_fetch_array($result);
-
-  $pages = ceil($get_all_rows[0]/$item_per_page);
-
-  $pagination = '';
-
-  if($pages > 1)
-  {
-      $pagination .= '<div class="row">
-                          <div class="large-12 columns">
-                              <div class="pagination-centered">
-                                  <ul class="pagination">';
-      for($i = 1; $i<=$pages; $i++)
-      {
-          $pagination .= '<li><a href="ervaring.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-      }
-
-      $pagination .= '</ul>
-                  </div>
-              </div>
-        </div>';
-  }
-
-  if (isset($_GET["page"]))
-  { 
-    $page  = $_GET["page"]; 
-  } 
-  else 
-  { 
-    $page = 1; 
-  }
-
-  $start_from = ($page-1) * $item_per_page;
+    if($filter_e == "eigen_ervaringen")
+    {
+      $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
+      $result = $db->query($sql);
+    }
+    else if($filter_e == "beantwoord")
+    {
+      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=1";
+      $result = $db->query($sql);
+    }
+    else if($filter_e == "onbeantwoord")
+    {
+      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=0";
+      $result = $db->query($sql);
+    } 
 }
 else
 {
+    $sql = "select count(*) from tbl_ervaringen";
+    $result = $db->query($sql);
+}
 
-  $sql = "select count(*) from tbl_ervaringen";
-  $result = $db->query($sql);
+$get_all_rows = mysqli_fetch_array($result);
 
-  $get_all_rows = mysqli_fetch_array($result);
+$pages = ceil($get_all_rows[0]/$item_per_page);
 
-  $pages = ceil($get_all_rows[0]/$item_per_page);
+$pagination = '';
 
-  if($pages > 1)
-  {
-      $pagination = '';
-      $pagination .= '<div class="row">
-                          <div class="large-12 columns">
-                              <div class="pagination-centered">
-                                  <ul class="pagination">';
-      for($i = 1; $i<=$pages; $i++)
-      {
-          $pagination .= '<li><a href="ervaring.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-      }
+if($pages > 1)
+{
+    $pagination .= '<div class="row">
+                        <div class="large-12 columns">
+                            <div class="pagination-centered">
+                                <ul class="pagination">';
+    for($i = 1; $i<=$pages; $i++)
+    {
+        if (isset($_GET["filter"]))
+        { 
+            $pagination .= '<li><a href="ervaring.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+        }
+        else if (isset($_GET["filter_e"]))
+        {
+            $pagination .= '<li><a href="ervaring.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+        }
+        else
+        {
+            $pagination .= '<li><a href="ervaring.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+        }
+    }
 
-      $pagination .= '</ul>
-                  </div>
-              </div>
+    $pagination .= '</ul>
+                </div>
+            </div>
         </div>';
   }
 
-  if (isset($_GET["page"]))
-  { 
+if (isset($_GET["page"]))
+{ 
     $page  = $_GET["page"]; 
-  } 
-  else 
-  { 
+} 
+else 
+{ 
     $page = 1; 
-  }
+}
 
-  $start_from = ($page-1) * $item_per_page;
-}  
+$start_from = ($page-1) * $item_per_page;
 
 /*---------------------aanmaken van filters----------------------*/
 
@@ -333,13 +282,13 @@ echo $result_color;*/
 
                 <?php if($user_privilege == 'false')
                 {?>
-                <div class="large-3 columns" style="width: auto; height: auto;">
+                <div class="large-3 columns" style="width: auto; height: auto; margin-right: 5px;">
                     <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
                 </div>
                 <?php } 
                 else
                 {?>
-                <div class="large-3 columns" style="width: auto; height: auto;">
+                <div class="large-3 columns" style="width: auto; height: auto; margin-right: 5px;">
                     <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
                 </div>
                 <?php } ?>
@@ -410,8 +359,8 @@ echo $result_color;*/
                       </div>
 
                       <div class="large-4 columns">
-                        <input type="text" placeholder="Geef hier een aantal tags in die je ervaring en vragen beschrijven, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
-                        <small class="error">Geef een aantal tags in die je ervaring of vraag beschrijven</small>
+                        <input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
+                        <small class="error">Je mag maar 5 tags ingeven</small>
                             <button type="submit" href="#" class="button [radius round]" id="btnSubmitErvaring" name="btnSubmitErvaring"
                                     style="height: 47px;
                                            width: 100%;
@@ -432,7 +381,7 @@ echo $result_color;*/
     <!--nieuwe categorie toevoegen-->
 
     <div class="row" id="slidingDiv_categorieform">
-        <div class="large-12 small-12 columns" style="border-radius: 3px; background-color: #ffffff; padding: 10px; margin-bottom: 10px; border: 1px solid #d8d8d8;">
+        <div class="large-12 columns" style="border-radius: 3px; background-color: #ffffff; padding: 10px; margin-bottom: 10px; border: 1px solid #d8d8d8;">
         <div class="row">
                 <form action="" method="post" id="categorie_form" style="padding: 10px;" data-abide>
                     <div class="large-12 small-12 columns">
@@ -496,7 +445,7 @@ echo $result_color;*/
               if (isset($_GET["filter"]))
               { 
                 $filter  = $_GET["filter"];
-                $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' LIMIT $start_from, $item_per_page";
+                $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' order by ervaring_id desc LIMIT $start_from, $item_per_page";
                 $results = $db->query($sql); 
               } 
               else if (isset($_GET["filter_e"]))
@@ -505,17 +454,17 @@ echo $result_color;*/
 
                 if($filter_e == "eigen_ervaringen")
                 {
-                  $sql = "select * from tbl_ervaringen where fk_user_id=$userid LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_ervaringen where fk_user_id=$userid order by ervaring_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else if($filter_e == "beantwoord")
                 {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=1 LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_ervaringen where ervaring_solved=1 order by ervaring_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else if($filter_e == "onbeantwoord")
                 {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=0 LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_ervaringen where ervaring_solved=0 order by ervaring_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else
@@ -525,7 +474,7 @@ echo $result_color;*/
               }
               else 
               { 
-                $sql = "select * from tbl_ervaringen LIMIT $start_from, $item_per_page";
+                $sql = "select * from tbl_ervaringen order by ervaring_id desc LIMIT $start_from, $item_per_page";
                 $results = $db->query($sql);
               }
               
@@ -534,8 +483,8 @@ echo $result_color;*/
                 while ($row = mysqli_fetch_assoc($results))
                 { ?>
                     <div class="large-4 columns dashboard_container">
-                            <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
-                                 style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>;">
+                            <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
+                            <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                 <ul class="small-block-grid-2 profile_info">
                                     <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
                                     <li style="width:88%; padding-left: 10; padding-bottom: 0;">
@@ -582,6 +531,7 @@ echo $result_color;*/
             </div>-->
         </div>
     </div>
+    <br/>
 
     <!--loading all scripts-->
 
@@ -634,7 +584,7 @@ echo $result_color;*/
         });
     </script>
 
-    <script src="js/save_ervaring.js"></script>
+    <!--<script src="js/save_ervaring.js"></script>-->
     <script src="js/save_categorie_ervaring.js"></script>
     <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->

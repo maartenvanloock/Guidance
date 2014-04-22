@@ -36,6 +36,7 @@ h4
 	text-align: left;
 	margin-left: 0;
 	float: left;
+	color: #7b868c;
 }
 h6
 {
@@ -405,14 +406,14 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 
 .feedback
 {
-  padding-top: 1%;
-  padding-bottom: 1%;
+  /*padding-top: 1%;
+  padding-bottom: 1%;*/
   text-align: center;
 }
 .conf
 {
-  padding-top: 1%;
-  padding-bottom: 1%;
+  /*padding-top: 1%;
+  padding-bottom: 1%;*/
   text-align: center;
 }
 .alert-box.alert
@@ -507,4 +508,82 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     padding: 0.1875rem 1rem;
     cursor: default;
     color: #ffffff; 
+}
+
+/*--------------------------- algemene info ---------------------------*/
+
+.nieuwe_informatieblok
+{
+	width: 240px;
+	height: 35px;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 2px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+}
+
+/*-----------------------------nieuwe categorie form-------------------------------------*/
+
+#slidingDiv_informatieform
+{
+    height: auto;
+}
+.show_hide_informatie_form
+{
+    display:none;
+}
+#informatieblok_title, #informatieblok_description
+{
+	margin-bottom: 0px;
+}
+
+/*-----------------------------icon sizes and styles-------------------------------------*/
+
+.style_1
+{ 
+  	color: #7b868c; 
+}
+.size-12 
+{ 
+	font-size: 12px; 
+}
+.size-14 
+{ 
+	font-size: 14px; 
+}
+.size-16 
+{ 
+	font-size: 16px; 
+}
+.size-18 
+{ 
+	font-size: 18px; 
+}
+.size-21 
+{ 
+	font-size: 21px; 
+}
+.size-24 
+{ 
+	font-size: 24px; 
+}
+.size-36 
+{ 
+	font-size: 36px; 
+}
+.size-48 
+{ 
+	font-size: 48px; 
+}
+.size-60 
+{ 
+	font-size: 60px; 
+}
+.size-72 
+{ 
+	font-size: 72px; 
 }

@@ -16,7 +16,6 @@ if(isset($_POST['btnLogIn']))
     $userpassword = mysql_real_escape_string($userpassword);
 
     $sql = "select * from tbl_users where user_name='$username' and user_password='$userpassword'";
-
     $result = $db->query($sql);
 
     $numRows = mysqli_num_rows($result);

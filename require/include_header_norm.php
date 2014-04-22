@@ -14,7 +14,7 @@
 	    			<!-- Right Nav Section -->
 	    			<ul class="right">
 	     				<li><a href="ervaring.php"><img src="img/icons/ervaringen.png" onmouseover="this.src='img/icons/ervaringen_selected.png'" onmouseout="this.src='img/icons/ervaringen.png'" class="nav_icon">Ervaringen</a></li>
-	     				<li><a href="#"><img src="img/icons/info.png" onmouseover="this.src='img/icons/info_selected.png'" onmouseout="this.src='img/icons/info.png'" class="nav_icon">Algemene info</a></li>
+	     				<li><a href="algemene_info.php"><img src="img/icons/info.png" onmouseover="this.src='img/icons/info_selected.png'" onmouseout="this.src='img/icons/info.png'" class="nav_icon">Algemene info</a></li>
 	     				<li><a href="#"><img src="img/icons/evenementen.png" onmouseover="this.src='img/icons/evenementen_selected.png'" onmouseout="this.src='img/icons/evenementen.png'" class="nav_icon">Evenementen</a></li>
 	     				<!--<li class="has-form">
 	  						<div class="row collapse">
@@ -63,7 +63,7 @@
 							</a>
 							<ul class="dropdown">
 								<li><a href="#">Profile settings</a></li>
-								<li><a href="#">Sign out</a></li>
+								<li><a href="require/log_user.php">Sign out</a></li>
 							</ul>
 						</li>
 	    			</ul>

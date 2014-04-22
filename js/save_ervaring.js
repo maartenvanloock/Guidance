@@ -9,12 +9,13 @@ $(document).ready(function(){
         var categorie_name = $('#categorie_name').val();
         var user_name = $('#user_name').val();
         var user_id = $('#user_id').val();
+        var ervaring_tags = $('#ervaring_tags').val();
 
         $.ajax({
             type: "POST",
             dataType: "html",
             url: "ajax/save_ervaring.php",
-            data: { ervaring_title : ervaring_title, ervaring_description : ervaring_description, categorie_name:categorie_name, user_name:user_name, user_id:user_id },
+            data: { ervaring_title : ervaring_title, ervaring_description : ervaring_description, categorie_name:categorie_name, user_name:user_name, user_id:user_id, ervaring_tags:ervaring_tags },
             cache: false,
             success: function(data) {
                 $('#slidingDiv_ervaringform').slideUp();
