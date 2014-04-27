@@ -132,7 +132,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                             <dt style="margin-left: 10px;">Tags:</dt>
                                 <?php   while ($row_tags = mysqli_fetch_assoc($result_tags))
                                         { ?>
-                                            <dd class="active"><a href="#"><?php echo $row_tags['tag_name'] ?></a></dd>
+                                            <dd class="active"><a href="ervaring_tags.php?tag=<?php echo $row_tags['tag_name'] ?>"><?php echo $row_tags['tag_name'] ?></a></dd>
                                 <?php  
                                         } ?>
                                         </dl>
@@ -196,6 +196,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                     </div>
 
     <!--overzicht van comments-->
+    
                     <div class="large-12 small-12 columns" style="padding: 0px;" id="reacties_update">
                         <?php 
                             $sql = "select * from tbl_reacties where fk_ervaring_id='".$_GET['id']."' order by reactie_likes desc";
@@ -206,24 +207,20 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                 while ($row = mysqli_fetch_assoc($result))
                                 { ?>
                                     <div class="large-12 columns reactie" style="padding: 10px; background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8; margin-bottom: 10px;">
-                                        <div class="large-1 columns">
+                                        <div class="large-1 small-2 columns" style="width: auto; height: auto;">
 
-                                            <img src="img/profile_img.png" style="border-radius: 20px;"
-                                            <?php 
-                                            if ($user_privilege == "true")
+                                            <img src="img/profile_img.png" class="reactie_profile_img"
+                                    <?php 
+                                            if ($row['fk_user_privilege'] == "true")
                                             { ?>
-                                              style="border: 3px solid #5db0c6;"
-                                            <?php 
-                                            } 
-                                            else
-                                            {
-                                              
+                                              style="border-radius: 30px; border: 3px solid #5db0c6;"
+                                    <?php 
                                             } ?>
                                             >
                                         </div>
 
-                                        <div class="large-11 columns">
-                                            <ul style="text-decoration: none;">
+                                        <div class="large-10 small-10 columns" style="padding-left: 0px;">
+                                            <ul style="text-decoration: none; list-style: none;">
                                               <li><?php echo htmlspecialchars($row['fk_user_name']).' '.htmlspecialchars($row['reactie_date']); ?></li>
                                               <li style="margin-bottom: 5; 
                                                          color: #a5b1b8; 
@@ -251,7 +248,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                                         
                                                         if ($row_vt != false)
                                                         { ?>
-                                                                <button type="submit" href="#" class="button [radius round] left" id="btnSubmitReactie_vt" name="btnSubmitReactie_vt"
+                                                                <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
                                                                         style="height: auto;
                                                                                width: auto;
                                                                                -webkit-border-radius: 3px;
@@ -270,7 +267,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                                         }
                                                         else if (empty($row_vt['fk_reactie_id']))
                                                         { ?>
-                                                            <button type="submit" href="#" class="button [radius round] left" id="btnSubmitReactie_vt" name="btnSubmitReactie_vt"
+                                                            <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
                                                                     style="height: auto;
                                                                            width: auto;
                                                                            -webkit-border-radius: 3px;
@@ -311,7 +308,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
 
     <!--overzicht van relevante ervaringen-->
     
-                <div class="large-4 columns" style="padding: 0px;">
+                <div class="large-4 small-12 columns" style="padding: 0px;">
                     <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Relevante ervaringen</h4>
                 </div>
                 <?php 

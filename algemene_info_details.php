@@ -94,54 +94,60 @@ if(isset($_POST['btnSubmitEditInformatie']))
 
         ?>
         
-        <div class="large-12 small-12 columns" id="info_ov" style="border-radius: 3px; background-color: #ffffff; padding: 30px; margin-bottom: 10px; border: 1px solid #d8d8d8; height: auto;">
+        <div class="large-12 small-12 columns" id="info_ov">
             <div class="large-12 columns" style="padding: 0px;">
                 <div class="large-11 small-11 columns left" style="padding: 0px;">
-                    <p id="info_title" style="margin-bottom: 10px; font-family: 'Open Sans', sans-serif; font-size: 18px; font-style: inherit; font-weight: 600;"><?php echo $row['informatieblok_title']; ?></p>
+                    <p id="info_title"><?php echo $row['informatieblok_title']; ?></p>
                 </div>
 
                 <div class="large-2 small-2 columns right" style="padding: 0px; width: auto; height: auto;">
-                    <a class="btnEdit" name="btnEdit"><i class="fi-widget size-21 style_1"></i></a> 
+                    <?php  
+
+                    if($user_privilege == 'true') 
+                    { ?>
+                      <a class="btnEdit" name="btnEdit"><i class="fi-widget size-21 style_1"></i></a> 
+              <?php 
+                    } ?>
                 </div>
             </div>
 
-            <p id="info_description" style="margin-bottom: 0px;"><?php echo $row['informatieblok_description']; ?></p>
+            <p id="info_description"><?php echo $row['informatieblok_description']; ?></p>
         </div>
 
     <!--feedback for both forms-->
 
         <?php require ("require/feedback_form.php"); ?>
 
-        <div class="row" id="conf" style="margin-top: 0; padding: 0; height: auto; text-align: center; display: none;">
+        <div class="row" id="conf">
             <div class="large-12 columns">
                 <div data-alert="" class="alert-box success radius">
-                  <p id="conf_message" style="font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-bottom: 0px;"></p>
+                  <p id="conf_message"></p>
                   <a class="close" href="#">×</a>
                 </div>
             </div>
         </div>
 
-        <div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
+        <div class="row" id="feedback">
             <div class="large-12 columns">
                 <div data-alert="" class="alert-box alert radius">
-                  <p id="feedback_message" style="font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-bottom: 0px;"></p>
+                  <p id="feedback_message"></p>
                   <a class="close" href="#">×</a>
                 </div>
             </div>
         </div>
 
-        <div class="large-12 small-12 columns hide" id="info_update" style="border-radius: 3px; background-color: #ffffff; padding: 30px; margin-bottom: 10px; border: 1px solid #d8d8d8; height: auto;">
+        <div class="large-12 small-12 columns hide" id="info_update">
 
         </div>
 
     <!--overzicht van edit form-->
 
-        <div class="large-12 small-12 columns hide" id="ed_info_form" style="border-radius: 3px; background-color: #ffffff; padding: 30px; margin-bottom: 10px; border: 1px solid #d8d8d8; height: auto;">
+        <div class="large-12 small-12 columns hide" id="ed_info_form">
             <form action="" method="post" style="padding: 0px;" class="ed_form" data-abide>
                 <div class="large-12 columns" style="padding: 0px;">
                     <div class="large-11 small-11 columns left" style="padding: 0px;">
                         <div id="informatieblok_toolbar">
-                            <dl class="sub-nav edit_text" style="margin-bottom: 0px; margin: 0px;">
+                            <dl class="sub-nav" style="margin-bottom: 0px; margin: 0px;">
                                 <dd style="margin-left: 0px;"><a data-wysihtml5-command="bold"><i class="fi-bold size-21"></i></a></dd>
                                 <dd style="margin-left: 2px;"><a data-wysihtml5-command="italic" ><i class="fi-italic size-21"></i></a></dd>
                                 <dd style="margin-left: 2px; margin-bottom: 0px; margin-top: 4px;"><a data-wysihtml5-command="formatBlock" data-wysihtml5-command-value="h1" style="font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600;">h1</a></dd>
@@ -158,33 +164,20 @@ if(isset($_POST['btnSubmitEditInformatie']))
                 </div>
 
                 <div class="large-12 columns">
-                    <input type="text" id="informatieblok_title" name="informatieblok_title" placeholder="Geef hier alle informatie in" style="margin-bottom: 10px; border-radius: 3px;" 
-                           value="<?php echo $row['informatieblok_title']; ?>">
+                    <input type="text" id="informatieblok_title" name="informatieblok_title" placeholder="Geef hier alle informatie in" value="<?php echo $row['informatieblok_title']; ?>">
                     <small class="error">Geef de informatie in</small>
                 </div>
 
                 <div class="large-12 columns">
-                    <textarea id="informatieblok_description" name="informatieblok_description" placeholder="Geef hier alle informatie in" style="margin-bottom: 10px; border-radius: 3px;"><?php echo $row['informatieblok_description']; ?></textarea>
+                    <textarea id="informatieblok_description" name="informatieblok_description" placeholder="Geef hier alle informatie in"><?php echo $row['informatieblok_description']; ?></textarea>
                 </div>
 
                 <div class="large-12 columns hide">
-                    <input type="text" id="informatieblok_id" name="informatieblok_id" style="margin-bottom: 10px; border-radius: 3px;" value="<?php echo $_GET["id"]; ?>">
+                    <input type="text" id="informatieblok_id" name="informatieblok_id" value="<?php echo $_GET["id"]; ?>">
                 </div>
 
                 <div class="large-12 columns" style="height: auto; margin-bottom: 0px;">
-                    <button type="submit" class="button [radius round]" id="btnSubmitEditInformatie" name="btnSubmitEditInformatie" 
-                            style="height: 40px;
-                                   width: 100%;
-                                   border-radius: 3px;
-                                   background-color: #5db0c6;
-                                   color: white;
-                                   font-family: 'Open Sans', sans-serif;
-                                   font-size: 16px;
-                                   font-style: inherit;
-                                   font-weight: 600;
-                                   padding: 5px;
-                                   margin-bottom: 0px;">Save changes
-                    </button>
+                    <button type="submit" class="button [radius round]" id="btnSubmitEditInformatie" name="btnSubmitEditInformatie">Save changes</button>
                 </div>
             </form>
         </div>

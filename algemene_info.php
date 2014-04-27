@@ -137,7 +137,7 @@ $start_from = ($page-1) * $item_per_page;
     <div class="row">
     <br/>
     <br/>
-        <div class="large-12 small-12 columns">
+        <div class="large-12 small-12 columns show-for-large-up">
             <div class="row">
                 <div class="large-9 columns">
                     <dl class="sub-nav">
@@ -151,9 +151,18 @@ $start_from = ($page-1) * $item_per_page;
                       {
                         while ($row = mysqli_fetch_assoc($result))
                         { ?>
-                            <dd><a href="algemene_info.php?filter=<?php echo $row['categorie_name']; ?>" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
-                                   onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                                   style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;"><?php echo $row['categorie_name']; ?></a></dd>
+                            <dd <?php if (isset($_GET["filter"]))
+                                         { 
+                                             $categorie_filter_large = $_GET["filter"];
+
+                                             if($categorie_filter_large == $row['categorie_name'])
+                                             {
+                                                echo 'class="active"';
+                                             } 
+                                         } ?>>
+                            <a href="algemene_info.php?filter=<?php echo $row['categorie_name']; ?>" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                               onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                               style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;"><?php echo $row['categorie_name']; ?></a></dd>
                 <?php  
                         }
                       } ?>
@@ -169,13 +178,52 @@ $start_from = ($page-1) * $item_per_page;
 
                 } ?>
             </div>
+            </div>
+
+            <div class="large-4 columns show-for-small-up hide-for-large-up">
+                <div class="large-12 columns" style="padding: 6px;">
+                    <form action="" method="get" Onchange="this.form.submit()" id="categorie_filter" name="categorie_filter" style="margin-bottom: 0px;" data-abide>
+                        <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
+                            <option value="" disabled selected>Filter op categorie:</option>
+                            
+                            <?php 
+
+                                  $sql = "select * from tbl_categorie_informatieblok";
+                                  $result = $db->query($sql);
+
+                                  if(mysqli_num_rows($result) > 0)
+                                  {
+                                    while ($row = mysqli_fetch_assoc($result))
+                                    { ?>
+                                      <option <?php if (isset($_GET["filter"]))
+                                                    {   
+                                                        $categorie_filter_small = $_GET["filter"];
+
+                                                        if($categorie_filter_small == $row['categorie_name'])
+                                                        {
+                                                          echo 'selected';
+                                                        } 
+                                                    } ?> value="<?php echo $row['categorie_name']; ?>"><?php echo $row['categorie_name']; ?></option>
+                          <?php     }
+                                  } ?>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="large-12 columns" style="padding: 6px;">
+                    <?php if($user_privilege == 'true')
+                          {?>
+                            <button type="submit" href="#" class="show_hide_informatie_form button [radius round] right nieuwe_informatieblok_s"><img src="img/icons/add.png" class="add_icon">Nieuwe informatieblok</button>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
 
     <!--nieuwe informatieblok toevoegen-->
 
         <div class="row" id="slidingDiv_informatieform">
-            <div class="large-12 small-12 columns" style="border-radius: 3px; background-color: #ffffff; padding: 10px; margin-bottom: 10px; border: 1px solid #d8d8d8;">
-                <form action="" method="post" id="categorie_form" style="padding: 10px;" data-abide>
+            <div class="large-12 small-12 columns informatieblok_form">
+                <form action="" method="post" id="informatie_form" data-abide>
                     <div class="large-12 small-12 columns">
                         <h4>Voeg een nieuwe informatieblok toe</h4>
                     </div>
@@ -215,18 +263,7 @@ $start_from = ($page-1) * $item_per_page;
                     </div>
 
                     <div class="large-4 columns" style="height: 100px; margin-bottom: 0px;">
-                        <button type="submit" href="#" class="button [radius round]" id="btnSubmitInformatie" name="btnSubmitInformatie" 
-                                style="height: 100px;
-                                       width: 100%;
-                                       border-radius: 3px;
-                                       background-color: #5db0c6;
-                                       color: white;
-                                       font-family: 'Open Sans', sans-serif;
-                                       font-size: 16px;
-                                       font-style: inherit;
-                                       font-weight: 600;
-                                       padding: 5px;">Voeg categorie toe
-                        </button>
+                        <button type="submit" href="#" class="button [radius round]" id="btnSubmitInformatie" name="btnSubmitInformatie">Voeg informatieblok toe</button>
                     </div>
                 </form>
             </div>

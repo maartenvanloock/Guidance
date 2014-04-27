@@ -107,8 +107,8 @@ footer
 #profile_img
 {
 	border-radius: 20px;
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 	margin-top: 0px;
 	margin-bottom: 2px;
 	margin-left: 10px;
@@ -293,6 +293,19 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	font-style: inherit;
 	font-weight: 600;
 }
+.nieuwe_ervaring_s
+{
+	width: 100%;
+	height: auto;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 10px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+}
 .add_icon
 {
 	padding-bottom: 4px;
@@ -343,6 +356,33 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	margin-bottom: 0;
 }
+#btnSubmitErvaring
+{
+	height: 47px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+}
+.ervaring_form
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 10px; 
+	margin-bottom: 20px; 
+	border: 1px solid #d8d8d8;
+}
+#ervaring_description
+{
+	resize: vertical; 
+	height: 100px; 
+	border-radius: 3px;
+}
 
 /*-----------------------------nieuwe categorie form-------------------------------------*/
 
@@ -357,6 +397,40 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 #categorie_title
 {
 	margin-bottom: 0;
+}
+#btnSubmitCategorie
+{
+	height: 38px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+}
+.categorie_form
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 10px; 
+	margin-bottom: 10px; 
+	border: 1px 
+	solid #d8d8d8;
+}
+.color_label
+{
+	border-radius: 3px;
+    height: 35px;
+    width: 120px;
+    background-color: #5db0c6;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-style: inherit;
+    font-weight: 600;
 }
 
 /*---------------------------display characters left---------------------------*/
@@ -406,15 +480,42 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 
 .feedback
 {
-  /*padding-top: 1%;
-  padding-bottom: 1%;*/
-  text-align: center;
+  	text-align: center;
+}
+#feedback
+{
+	margin-top: 0; 
+	padding: 0; 
+	text-align: center; 
+	display: none;
+}
+#feedback_message
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: inherit; 
+	font-weight: 600;
+	margin-bottom: 0px;
 }
 .conf
 {
-  /*padding-top: 1%;
-  padding-bottom: 1%;*/
-  text-align: center;
+  	text-align: center;
+}
+#conf
+{
+	margin-top: 0; 
+	padding: 0; 
+	height: auto; 
+	text-align: center; 
+	display: none;
+}
+#conf_message
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: inherit; 
+	font-weight: 600;
+	margin-bottom: 0px;
 }
 .alert-box.alert
 {
@@ -524,6 +625,20 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	font-size: 16px;
 	font-style: inherit;
 	font-weight: 600;
+	margin-right: 5px;
+}
+.nieuwe_informatieblok_s
+{
+	width: 100%;
+	height: auto;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 10px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
 }
 
 /*-----------------------------nieuwe categorie form-------------------------------------*/
@@ -546,6 +661,12 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 .style_1
 { 
   	color: #7b868c; 
+}
+#search_icon
+{
+	margin-right: 10px;
+	background-color: transparent !important;
+	background: transparent !important;
 }
 .size-12 
 { 
@@ -586,4 +707,124 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 .size-72 
 { 
 	font-size: 72px; 
+}
+
+/*-----------------------------reacties-------------------------------------*/
+
+.reactie_profile_img
+{
+	border-radius: 20px;
+	width: auto;
+	height: auto;
+}
+.btnSubmitReactie_vt
+{
+	height: auto;
+    width: auto;
+    border-radius: 3px;
+    background-color: #e6e6e6;
+    color: #7b868c;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-style: inherit;
+    padding: 6px;
+}
+
+/*-----------------------------algemene info-------------------------------------*/
+
+.informatieblok_form
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 10px; 
+	margin-bottom: 10px; 
+	border: 1px solid #d8d8d8;
+}
+#informatie_form
+{
+	padding: 10px;
+}
+#btnSubmitInformatie
+{
+	height: 100px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+}
+
+/*-----------------------------algemene info details-------------------------------------*/
+
+#info_ov
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 30px; 
+	margin-bottom: 10px; 
+	border: 1px solid #d8d8d8; 
+	height: auto;
+}
+#info_title
+{
+	margin-bottom: 10px; 
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 18px; 
+	font-style: inherit; 
+	font-weight: 600;
+}
+#info_description
+{
+	margin-bottom: 0px;
+}
+#info_update
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 30px; 
+	margin-bottom: 10px; 
+	border: 1px solid #d8d8d8; 
+	height: auto;
+}
+#ed_info_form
+{
+	border-radius: 3px; 
+	background-color: #ffffff; 
+	padding: 30px; 
+	margin-bottom: 10px; 
+	border: 1px solid #d8d8d8; 
+	height: auto;
+}
+#informatieblok_title
+{
+	margin-bottom: 10px; 
+	border-radius: 3px;
+}
+#informatieblok_description
+{
+	margin-bottom: 10px; 
+	border-radius: 3px;
+}
+#informatieblok_id
+{
+	margin-bottom: 10px; 
+	border-radius: 3px;
+}
+#btnSubmitEditInformatie
+{
+	height: 40px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+    margin-bottom: 0px;
 }

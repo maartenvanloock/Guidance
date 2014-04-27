@@ -13,9 +13,22 @@
 
 	    			<!-- Right Nav Section -->
 	    			<ul class="right">
+
+						<div class="large-12 small-12 columns show-for-small-only text-center" style="padding: 0px;">
+							<a href="profile_details.php">
+								<ul>
+									<li><img src="img/profile_img.png" style="border-radius: 20px;"></li>
+									<li style="width: auto; height: auto; padding: 0px; margin-top: 10px;">
+										<p style="color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600; font-size: 24px;"><?php echo $username; ?></p>
+									</li>
+								</ul>
+							</a>
+						</div>
+
 	     				<li><a href="ervaring.php"><img src="img/icons/ervaringen.png" onmouseover="this.src='img/icons/ervaringen_selected.png'" onmouseout="this.src='img/icons/ervaringen.png'" class="nav_icon">Ervaringen</a></li>
 	     				<li><a href="algemene_info.php"><img src="img/icons/info.png" onmouseover="this.src='img/icons/info_selected.png'" onmouseout="this.src='img/icons/info.png'" class="nav_icon">Algemene info</a></li>
 	     				<li><a href="#"><img src="img/icons/evenementen.png" onmouseover="this.src='img/icons/evenementen_selected.png'" onmouseout="this.src='img/icons/evenementen.png'" class="nav_icon">Evenementen</a></li>
+	     				<li><a href="ervaring_search.php"><img src="img/icons/search.png" onmouseover="this.src='img/icons/search.png'" onmouseout="this.src='img/icons/search.png'" class="nav_icon">Search</a></li>
 	     				<!--<li class="has-form">
 	  						<div class="row collapse">
 	    						<div class="large-8 small-9 columns">
@@ -44,7 +57,7 @@
 							></li>
 							<li><a href="#"><?php /*echo*/ $username ?></a></li>
 						</ul>-->
-						<li class="has-dropdown not-click">
+						<li class="has-dropdown not-click show-for-medium-up">
 							<a style="padding-left: 20px; padding: 0px;">
 								<img src="img/profile_img.png" id="profile_img" 
 								<?php 
@@ -62,7 +75,7 @@
 								<span style="padding-right: 0px;"><?php echo $username ?></span>
 							</a>
 							<ul class="dropdown">
-								<li><a href="#">Profile settings</a></li>
+								<li><a href="profile_details.php">Profile settings</a></li>
 								<li><a href="require/log_user.php">Sign out</a></li>
 							</ul>
 						</li>
