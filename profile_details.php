@@ -179,7 +179,7 @@ $start_from = ($page-1) * $item_per_page;
                                 echo $row_reacties['reacties'];
                             ?>
                         </h2>
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-top: 10px; margin-bottom: 0px;">answers</h2>
+                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-top: 10px; margin-bottom: 0px;">antwoorden</h2>
                     </li>
                         
                     <li style="margin-right: 10px;">

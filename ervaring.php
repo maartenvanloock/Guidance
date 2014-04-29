@@ -75,7 +75,7 @@ if(isset($_POST['btnSubmitErvaring']))
 
         for ($x = 0; $x < $tags_lim; $x++)
         {
-            $sql = "insert into tbl_tags(tag_name, fk_ervaring_id) values ('".$tags[$x]."', '".$last_ervaring_id."')";
+            $sql = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$last_ervaring_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
       }

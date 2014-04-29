@@ -5,6 +5,7 @@ session_start();
 require ("classes/connection.class.php");
 require ("classes/reactie.class.php");
 require ("classes/reactie_vt.class.php");
+require ("classes/ervaring_vt.class.php");
 
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
@@ -58,11 +59,46 @@ if(isset($_POST['btnSubmitReactie_vt']))
 {
     try
     {
-      $vt = new Reactie_vt();
-      $vt->User_id = $userid;
-      $vt->Reactie_id = $_POST['reactie_id'];
+      $reactie_vt = new Reactie_vt();
+      $reactie_vt->User_id = $userid;
+      $reactie_vt->Reactie_id = $_POST['reactie_id'];
 
-      $vt->Save();
+      $reactie_vt->Save();
+    }
+    catch (Exception $e)
+    {
+      $feedback = $e->getMessage();
+    }
+}
+
+/*---------------------aanmaken van een nieuwe ervaring_vt----------------------*/
+
+if(isset($_POST['btnSubmitErvaring_vt_up']))
+{
+    try
+    {
+      $ervaring_vt = new Ervaring_vt();
+      $ervaring_vt->User_id = $userid;
+      $ervaring_vt->Ervaring_id = $_GET['id'];
+      $ervaring_vt->Ervaring_st = "up";
+
+      $ervaring_vt->Save();
+    }
+    catch (Exception $e)
+    {
+      $feedback = $e->getMessage();
+    }
+}
+else if(isset($_POST['btnSubmitErvaring_vt_down']))
+{
+    try
+    {
+      $ervaring_vt = new Ervaring_vt();
+      $ervaring_vt->User_id = $userid;
+      $ervaring_vt->Ervaring_id = $_GET['id'];
+      $ervaring_vt->Ervaring_st = "down";
+
+      $ervaring_vt->Save();
     }
     catch (Exception $e)
     {
@@ -113,10 +149,41 @@ if(isset($_POST['btnSubmitReactie_vt']))
                   $result = $db->query($sql);
                   $row = mysqli_fetch_assoc($result);
                 ?>
-                    <div class="panel" style="background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8;">
+
+    <!--overzicht van ervaring details medium and up-->
+
+                    <div class="panel show-for-medium-up" style="background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8;">
                         <ul class="small-block-grid-2 profile_info">
-                            <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
-                            <li style="width:88%; padding-left: 10; padding-bottom: 0;">
+                            <li style="width: 10%; padding-bottom: 0px; padding-right: 0px;">
+                            <img src="img/profile_img.png" style="border-radius: 20px;">
+                            <?php  
+
+                                $sql_ervaring_vt = "select * from tbl_ervaringen_vt where fk_ervaring_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
+                                $result_ervaring_vt = $db->query($sql_ervaring_vt);
+                                $row_ervaring_vt = mysqli_fetch_array($result_ervaring_vt);
+                                                        
+                                if ($row_ervaring_vt != false)
+                                { ?>
+                                    <form action="" method="post" class="text-center" style="width: 20px; margin: 0px; margin-left: 6px; margin-top: 15px;" data-abide>
+                                        <span>
+                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
+                                            <p id="vt_ervaring"><?php echo $row['ervaring_likes']; ?></p>
+                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
+                                        </span>
+                                    </form>
+                          <?php }
+                                else
+                                { ?>
+                                  <form action="" method="post" class="text-center" style="width: 20px; margin: 0px; margin-left: 6px; margin-top: 15px;" data-abide>
+                                      <span>
+                                          <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
+                                          <p id="vt_ervaring"><?php echo $row['ervaring_likes']; ?></p>
+                                          <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
+                                      </span>
+                                  </form>
+                          <?php } ?>
+                            </li>
+                            <li style="width: 90%; padding-left: 10px; padding-bottom: 0px;">
                                 <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo htmlspecialchars($row['ervaring_title']); ?></p>
                                 <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
                                 <p style="margin-bottom: 10px; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;">
@@ -140,6 +207,86 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                 
                             </li>
                         </ul>
+                    </div>
+
+    <!--overzicht van ervaring details small-->
+
+                    <div class="large-12 small-12 show-for-small hide-for-medium-up" style="background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8; padding: 20px;">
+                        <ul class="profile_info" style="list-style: none; margin-bottom: 0px;">
+                            <li class="text-center" style="width: 100%; padding-bottom: 0px; padding-right: 0px;">
+                                <img src="img/profile_img.png" style="border-radius: 20px;">
+                                <p style="padding-top: 10px; padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
+                            </li>
+
+                            <li style="width: 100%; padding: 0px;">
+                                <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo htmlspecialchars($row['ervaring_title']); ?></p>
+                                <p style="margin-bottom: 10px; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;">
+                                <?php echo htmlspecialchars($row['ervaring_description']); ?></p>
+                                
+                                  <?php  
+                                      $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                                      $result_tags = $db->query($sql_tags);
+
+                                      if(mysqli_num_rows($result_tags) > 0)
+                                      { ?>
+                                        <dl class="sub-nav" style="margin-bottom: 0px; padding-bottom: 0px;">
+                                            <dt style="margin-left: 10px;">Tags:</dt>
+                                <?php   while ($row_tags = mysqli_fetch_assoc($result_tags))
+                                        { ?>
+                                            <dd class="active"><a href="ervaring_tags.php?tag=<?php echo $row_tags['tag_name'] ?>"><?php echo $row_tags['tag_name'] ?></a></dd>
+                                <?php  
+                                        } ?>
+                                        </dl>
+                                <?php } ?>
+                            </li>
+                        </ul>
+
+                        <?php  
+
+                            $sql_ervaring_vt = "select * from tbl_ervaringen_vt where fk_ervaring_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
+                            $result_ervaring_vt = $db->query($sql_ervaring_vt);
+                            $row_ervaring_vt = mysqli_fetch_array($result_ervaring_vt);
+                                                        
+                            if ($row_ervaring_vt != false)
+                            { ?>
+                                <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                                    <div class="large-12 columns" style="padding: 0px; margin-top: 20px;">
+                                        <div class="large-5 small-5 columns" style="padding: 0px;">
+                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" 
+                                                    style="width: 100%; background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
+                                        </div>
+
+                                        <div class="large-2 small-2 columns text-center">
+                                            <p id="vt_ervaring" style="width: 100%;"><?php echo $row['ervaring_likes']; ?></p>
+                                        </div>
+
+                                        <div class="large-5 small-5 columns" style="padding: 0px;">
+                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" 
+                                                    style="width: 100%; background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                      <?php }
+                            else
+                            { ?>
+                                <div class="row" style="margin-left: 0px; margin-right: 0px;">
+                                    <div class="large-12 columns" style="padding: 0px; margin-top: 20px;">
+                                        <div class="large-5 small-5 columns" style="padding: 0px;">
+                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" 
+                                                    style="width: 100%; background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
+                                        </div>
+
+                                        <div class="large-2 small-2 columns text-center">
+                                            <p id="vt_ervaring" style="width: 100%;"><?php echo $row['ervaring_likes']; ?></p>
+                                        </div>
+
+                                        <div class="large-5 small-5 columns" style="padding: 0px;">
+                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" 
+                                                    style="width: 100%; background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                      <?php } ?>
                     </div>
                 
     <!--reactie form-->
@@ -209,14 +356,14 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                     <div class="large-12 columns reactie" style="padding: 10px; background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8; margin-bottom: 10px;">
                                         <div class="large-1 small-2 columns" style="width: auto; height: auto;">
 
-                                            <img src="img/profile_img.png" class="reactie_profile_img"
+                                            <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>"><img src="img/profile_img.png" class="reactie_profile_img"
                                     <?php 
                                             if ($row['fk_user_privilege'] == "true")
                                             { ?>
                                               style="border-radius: 30px; border: 3px solid #5db0c6;"
                                     <?php 
                                             } ?>
-                                            >
+                                            ></a>
                                         </div>
 
                                         <div class="large-10 small-10 columns" style="padding-left: 0px;">
@@ -307,32 +454,45 @@ if(isset($_POST['btnSubmitReactie_vt']))
                 </div>
 
     <!--overzicht van relevante ervaringen-->
-    
-                <div class="large-4 small-12 columns" style="padding: 0px;">
+
+        <div class="large-4 small-12 columns" style="padding: 0px;">
+                <div class="large-12 small-12 columns" style="padding: 0px;">
                     <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Relevante ervaringen</h4>
                 </div>
                 <?php 
-                    $sql = "select * from tbl_ervaringen where fk_categorie_name='".$_GET['categorie_name']."' and not ervaring_id='".$_GET['id']."' limit 3";
-                    $result = $db->query($sql);
+                    /*$sql = "select * from tbl_ervaringen where fk_categorie_name='".$_GET['categorie_name']."' and not ervaring_id='".$_GET['id']."' limit 3";
+                    $result = $db->query($sql);*/
 
-                    if(mysqli_num_rows($result) > 0)
+                    $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                    $result_tags = $db->query($sql_tags);
+                    $row_tags = mysqli_fetch_assoc($result_tags);
+
+                    $sql_find = "select distinct(fk_ervaring_id) from tbl_tags where tag_name='".$row_tags['tag_name']."' limit 3";
+                    $result_find = $db->query($sql_find);
+                    
+                    if(mysqli_num_rows($result_find) > 0)
                     {
-                      while ($row = mysqli_fetch_assoc($result))
-                      { ?>
-                          <div class="large-4 columns dashboard_container">
-                                  <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
-                                       style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>;">
+                      while ($row_find = mysqli_fetch_assoc($result_find))
+                      { 
+
+                          $sql_find_er = "select * from tbl_ervaringen where ervaring_id='".$row_find['fk_ervaring_id']."' order by ervaring_reacties desc";
+                          $result_find_er = $db->query($sql_find_er);
+                          $row_find_er = mysqli_fetch_assoc($result_find_er);  ?>
+
+                          <div class="large-12 small-12 columns dashboard_container">
+                                  <a href="ervaring_details.php?id=<?php echo $row_find_er['ervaring_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                       style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
                                           <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
                                           <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                              <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row['ervaring_title']; ?></p>
-                                              <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row['fk_user_name']; ?></p>
-                                              <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."..."; ?></p>
+                                              <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row_find_er['ervaring_title']; ?></p>
+                                              <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row_find_er['fk_user_name']; ?></p>
+                                              <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row_find_er['ervaring_description'], 0, 118))."..."; ?></p>
                                           </li>
-                                          <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row['ervaring_date']; ?></li>
+                                          <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row_find_er['ervaring_date']; ?></li>
                                           <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
-                                              <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row['ervaring_likes']; ?>
-                                              <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row['ervaring_reacties']; ?>
+                                              <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_find_er['ervaring_likes']; ?>
+                                              <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_find_er['ervaring_reacties']; ?>
                                           </li>
                                       </ul>
                                   </div></a>
@@ -347,6 +507,8 @@ if(isset($_POST['btnSubmitReactie_vt']))
                       </div>
                     <?php 
                     } ?>
+        </div>
+
             </div>
         </div>
     </div>

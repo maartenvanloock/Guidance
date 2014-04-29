@@ -91,8 +91,8 @@ Class Ervaring {
 	{	
 		require ("connection.class.php");
 
-		$sql = "insert into tbl_ervaringen(ervaring_title, ervaring_description, ervaring_likes, ervaring_reacties, ervaring_solved, ervaring_date, fk_reactie_id, fk_user_id, fk_user_name, fk_categorie_name, fk_categorie_color) 
-				values ('$this->Title', '$this->Description', 0, 0, 0, '$this->Date', 0, '$this->User_id', '$this->User', '$this->Categorie_name', '$this->Categorie_color')";
+		$sql = "insert into tbl_ervaringen(ervaring_title, ervaring_description, ervaring_likes, ervaring_reacties, ervaring_solved, ervaring_date, fk_user_id, fk_user_name, fk_categorie_name, fk_categorie_color) 
+				values ('$this->Title', '$this->Description', 0, 0, 0, '$this->Date', '$this->User_id', '$this->User', '$this->Categorie_name', '$this->Categorie_color')";
 		$db->query($sql);
 
 		$reactie_id_tags = mysqli_insert_id($db);

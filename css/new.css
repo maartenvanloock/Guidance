@@ -276,6 +276,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	border-radius: 3px;
 	/*border-bottom: 12px solid #5db0c6;*/
 	background-color: #ffffff;
+	margin-bottom: 10px;
 }
 
 /*-----------------------------ervaring mantelzorgers-------------------------------------*/
@@ -827,4 +828,23 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     font-weight: 600;
     padding: 5px;
     margin-bottom: 0px;
+}
+
+/*-----------------------------ervaring details vote -------------------------------------*/
+
+.btnSubmitErvaring_vt_up, .btnSubmitErvaring_vt_down
+{
+	border-radius: 3px; 
+	background-color: #e6e6e6; 
+	padding: 7px; 
+	padding-top: 3px;
+	padding-bottom: 3px;  
+	margin-bottom: 0px;
+    color: #7b868c;
+}
+#vt_ervaring
+{
+	padding: 6px; 
+	margin-bottom: 0px; 
+	width: 28px;
 }
