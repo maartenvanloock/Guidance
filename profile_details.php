@@ -5,8 +5,9 @@ session_start();
 require ("classes/connection.class.php");
 
 $username = $_SESSION['username'];
-$user_privilege = $_SESSION['userprivilege'];
 $userid = $_SESSION['userid'];
+$user_privilege = $_SESSION['userprivilege'];
+$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
@@ -20,11 +21,13 @@ if(empty($username))
 if (isset($_GET["user"]))
 {
     $userid = $_GET["user"];
-} 
-else
-{
 
-}
+    $sql_privilege = "select * from tbl_users where user_id='$userid'";
+    $result_privilege = $db->query($sql_privilege);
+    $row_privilege = mysqli_fetch_assoc($result_privilege);
+
+    $user_privilege = $row_privilege['user_privilege'];
+} 
 
 $sql = "select * from tbl_users where user_id='$userid'";
 $result = $db->query($sql);
@@ -43,7 +46,7 @@ if (isset($_GET["filter"]))
         $sql = "select count(*) from tbl_ervaringen where fk_user_id='".$userid."'";
         $result = $db->query($sql);
     }
-    else if($filter == "reactie")
+    else if($filter == "reacties")
     {
         $sql = "select count(*) from tbl_reacties where fk_user_id='".$userid."'";
         $result = $db->query($sql);
@@ -96,6 +99,18 @@ else
 
 $start_from = ($page-1) * $item_per_page;
 
+/*---------------------aanpassen van profile details---------------------*/
+
+if(isset($_POST['btnSubmitProfile']))
+{
+   $href_cropped_image = $_POST['image_hr'];
+   $img = preg_replace('#^data:image/[^;]+;base64,#', '', $href_cropped_image);
+   $movecroppedimage = file_put_contents('profile_imgs/profile_img_'.$userid.'.png', base64_decode($img));
+
+   $sql = "update tbl_users set user_profile_path = 'profile_imgs/profile_img_$userid.png' where user_id = $userid";
+   $db->query($sql);
+}
+
 ?>
 
 <!doctype html>
@@ -115,6 +130,62 @@ $start_from = ($page-1) * $item_per_page;
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation-->
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
+
+    <link rel="stylesheet" href="css/jquery.cropbox.css"/>
+    <!--<script src=​"http:​/​/​ajax.googleapis.com/​ajax/​libs/​jquery/​2.1.0/​jquery.min.js">​</script>​-->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.10/hammer.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.js"></script>
+    <script src="js/jquery.cropbox.js"></script>
+
+    <script type="text/javascript">
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('.cropimage')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    <script type="text/javascript" defer>
+        $( function () {
+          $( '.cropimage' ).each( function () {
+            var image = $(this),
+                cropwidth = image.attr('cropwidth'),
+                cropheight = image.attr('cropheight'),
+                results = image.next('.results' ),
+                x       = $('.cropX', results),
+                y       = $('.cropY', results),
+                w       = $('.cropW', results),
+                h       = $('.cropH', results),
+                download = results.next('.download').find('a');
+
+              image.cropbox( {width: cropwidth, height: cropheight, showControls: 'always' } )
+                .on('cropbox', function( event, results, img ) {
+                  x.text( results.cropX );
+                  y.text( results.cropY );
+                  w.text( results.cropW );
+                  h.text( results.cropH );
+                  download.attr('href', img.getDataURL());
+                  var href = $('#profile_image_cropped').attr('href');
+                  $('#image_hr').val(href);
+                });
+          } );
+
+          $('#select').on('change', function () {
+              var size = parseInt(this.value);
+              $('.cropimage').each(function () {
+                $(this).cropbox({width: size, height: size})
+              });
+          });
+        });
+    </script>
+
   </head>
 
   <body>
@@ -131,22 +202,48 @@ $start_from = ($page-1) * $item_per_page;
         </form>
     </div>
 
-    <!--profile details-->
+    <!--profile details voor gebruiker-->
 
     <div class="large-12 small-12 columns" style="background-color: #074e68;">
     <br/>
     <br/>
             <div class="large-12 small-12 columns text-center">
-                <img src="img/user.png" style="width: 100px; height: 100px; border-radius: 100px;">
+                <?php
+                if (isset($_GET["user"]))
+                {
+                    $sql_user = "select * from tbl_users where user_id='".$userid."'";
+                }
+                else
+                {
+                    $sql_user = "select * from tbl_users where user_id='".$_SESSION['userid']."'";
+                }
+
+                $results_user = $db->query($sql_user);
+                $row_user = mysqli_fetch_assoc($results_user); ?>
+                <img src="<?php echo $row_user['user_profile_path']; ?>" id="profile_details_med_img" style="width: 100px; height: 100px; border-radius: 100px;">
             </div>
 
             <div class="large-12 small-12 columns text-center">
-                <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 28px; font-style: inherit; font-weight: 700; margin-top: 10px;"><?php echo $row['user_name']; ?></h2>
+                <h2 id="profile_details_username"><?php echo $row['user_name']; ?></h2>
+            </div>
+            
+            <div class="large-12 small-12 columns text-center n_pad">
+                <a href="#" class="edit_profile" data-reveal-id="edit_profile">
+            <?php  
+                    if (!isset($_GET["user"]))
+                    { ?>
+                        <p class="btn_edit_profile">edit profile</p>
+            <?php   }
+                    else if ($_GET['user'] == $_SESSION['userid'])
+                    { ?>
+                        <p class="btn_edit_profile">edit profile</p>
+            <?php   } ?>
+                </a>
             </div>
 
             <div class="large-12 small-12 columns text-center" style="margin-top: 10px;">
                     <i class="fi-star size-36" style="color: #ffffff;"></i>
-                    <span style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 28px; font-style: inherit; font-weight: 700; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+                    <span id="profile_details_ptn" style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 28px; font-style: inherit; font-weight: 700; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
                     <?php echo $row['user_ptn']; ?></span>
                     <i class="fi-star size-36" style="color: #ffffff;"></i>
             </div>
@@ -157,7 +254,7 @@ $start_from = ($page-1) * $item_per_page;
             <div class="large-6 small-12 small-centered large-centered columns text-center" style="margin-top: 30px;">
                 <ul class="inline-list text-center" style="display: inline-block;">
                     <li style="padding-right: 20px; border-right: 3px solid #ffffff;">
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 24px; font-style: inherit; font-weight: 600; margin-top: 0px;">
+                        <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_posts = "select count(*) as posts from tbl_ervaringen where fk_user_id='".$userid."'";
                                 $result_posts = $db->query($sql_posts);
@@ -166,11 +263,11 @@ $start_from = ($page-1) * $item_per_page;
                                 echo $row_posts['posts'];
                             ?>
                         </h2>
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-top: 10px; margin-bottom: 0px;">posts</h2>
+                        <h2 class="profile_details_smallinftext">posts</h2>
                     </li>
                         
                     <li style="padding-right: 20px; border-right: 3px solid #ffffff;">
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 24px; font-style: inherit; font-weight: 600; margin-top: 0px;">
+                        <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_reacties = "select count(*) as reacties from tbl_reacties where fk_user_id='".$userid."'";
                                 $result_reacties = $db->query($sql_reacties);
@@ -179,11 +276,11 @@ $start_from = ($page-1) * $item_per_page;
                                 echo $row_reacties['reacties'];
                             ?>
                         </h2>
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-top: 10px; margin-bottom: 0px;">antwoorden</h2>
+                        <h2 class="profile_details_smallinftext">antwoorden</h2>
                     </li>
                         
                     <li style="margin-right: 10px;">
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 24px; font-style: inherit; font-weight: 600; margin-top: 0px;">
+                        <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_reactielikes = "select count(reactie_likes) as reactielikes from tbl_reacties where fk_user_id='".$userid."'";
                                 $result_reactielikes = $db->query($sql_reactielikes);
@@ -192,13 +289,75 @@ $start_from = ($page-1) * $item_per_page;
                                 echo $row_reactielikes['reactielikes'];
                             ?>
                         </h2>
-                        <h2 style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: inherit; font-weight: 600; margin-top: 10px; margin-bottom: 0px;">likes</h2>
+                        <h2 class="profile_details_smallinftext">likes</h2>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!--aanpassen van profile details-->
+    
+    <div class="large-12 small-12 columns">
+        <div id="edit_profile" class="reveal-modal large" style="padding: 40px;" data-reveal>
+            <div class="large-12 small-12 columns n_pad">
+                <h4>Edit profile</h4>
+            </div>
+
+            <form action="" method="post" data-abide>
+                <div class="large-12 small-12 columns n_pad" style="margin-bottom: 10px;">
+                    <label style="margin-bottom: 10px;">CHANGE PROFILE PHOTO:</label>
+                    <input type="file" name="image" onchange="readURL(this);">
+                    <img class="cropimage" alt="" src="img/user.png" cropwidth="200" cropheight="200"/>
+
+                    <div class="results hide"> 
+                        <b>X</b>: <span class="cropX"></span> 
+                        <b>Y</b>: <span class="cropY"></span> 
+                        <b>W</b>: <span class="cropW"></span> 
+                        <b>H</b>: <span class="cropH"></span> 
+                    </div>
+
+                    <div class="download hide"> 
+                        <a href="" id="profile_image_cropped" name="profile_image_cropped" download="<?php echo 'profile_img_'.$userid; ?>">Download</a>
+                    </div>
+                </div>    
+
+                <div class="large-12 small-12 columns n_pad hide">
+                    <input type="text" id="image_hr" name="image_hr">
+                </div>
+
+                <div class="large-12 small-12 columns n_pad">
+                    <label style="margin-bottom: 10px;">IK ZORG VOOR:</label>
+                    <input type="text" id="profile_zorg_voor" name="profile_zorg_voor" placeholder="Ex: mijn dementerende vader">
+                </div>
+
+                <div class="large-12 small-12 columns n_pad">
+                    <label style="margin-bottom: 10px;">ABOUT YOU</label>
+                    <textarea type="text" placeholder="Geef hier wat meer informatie over jezelf" id="profile_description" name="profile_description"></textarea>
+                    <ul class="chars_left">
+                        <li><p class="profile_description_chars"></p></li>
+                        <li><p>characters left</p></li>
+                    </ul>
+                </div>
+
+                <div class="large-12 small-12 columns n_pad">
+                    <label style="margin-bottom: 10px;">LOCATIE</label>
+                    <input type="text" id="profile_location" name="profile_location" placeholder="Naam gemeente, Naam stad">
+                    <ul class="chars_left">
+                        <li><p class="profile_location_chars"></p></li>
+                        <li><p>characters left</p></li>
+                    </ul>
+                </div>
+
+                <div class="large-12 small-12 columns n_pad">
+                    <button type="submit" href="#" class="button [radius round]" id="btnSubmitProfile" name="btnSubmitProfile">Voeg aanpassingen toe</button>
+                </div>
+            </form>
+
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+    </div>
+    
     <!--filters large and up-->
 
     <div class="row">
@@ -214,9 +373,9 @@ $start_from = ($page-1) * $item_per_page;
                                     echo 'class="active"';
                                 } 
                           } ?> >
-                    <a href="profile_details.php?filter=ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                    <a href="profile_details.php?user=<?php echo $userid; ?>&filter=ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                        onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                       style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">ervaringen</a>
+                       class="filter_ervaring_fi">ervaringen</a>
                 </dd>
                 <dd <?php if (isset($_GET["filter"]))
                           { 
@@ -227,9 +386,9 @@ $start_from = ($page-1) * $item_per_page;
                                     echo 'class="active"';
                                 } 
                           } ?> >
-                    <a href="profile_details.php?filter=reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                    <a href="profile_details.php?user=<?php echo $userid; ?>&filter=reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                        onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                       style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">reacties</a>
+                       class="filter_ervaring_fi">reacties</a>
                 </dd>
             </dl>
         </div>
@@ -237,7 +396,7 @@ $start_from = ($page-1) * $item_per_page;
     <!--filters small-->
 
     <div class="large-4 columns show-for-small-up hide-for-large-up">
-            <div class="large-12 columns" style="padding: 0px;">
+            <div class="large-12 columns n_pad">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
@@ -273,14 +432,14 @@ $start_from = ($page-1) * $item_per_page;
     <!--overzicht van ervaringen voor deze gebruiker-->
 
     <div class="row">
-        <div class="large-12 small-12 columns ervaringen" id="results">
+        <div class="large-12 small-12 columns ervaringen" id="results_ervaringen">
             <?php
 
                 if (isset($_GET["filter"]))
                 { 
                         $filter = $_GET["filter"];
 
-                        if($filter_small == 'ervaringen')
+                        if($filter == 'ervaringen')
                         {
                             $sql_e = "select * from tbl_ervaringen where fk_user_id='".$userid."' order by ervaring_id desc LIMIT $start_from, $item_per_page";
                             $result_e = $db->query($sql_e);
@@ -288,20 +447,24 @@ $start_from = ($page-1) * $item_per_page;
                             if(mysqli_num_rows($result_e) > 0)
                             {
                                 while ($row_e = mysqli_fetch_assoc($result_e))
-                                { ?>
-
+                                { 
+                                    $sql_user = "select * from tbl_users where user_id='".$row_e['fk_user_id']."'";
+                                    $results_user = $db->query($sql_user);
+                                    $row_user = mysqli_fetch_assoc($results_user); ?>
                                     <div class="large-4 columns dashboard_container">
                                         <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
                                         <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                             <ul class="small-block-grid-2 profile_info">
-                                                <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
-                                                <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                                    <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row_e['ervaring_title']; ?></p>
-                                                    <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row_e['fk_user_name']; ?></p>
-                                                    <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                                <li style="width: 12%; padding-bottom: 0; padding-right: 0;">
+                                                    <img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img">
                                                 </li>
-                                                <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row_e['ervaring_date']; ?></li>
-                                                <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
+                                                <li style="width:88%; padding-left: 10; padding-bottom: 0;">
+                                                    <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
+                                                    <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
+                                                    <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                                </li>
+                                                <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
+                                                <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
                                                     <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_e['ervaring_likes']; ?>
                                                     <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
                                                 </li>
@@ -317,7 +480,7 @@ $start_from = ($page-1) * $item_per_page;
                                 </div>
                 <?php       } 
                         }
-                        else if($filter_small == 'reacties')
+                        else if($filter == 'reacties')
                         {
                             $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from, $item_per_page";
                             $result_r = $db->query($sql_r);
@@ -325,11 +488,14 @@ $start_from = ($page-1) * $item_per_page;
                             if(mysqli_num_rows($result_r) > 0)
                             {
                                 while ($row_r = mysqli_fetch_assoc($result_r))
-                                { ?>
+                                { 
+                                    $sql_user = "select * from tbl_users where user_id='".$row_r['fk_user_id']."'";
+                                    $results_user = $db->query($sql_user);
+                                    $row_user = mysqli_fetch_assoc($results_user); ?>
                                     <div class="large-6 small-12 columns" style="padding-left: 5px; padding-right: 5px;">
-                                         <div class="panel" style="height: 150px; background-color: #ffffff; -webkit-border-radius: 3px; border: 1px solid #d8d8d8; margin-bottom: 10px; padding: 20px;">
-                                            <div class="large-2 columns" style="width: auto; height: auto;">
-                                                <img src="img/profile_img.png" class="reactie_profile_img"
+                                         <div class="panel profile_reactie_panel">
+                                            <div class="large-2 columns w_h_auto">
+                                                <img src="<?php echo $row_user['user_profile_path']; ?>" class="reactie_profile_img"
                                         <?php 
                                                 if ($row_r['fk_user_privilege'] == "true")
                                                 { ?>
@@ -342,11 +508,7 @@ $start_from = ($page-1) * $item_per_page;
                                             <div class="large-10 small-10 columns" style="padding-left: 0px;">
                                                 <ul style="text-decoration: none; list-style: none;">
                                                   <li><?php echo htmlspecialchars($row_r['fk_user_name']).' '.htmlspecialchars($row_r['reactie_date']); ?></li>
-                                                  <li style="margin-bottom: 5; 
-                                                             color: #a5b1b8; 
-                                                             font-family: 'Open Sans', sans-serif; 
-                                                             font-size: 16px; 
-                                                             font-style: italic;"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
+                                                  <li class="reactie_desc"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
                                                   </li>
                                                 </ul>
                                             </div>
@@ -365,21 +527,13 @@ $start_from = ($page-1) * $item_per_page;
                                                             $result_vt = $db->query($sql_vt);
                                                             $row_vt = mysqli_fetch_array($result_vt); ?>
 
-                                                                    <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
-                                                                            style="height: auto;
-                                                                                   width: auto;
-                                                                                   -webkit-border-radius: 3px;
-                                                                                   background-color: #e6e6e6;
-                                                                                   color: #7b868c;
-                                                                                   font-family: 'Open Sans', sans-serif;
-                                                                                   font-size: 14px;
-                                                                                   font-style: inherit;
-                                                                                   padding: 6px;" disabled>
-                                                                                   <i class="fi-check size-16"></i>
-                                                                                   <span style="margin-left: 5px; margin-right: 5px;">Helpful</span>
-                                                                                   <span style="-webkit-border-radius: 3px; background-color: #fafafa; padding: 3px; padding-top: 0px; padding-bottom: 0px;">
-                                                                                   <?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
-                                                                    </button>
+                                                            <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                                    style="background-color: #e6e6e6; color: #7b868c;" disabled>
+                                                                    <i class="fi-check size-16"></i>
+                                                                    <span class="reactie_helpful">Helpful</span>
+                                                                    <span class="reactie_vt_n">
+                                                                    <?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
+                                                            </button>
                                                         </li>
                                                     </ul>
                                             </div>
@@ -397,20 +551,22 @@ $start_from = ($page-1) * $item_per_page;
                     if(mysqli_num_rows($result_e) > 0)
                     {
                         while ($row_e = mysqli_fetch_assoc($result_e))
-                        { ?>
-
+                        { 
+                            $sql_user = "select * from tbl_users where user_id='".$row_e['fk_user_id']."'";
+                            $results_user = $db->query($sql_user);
+                            $row_user = mysqli_fetch_assoc($results_user); ?>
                             <div class="large-4 columns dashboard_container">
                                 <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                     <ul class="small-block-grid-2 profile_info">
-                                        <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
+                                        <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
                                         <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                            <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row_e['ervaring_title']; ?></p>
-                                            <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row_e['fk_user_name']; ?></p>
-                                            <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                            <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
+                                            <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
+                                            <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
                                         </li>
-                                        <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row_e['ervaring_date']; ?></li>
-                                        <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
+                                        <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
+                                        <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
                                             <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_e['ervaring_likes']; ?>
                                             <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
                                         </li>
@@ -435,7 +591,24 @@ $start_from = ($page-1) * $item_per_page;
     <script>
       $(document).foundation();
     </script>
-    
+
+    <!--char limit-->
+
+    <script src="js/char_limit.js"></script>
+    <script src="js/form_animations.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+          var elem_profile_description = $(".profile_description_chars");
+          $("#profile_description").limiter(500, elem_profile_description);
+
+          var elem_profile_location = $(".profile_location_chars");
+          $("#profile_location").limiter(100, elem_profile_location);
+
+        });
+    </script>
+
     <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->

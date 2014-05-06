@@ -16,9 +16,11 @@ if(!empty($username))
 
     $user_privilege = $row['user_privilege'];
     $userid = $row['user_id'];
+    $user_up_v = $row['user_ptn'];
 
     $_SESSION['userprivilege'] = $user_privilege;
     $_SESSION['userid'] = $userid;
+    $_SESSION['user_up_v'] = $user_up_v;
 }
 else if(empty($username))
 {

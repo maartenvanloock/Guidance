@@ -4,6 +4,8 @@ Class Reactie_vt {
 
 	private $m_iUser_id;
 	private $m_iReactie_id;
+	private $m_iUser_id_m;
+	private $m_iUser_up_v;
 
 	public function __set($p_sProperty, $p_vValue)
 	{
@@ -15,6 +17,14 @@ Class Reactie_vt {
 
 			case "Reactie_id":
 			$this->m_iReactie_id = $p_vValue;
+			break;
+
+			case "User_id_m":
+			$this->m_iUser_id_m = $p_vValue;
+			break;
+
+			case "User_up_v":
+			$this->m_iUser_up_v = $p_vValue;
 			break;
 		}	   
 	}
@@ -30,6 +40,14 @@ Class Reactie_vt {
 			case "Reactie_id": 
 			return $this->m_iReactie_id;
 			break;
+
+			case "User_id_m": 
+			return $this->m_iUser_id_m;
+			break;
+
+			case "User_up_v": 
+			return $this->m_iUser_up_v;
+			break;
         }
 	}
 
@@ -40,7 +58,10 @@ Class Reactie_vt {
 		$sql = "insert into tbl_reacties_vt(fk_user_id, fk_reactie_id) 
 				values ('$this->User_id', '$this->Reactie_id');
 
-				update tbl_reacties set reactie_likes = reactie_likes+1 where reactie_id = $this->Reactie_id;";
+				update tbl_reacties set reactie_likes = reactie_likes+1 where reactie_id = $this->Reactie_id;
+
+				update tbl_users set user_ptn = user_ptn+$this->User_up_v where user_id = $this->User_id_m;";
+
 		$db->multi_query($sql);
 	}
 	

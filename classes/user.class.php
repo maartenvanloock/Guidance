@@ -69,7 +69,7 @@ Class User {
 		require ("connection.class.php");
 
 		//$db = new Db();
-		$sql = "insert into tbl_users(user_name, user_profile_path, user_password, user_privilege) values ('$this->Username', ' ', '$this->Userpassword', '$this->Userprivilege')";
+		$sql = "insert into tbl_users(user_name, user_profile_path, user_password, user_privilege, user_ptn) values ('$this->Username', ' ', '$this->Userpassword', '$this->Userprivilege', 0)";
 		//$db->conn->query($sql);
 		$db->query($sql);
 	}

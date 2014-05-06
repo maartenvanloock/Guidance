@@ -9,6 +9,7 @@ require ("classes/ervaring_categorie.class.php");
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
 $userid = $_SESSION['userid'];
+$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
@@ -262,14 +263,14 @@ echo $result_color;*/
                       {?>
                       <dd><a href="ervaring.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Eigen ervaringen</a></dd>
+                             class="filter_ervaring_fi">Eigen ervaringen</a></dd>
                       <?php } ?>
                       <dd><a href="ervaring.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Beantwoord</a></dd>
+                             class="filter_ervaring_fi">Beantwoord</a></dd>
                       <dd><a href="ervaring.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;">Onbeantwoord</a></dd>
+                             class="filter_ervaring_fi">Onbeantwoord</a></dd>
                       <?php  
                           $sql = "select * from tbl_categorie_ervaringen";
                           $result = $db->query($sql);
@@ -312,13 +313,13 @@ echo $result_color;*/
 
                 <?php if($user_privilege == 'false')
                 {?>
-                <div class="large-3 columns" style="width: auto; height: auto; margin-right: 5px;">
+                <div class="large-3 columns btn_add">
                     <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
                 </div>
                 <?php } 
                 else
                 {?>
-                <div class="large-3 columns" style="width: auto; height: auto; margin-right: 5px;">
+                <div class="large-3 columns btn_add">
                     <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
                 </div>
                 <?php } ?>
@@ -328,7 +329,7 @@ echo $result_color;*/
     <!--filters en add ervaring small-->
 
     <div class="large-4 columns show-for-small-up hide-for-large-up">
-            <div class="large-12 columns" style="padding: 6px;">
+            <div class="large-12 columns s_pad">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
@@ -362,7 +363,7 @@ echo $result_color;*/
                 </form>
             </div>
 
-            <div class="large-12 columns" style="padding: 6px;">
+            <div class="large-12 columns s_pad">
           <?php if($user_privilege == 'false')
                 {?>
                   <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
@@ -530,19 +531,24 @@ echo $result_color;*/
               if(mysqli_num_rows($results) > 0)
               {
                 while ($row = mysqli_fetch_assoc($results))
-                { ?>
+                { 
+                  $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
+                  $results_user = $db->query($sql_user);
+                  $row_user = mysqli_fetch_assoc($results_user); ?>
                     <div class="large-4 columns dashboard_container">
                             <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
                             <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                 <ul class="small-block-grid-2 profile_info">
-                                    <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
-                                    <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                        <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row['ervaring_title']; ?></p>
-                                        <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row['fk_user_name']; ?></p>
-                                        <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."..."; ?></p>
+                                    <li style="width: 12%; padding-bottom: 0; padding-right: 0;">
+                                      <img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre">
                                     </li>
-                                    <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row['ervaring_date']; ?></li>
-                                    <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
+                                    <li style="width: 88%; padding-left: 10; padding-bottom: 0;">
+                                        <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row['ervaring_title']; ?></p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row['fk_user_name']; ?></p>
+                                        <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."..."; ?></p>
+                                    </li>
+                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['ervaring_date']; ?></li>
+                                    <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
                                         <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row['ervaring_likes']; ?>
                                         <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row['ervaring_reacties']; ?>
                                     </li>

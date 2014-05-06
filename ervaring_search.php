@@ -7,6 +7,7 @@ require ("classes/connection.class.php");
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
 $userid = $_SESSION['userid'];
+$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
@@ -142,20 +143,24 @@ if (isset($_GET["zoek_filter"]))
                         { 
                             $sql_s = "select * from tbl_ervaringen where ervaring_id='".$row['fk_ervaring_id']."'";
                             $results = $db->query($sql_s);
-                            $row_s = mysqli_fetch_assoc($results); ?>
+                            $row_s = mysqli_fetch_assoc($results); 
+
+                            $sql_user = "select * from tbl_users where user_id='".$row_s['fk_user_id']."'";
+                            $results_user = $db->query($sql_user);
+                            $row_user = mysqli_fetch_assoc($results_user);?>
 
                             <div class="large-4 columns dashboard_container">
                                 <a href="ervaring_details.php?id=<?php echo $row_s['ervaring_id']; ?>&categorie_name=<?php echo $row_s['fk_categorie_name']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_s['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                     <ul class="small-block-grid-2 profile_info">
-                                        <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
+                                        <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
                                         <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                            <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row_s['ervaring_title']; ?></p>
-                                            <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;"><?php echo $row_s['fk_user_name']; ?></p>
-                                            <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo htmlspecialchars(substr($row_s['ervaring_description'], 0, 118))."..."; ?></p>
+                                            <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_s['ervaring_title']; ?></p>
+                                            <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_s['fk_user_name']; ?></p>
+                                            <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_s['ervaring_description'], 0, 118))."..."; ?></p>
                                         </li>
-                                        <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;"><?php echo $row_s['ervaring_date']; ?></li>
-                                        <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
+                                        <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_s['ervaring_date']; ?></li>
+                                        <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
                                             <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_s['ervaring_likes']; ?>
                                             <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_s['ervaring_reacties']; ?>
                                         </li>
@@ -175,7 +180,6 @@ if (isset($_GET["zoek_filter"]))
       $(document).foundation();
     </script>
     
-    <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->
     <script src="js/foundation.min.js"></script> <!--script voor foundation-->

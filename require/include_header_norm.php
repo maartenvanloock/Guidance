@@ -59,9 +59,13 @@
 						</ul>-->
 						<li class="has-dropdown not-click show-for-medium-up">
 							<a style="padding-left: 20px; padding: 0px;">
-								<img src="img/profile_img.png" id="profile_img" 
+								<?php  
+								 	$sql_user = "select * from tbl_users where user_id='".$_SESSION['userid']."'";
+                                 	$results_user = $db->query($sql_user);
+                                 	$row_user = mysqli_fetch_assoc($results_user); ?>
+								<img src="<?php echo $row_user['user_profile_path']; ?>" id="profile_img" 
 								<?php 
-								if ($user_privilege == 'true')
+								if ($_SESSION['userprivilege'] == 'true')
 								{
 								?>
 									style="border: 3px solid #5db0c6;"

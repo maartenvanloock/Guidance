@@ -8,6 +8,7 @@ require ("classes/informatie.class.php");
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
 $userid = $_SESSION['userid'];
+$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 

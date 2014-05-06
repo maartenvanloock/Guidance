@@ -8,6 +8,7 @@ require ("classes/informatie.class.php");
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
 $userid = $_SESSION['userid'];
+$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
@@ -162,7 +163,7 @@ $start_from = ($page-1) * $item_per_page;
                                          } ?>>
                             <a href="algemene_info.php?filter=<?php echo $row['categorie_name']; ?>" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                                onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                               style="color: #7b868c; border-radius: 3px; padding-top: 5px; padding-bottom: 5px;"><?php echo $row['categorie_name']; ?></a></dd>
+                               class="filter_ervaring_fi"><?php echo $row['categorie_name']; ?></a></dd>
                 <?php  
                         }
                       } ?>
@@ -181,7 +182,7 @@ $start_from = ($page-1) * $item_per_page;
             </div>
 
             <div class="large-4 columns show-for-small-up hide-for-large-up">
-                <div class="large-12 columns" style="padding: 6px;">
+                <div class="large-12 columns s_pad">
                     <form action="" method="get" Onchange="this.form.submit()" id="categorie_filter" name="categorie_filter" style="margin-bottom: 0px;" data-abide>
                         <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
                             <option value="" disabled selected>Filter op categorie:</option>
