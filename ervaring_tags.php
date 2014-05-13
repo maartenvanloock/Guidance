@@ -175,7 +175,6 @@ $start_from = ($page-1) * $item_per_page;
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->
     <script src="js/foundation.min.js"></script> <!--script voor foundation-->
-    <script src="js/sign_up_select.js"></script> <!--script voor de keuze bij sign up-->
     <script src="js/foundation/foundation.js"></script> <!--script voor foundation-->
     <script src="js/foundation/foundation.abide.js"></script> <!--script voor form validation abide-->
 

@@ -40,8 +40,8 @@ if(isset($_POST['btnSubmitReactie']))
       $ervaring_date = $current_day.' '.$month_name;
       $r->Date = $ervaring_date;
 
-      $r->Ervaring_id = mysql_real_escape_string($_GET['id']);
-      $r->Vraag_id = 0;
+      $r->Vraag_id = mysql_real_escape_string($_GET['id']);
+      $r->Ervaring_id = 0;
       $r->Evenement_id = 0;
       $r->User_id = $userid;
       $r->User = $username;
@@ -266,7 +266,7 @@ if (isset($_POST['btnSubmitNewTags']))
     {
        for ($x = 0; $x < $tags_lim; $x++)
         {
-            $sql_tags = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
+            $sql_tags = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
             $result_q = $db->query($sql_tags);
         }
     }
@@ -300,7 +300,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
     {
        for ($x = 0; $x < $tags_lim; $x++)
         {
-            $sql_tags = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
+            $sql_tags = "insert into tbl_tags_vragen (tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
             $result_q = $db->query($sql_tags);
         }
     }
@@ -347,7 +347,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
             <div class="row">
                 <div class="large-8 columns">
                 <?php  
-                  $sql = "select * from tbl_ervaringen where ervaring_id='".$_GET['id']."'";
+                  $sql = "select * from tbl_vragen where vraag_id='".$_GET['id']."'";
                   $result = $db->query($sql);
                   $row = mysqli_fetch_assoc($result);
 
@@ -364,7 +364,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             <img src="<?php echo $row_user_details['user_profile_path']; ?>" style="width: 40px; height: 40px;" class="profile_img_details">
                             <?php  
 
-                                $sql_ervaring_vt = "select * from tbl_ervaringen_vt where fk_ervaring_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
+                                $sql_ervaring_vt = "select * from tbl_vragen_vt where fk_vraag_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
                                 $result_ervaring_vt = $db->query($sql_ervaring_vt);
                                 $row_ervaring_vt = mysqli_fetch_array($result_ervaring_vt);
                                                         
@@ -378,7 +378,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
 
                                         <span>
                                             <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
-                                            <p id="vt_ervaring"><?php echo $row['ervaring_likes']; ?></p>
+                                            <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
                                             <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
                                         </span>
                                     </form>
@@ -393,18 +393,18 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
 
                                       <span>
                                           <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
-                                          <p id="vt_ervaring"><?php echo $row['ervaring_likes']; ?></p>
+                                          <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
                                           <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
                                       </span>
                                   </form>
                           <?php } ?>
                             </li>
                             <li style="width: 90%; padding-left: 10px; padding-bottom: 0px;">
-                                <p class="ervaring_details_title" style="color: #7b868c;"><?php echo htmlspecialchars($row['ervaring_title']); ?></p>
+                                <p class="ervaring_details_title" style="color: #7b868c;"><?php echo htmlspecialchars($row['vraag_title']); ?></p>
                                 <p class="ervaring_details_username" style="color: #7b868c;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
-                                <p class="ervaring_details_desc" style="color: #a5b1b8;"><?php echo htmlspecialchars($row['ervaring_description']); ?></p>
+                                <p class="ervaring_details_desc" style="color: #a5b1b8;"><?php echo htmlspecialchars($row['vraag_description']); ?></p>
                                   <?php  
-                                      $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                                      $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
                                       $result_tags = $db->query($sql_tags);
 
                                       if(mysqli_num_rows($result_tags) > 0)
@@ -450,10 +450,10 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             </li>
 
                             <li style="width: 100%; padding: 0px;">
-                                <p class="ervaring_details_title"><?php echo htmlspecialchars($row['ervaring_title']); ?></p>
-                                <p class="ervaring_details_desc"><?php echo htmlspecialchars($row['ervaring_description']); ?></p>
+                                <p class="ervaring_details_title"><?php echo htmlspecialchars($row['vraag_title']); ?></p>
+                                <p class="ervaring_details_desc"><?php echo htmlspecialchars($row['vraag_description']); ?></p>
                                 <?php  
-                                    $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                                    $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
                                     $result_tags = $db->query($sql_tags); 
 
                                     if(mysqli_num_rows($result_tags) > 0)
@@ -493,14 +493,14 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
 
                         <?php  
 
-                            $sql_ervaring_vt = "select * from tbl_ervaringen_vt where fk_ervaring_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
-                            $result_ervaring_vt = $db->query($sql_ervaring_vt);
-                            $row_ervaring_vt = mysqli_fetch_array($result_ervaring_vt);
+                            $sql_vraag_vt = "select * from tbl_vragen_vt where fk_vraag_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
+                            $result_vraag_vt = $db->query($sql_vraag_vt);
+                            $row_vraag_vt = mysqli_fetch_array($result_vraag_vt);
                                                         
                             if ($row_ervaring_vt != false)
                             { ?>
                                 <div class="row n_marg_lr" style="margin-left: 0px; margin-right: 0px;">
-                                    <div class="large-12 small-12 columns" style="padding: 0px; margin-top: 0px; margin-top: 0px;">
+                                    <div class="large-12 small-12 columns" style="padding: 0px; margin-top: 20px; margin-top: 0px;">
                                         <form action="" method="post" class="text-center" style="margin: 0px; margin-top: 15px; margin-left: 5px; margin-right: 5px;" data-abide>
                                             <div class="large-12 columns hide">
                                                 <input type="text" placeholder="<?php echo htmlspecialchars($row['fk_user_id']); ?>" value="<?php echo htmlspecialchars($row['fk_user_id']); ?>" 
@@ -513,7 +513,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-2 small-2 columns text-center">
-                                                <p id="vt_ervaring" style="width: 100%;"><?php echo $row['ervaring_likes']; ?></p>
+                                                <p id="vt_ervaring" style="width: 100%;"><?php echo $row['vraag_likes']; ?></p>
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
@@ -527,7 +527,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             else
                             { ?>
                                 <div class="row" style="margin-left: 0px; margin-right: 0px;">
-                                    <div class="large-12 columns" style="padding: 0px; margin-top: 0px;">
+                                    <div class="large-12 columns" style="padding: 0px; margin-top: 20px;">
                                         <form action="" method="post" class="text-center" style="margin: 0px; margin-top: 15px; margin-left: 5px; margin-right: 5px;" data-abide>
                                             <div class="row hide">
                                                 <input type="text" placeholder="<?php echo htmlspecialchars($row['fk_user_id']); ?>" value="<?php echo htmlspecialchars($row['fk_user_id']); ?>" 
@@ -540,7 +540,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-2 small-2 columns text-center">
-                                                <p id="vt_ervaring" style="width: 100%;"><?php echo $row['ervaring_likes']; ?></p>
+                                                <p id="vt_ervaring" style="width: 100%;"><?php echo $row['vraag_likes']; ?></p>
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
@@ -604,7 +604,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
     
                     <div class="large-12 small-12 columns" style="padding: 0px;" id="reacties_update">
                         <?php 
-                            $sql = "select * from tbl_reacties where fk_ervaring_id='".$_GET['id']."' order by reactie_likes desc";
+                            $sql = "select * from tbl_reacties where fk_vraag_id='".$_GET['id']."' order by reactie_likes desc";
                             $result = $db->query($sql);
 
                             if(mysqli_num_rows($result) > 0)
@@ -616,6 +616,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                   $row_user = mysqli_fetch_assoc($results_user); ?>
                                     <div class="large-12 columns reactie">
                                         <div class="large-1 small-2 columns w_h_auto">
+
                                             <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>">
                                             <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="reactie_profile_img"
                                     <?php 
@@ -689,7 +690,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             else
                             { ?>
                                 <div class="row" style="text-align: center;">
-                                    <p>er zijn nog geen antwoorden geplaatst op deze ervaring</p>
+                                    <p>er zijn nog geen antwoorden geplaatst op deze vraag</p>
                                 </div>
                           <?php  
                             } ?>
@@ -698,17 +699,17 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
 
     <!--overzicht van relevante ervaringen large-->
 
-        <div class="large-4 small-12 columns show-for-large-up n_pad">
+        <div class="large-4 small-12 columns show-for-medium-up n_pad">
                 <div class="large-12 small-12 columns n_pad">
-                    <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;" class="show-for-medium-up">Relevante ervaringen</h4>
+                    <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Relevante Vragen</h4>
                 </div>
 
                 <?php 
-                    $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                    $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
                     $result_tags = $db->query($sql_tags);
                     $row_tags = mysqli_fetch_assoc($result_tags);
 
-                    $sql_find = "select distinct(fk_ervaring_id) from tbl_tags where tag_name='".$row_tags['tag_name']."' limit 3";
+                    $sql_find = "select distinct(fk_vraag_id) from tbl_tags_vragen where tag_name='".$row_tags['tag_name']."' limit 3";
                     $result_find = $db->query($sql_find);
                     
                     if(mysqli_num_rows($result_find) > 0)
@@ -716,7 +717,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                       while ($row_find = mysqli_fetch_assoc($result_find))
                       { 
 
-                          $sql_find_er = "select * from tbl_ervaringen where ervaring_id='".$row_find['fk_ervaring_id']."' order by ervaring_reacties desc";
+                          $sql_find_er = "select * from tbl_vragen where vraag_id='".$row_find['fk_vraag_id']."' order by vraag_reacties desc";
                           $result_find_er = $db->query($sql_find_er);
                           $row_find_er = mysqli_fetch_assoc($result_find_er);  
 
@@ -730,14 +731,14 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                       <ul class="small-block-grid-2 profile_info">
                                           <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
                                           <li class="p_l_t" style="width: 88%; padding-bottom: 0;">
-                                              <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['ervaring_title']; ?></p>
+                                              <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['vraag_title']; ?></p>
                                               <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_find_er['fk_user_name']; ?></p>
-                                              <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['ervaring_description'], 0, 118))."..."; ?></p>
+                                              <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['vraag_description'], 0, 118))."..."; ?></p>
                                           </li>
-                                          <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['ervaring_date']; ?></li>
+                                          <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['vraag_date']; ?></li>
                                           <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
-                                              <img src="img/icons/like.png" class="p_r_t"><?php echo $row_find_er['ervaring_likes']; ?>
-                                              <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_find_er['ervaring_reacties']; ?>
+                                              <img src="img/icons/like.png" class="p_r_t"><?php echo $row_find_er['vraag_likes']; ?>
+                                              <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_find_er['vraag_reacties']; ?>
                                           </li>
                                       </ul>
                                   </div></a>
@@ -748,7 +749,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                     else
                     {?>
                       <div class="large-12 small-12 columns" style="text-align: left; padding-left: 6px; padding-right: 0px;">
-                          <p>er zijn geen relevante ervaringen gevonden</p>
+                          <p>er zijn geen relevante vragen gevonden</p>
                       </div>
                     <?php 
                     } ?>
@@ -759,15 +760,15 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
         <div class="large-4 small-12 columns show-for-small-up hide-for-large-up">
                 <div class="large-12 small-12 columns n_pad text-center">
                     <p style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px; font-size: 20px; font-style: inherit; font-weight: 600;" 
-                       class="show-for-small-only">Relevante ervaringen</p>
+                       class="show-for-small-only">Relevante Vragen</p>
                 </div>
 
                 <?php 
-                    $sql_tags = "select * from tbl_tags where fk_ervaring_id='".$_GET['id']."'";
+                    $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
                     $result_tags = $db->query($sql_tags);
                     $row_tags = mysqli_fetch_assoc($result_tags);
 
-                    $sql_find = "select distinct(fk_ervaring_id) from tbl_tags where tag_name='".$row_tags['tag_name']."' limit 3";
+                    $sql_find = "select distinct(fk_vraag_id) from tbl_tags_vragen where tag_name='".$row_tags['tag_name']."' limit 3";
                     $result_find = $db->query($sql_find);
                     
                     if(mysqli_num_rows($result_find) > 0)
@@ -775,7 +776,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                       while ($row_find = mysqli_fetch_assoc($result_find))
                       { 
 
-                          $sql_find_er = "select * from tbl_ervaringen where ervaring_id='".$row_find['fk_ervaring_id']."' order by ervaring_reacties desc";
+                          $sql_find_er = "select * from tbl_vragen where vraag_id='".$row_find['fk_vraag_id']."' order by vraag_reacties desc";
                           $result_find_er = $db->query($sql_find_er);
                           $row_find_er = mysqli_fetch_assoc($result_find_er);  
 
@@ -784,19 +785,19 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                           $row_user = mysqli_fetch_assoc($results_user); ?>
 
                           <div class="large-12 small-12 columns dashboard_container">
-                                  <a href="ervaring_details.php?id=<?php echo $row_find_er['ervaring_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                  <a href="ervaring_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
                                           <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
                                           <li class="p_l_t" style="width:88%; padding-bottom: 0;">
-                                              <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['ervaring_title']; ?></p>
+                                              <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['vraag_title']; ?></p>
                                               <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_find_er['fk_user_name']; ?></p>
-                                              <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['ervaring_description'], 0, 118))."..."; ?></p>
+                                              <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['vraag_description'], 0, 118))."..."; ?></p>
                                           </li>
-                                          <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['ervaring_date']; ?></li>
+                                          <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['vraag_date']; ?></li>
                                           <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
-                                              <img src="img/icons/like.png" class="p_r_t"><?php echo $row_find_er['ervaring_likes']; ?>
-                                              <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_find_er['ervaring_reacties']; ?>
+                                              <img src="img/icons/like.png" class="p_r_t"><?php echo $row_find_er['vraag_likes']; ?>
+                                              <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_find_er['vraag_reacties']; ?>
                                           </li>
                                       </ul>
                                   </div></a>
@@ -807,7 +808,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                     else
                     {?>
                       <div class="large-12 small-12 columns" style="text-align: left; padding-left: 6px; padding-right: 0px;">
-                          <p>er zijn geen relevante ervaringen gevonden</p>
+                          <p>er zijn geen relevante vragen gevonden</p>
                       </div>
                     <?php 
                     } ?>

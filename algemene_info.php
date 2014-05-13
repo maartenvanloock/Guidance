@@ -211,7 +211,7 @@ $start_from = ($page-1) * $item_per_page;
                     </form>
                 </div>
 
-                <div class="large-12 columns" style="padding: 6px;">
+                <div class="large-12 columns s_pad">
                     <?php if($user_privilege == 'true')
                           {?>
                             <button type="submit" href="#" class="show_hide_informatie_form button [radius round] right nieuwe_informatieblok_s"><img src="img/icons/add.png" class="add_icon">Nieuwe informatieblok</button>
@@ -258,12 +258,12 @@ $start_from = ($page-1) * $item_per_page;
                         </div>
                     </div>
 
-                    <div class="large-8 columns left" style="margin-bottom: 20px;">
+                    <div class="large-8 columns left m_btm_tw">
                         <textarea id="informatieblok_description" name="informatieblok_description" placeholder="Geef hier alle informatie in" style="height: 100px; border-radius: 3px;"></textarea>
                         <small class="error">Geef de informatie in</small>
                     </div>
 
-                    <div class="large-4 columns" style="height: 100px; margin-bottom: 0px;">
+                    <div class="large-4 columns n_m_btm" style="height: 100px;">
                         <button type="submit" href="#" class="button [radius round]" id="btnSubmitInformatie" name="btnSubmitInformatie">Voeg informatieblok toe</button>
                     </div>
                 </form>
@@ -297,9 +297,9 @@ $start_from = ($page-1) * $item_per_page;
                 { ?>
                     <div class="large-4 columns dashboard_container">
                             <a href="algemene_info_details.php?id=<?php echo $row['informatieblok_id']; ?>" class="a_ervaring">
-                                <div class="panel ervaring_panel" style="margin-bottom: 10px;">
-                                    <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;"><?php echo $row['informatieblok_title']; ?></p>
-                                    <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;"><?php echo strip_tags(substr($row['informatieblok_description'], 0, 250))."..."; ?></p>      
+                                <div class="panel ervaring_panel m_btm_t">
+                                    <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row['informatieblok_title']; ?></p>
+                                    <p class="informatieblok_desc" style="color: #a5b1b8;"><?php echo strip_tags(substr($row['informatieblok_description'], 0, 250))."..."; ?></p>      
                                 </div>
                             </a>
                     </div>

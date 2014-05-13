@@ -403,6 +403,9 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 #slidingDiv_ervaringform
 {
     height: auto;
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 .show_hide_ervaring_form
 {
@@ -455,6 +458,9 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 #slidingDiv_categorieform
 {
     height: auto;
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 .show_hide_categorie_form
 {
@@ -490,12 +496,49 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	border-radius: 3px;
     height: 35px;
-    width: 120px;
+    width: auto;
     background-color: #5db0c6;
     padding: 10px;
     font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     font-style: inherit;
+    font-weight: 600;
+}
+
+/*-----------------------------nieuwe tags form-------------------------------------*/
+
+#slidingDiv_tagsform
+{
+    height: auto;
+}
+.show_hide_tags_form
+{
+    display:none;
+}
+#btnSubmitNewTags
+{
+	width: 100%; 
+	height: 37px; 
+	border-radius: 3px; 
+	background-color: #5db0c6; 
+	color: white; 
+	padding: 2px; 
+	font-family: 'Open Sans', sans-serif;
+    font-size: 16px; 
+    font-style: inherit; 
+    font-weight: 600;
+}
+#btnSubmitNewTagsSmall
+{
+	width: 100%; 
+	height: 37px; 
+	border-radius: 3px; 
+	background-color: #5db0c6; 
+	color: white; 
+	padding: 2px; 
+	font-family: 'Open Sans', sans-serif;
+    font-size: 16px; 
+    font-style: inherit; 
     font-weight: 600;
 }
 
@@ -541,7 +584,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	padding: 10px; 
 	background-color: #ffffff; 
-	-webkit-border-radius: 3px; 
+	border-radius: 3px; 
 	border: 1px solid #d8d8d8; 
 	margin-bottom: 10px;
 }
@@ -566,7 +609,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	height: auto;
     width: auto;
-    -webkit-border-radius: 3px;
+    border-radius: 3px;
     background-color: #e6e6e6;
     color: #7b868c;
     font-family: 'Open Sans', sans-serif;
@@ -701,7 +744,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 
 .sub-nav dt.active a, .sub-nav dd.active a, .sub-nav li.active a 
 {
-    -webkit-border-radius: 3px;
+    border-radius: 3px;
     border-radius: 3px;
     font-weight: normal;
     background: #5db0c6;
@@ -739,12 +782,31 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	font-style: inherit;
 	font-weight: 600;
 }
+.informatieblok_title
+{
+	padding-bottom: 0px; 
+	margin-bottom: 5px; 
+	color: #7b868c; 
+	font-family: 'Open Sans', sans-serif; 
+	font-weight: 600;
+}
+.informatieblok_desc
+{
+	margin-bottom: 5; 
+	color: #a5b1b8; 
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: italic;
+}
 
 /*-----------------------------nieuwe categorie form-------------------------------------*/
 
 #slidingDiv_informatieform
 {
     height: auto;
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 .show_hide_informatie_form
 {
@@ -816,10 +878,30 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	width: 40px;
 	height: 40px;
 }
+.profile_img_details_small
+{
+	border-radius: 30px;
+}
+.details_tags_small
+{
+	width: 100%; 
+	text-align: center;
+}
+.tag_panel_small
+{
+	margin-top: 5px; 
+	margin-bottom: 5px; 
+	margin-left: 5px; 
+	margin-right: 5px; 
+	border-radius: 3px; 
+	background-color: #5db0c6; 
+	padding: 5px; 
+	border: none;
+}
 .ervaring_detail_panel
 {
 	background-color: #ffffff; 
-	-webkit-border-radius: 3px; 
+	border-radius: 3px; 
 	border: 1px solid #d8d8d8;
 }
 .vote_ervaring_med
@@ -856,9 +938,10 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 .ervaring_details_small
 {
 	background-color: #ffffff; 
-	-webkit-border-radius: 3px; 
+	border-radius: 3px; 
 	border: 1px solid #d8d8d8; 
 	padding: 20px;
+	margin-bottom: 20px;
 }
 .profile_img_name
 {
@@ -905,7 +988,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	height: 50px;
     width: 100%;
-    -webkit-border-radius: 3px;
+    border-radius: 3px;
     background-color: #5db0c6;
     color: white;
     font-family: 'Open Sans', sans-serif;
@@ -1021,8 +1104,8 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	border-radius: 3px; 
 	background-color: #e6e6e6; 
 	padding: 7px; 
-	padding-top: 3px;
-	padding-bottom: 3px;  
+	padding-top: 5px;
+	padding-bottom: 5px;  
 	margin-bottom: 0px;
     color: #7b868c;
 }
@@ -1045,7 +1128,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	height: 150px; 
 	background-color: #ffffff; 
-	-webkit-border-radius: 3px; 
+	border-radius: 3px; 
 	border: 1px solid #d8d8d8; 
 	margin-bottom: 10px; 
 	padding: 20px;
@@ -1057,7 +1140,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 .reactie_vt_n
 {
-	-webkit-border-radius: 3px; 
+	border-radius: 3px; 
 	background-color: #fafafa; 
 	padding: 3px; 
 	padding-top: 0px; 
@@ -1117,6 +1200,21 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	margin-top: 10px; 
 	margin-bottom: 0px;
 }
+#n_posts
+{
+	margin-left: 0px;
+	padding-right: 20px; 
+	border-right: 3px solid #ffffff;
+}
+#n_reacties
+{
+	padding-right: 20px; 
+	border-right: 3px solid #ffffff;
+}
+#n_likes
+{
+	margin-right: 20px;
+}
 
 /*-----------------------------edit profile-------------------------------------*/
 
@@ -1145,7 +1243,215 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     padding: 5px;
     margin-bottom: 0px;
 }
+
+/*-----------------------------pads en margs-------------------------------------*/
+
 .n_pad
 {
 	padding: 0px;
+}
+.n_marg
+{
+	margin: 0px;
+}
+.p_t
+{
+	padding: 10px;
+}
+.m_t
+{
+	margin: 10px;
+}
+.p_tw
+{
+	padding: 20px;
+}
+.m_tw
+{
+	margin: 20px;
+}
+.p_th
+{
+	padding: 30px;
+}
+.m_th
+{
+	margin: 30px;
+}
+.p_ft
+{
+	padding: 40px;
+}
+.m_ft
+{
+	margin: 40px;
+}
+.n_p_btm
+{
+	padding-bottom: 0px;
+}
+.n_m_btm
+{
+	margin-bottom: 0px;
+}
+.n_p_tp
+{
+	padding-top: 0px;
+}
+.n_m_tp
+{
+	margin-top: 0px;
+}
+.n_p_l
+{
+	padding-left: 0px;
+}
+.n_m_l
+{
+	margin-left: 0px;
+}
+.n_p_r
+{
+	padding-right: 0px;
+}
+.n_m_r
+{
+	margin-right: 0px;
+}
+.p_btm_t
+{
+	padding-bottom: 10px;
+}
+.m_btm_t
+{
+	margin-bottom: 10px;
+}
+.p_btm_tw
+{
+	padding-bottom: 20px;
+}
+.m_btm_tw
+{
+	margin-bottom: 20px;
+}
+.m_btm_th
+{
+	margin-bottom: 30px;
+}
+.p_tp_t
+{
+	padding-top: 10px;
+}
+.m_tp_t
+{
+	margin-top: 10px;
+}
+.p_tp_tw
+{
+	padding-top: 20px;
+}
+.m_tp_tw
+{
+	margin-top: 20px;
+}
+.p_tp_th
+{
+	padding-top: 30px;
+}
+.m_tp_th
+{
+	margin-top: 30px;
+}
+.p_l_t
+{
+	padding-left: 10px;
+}
+.m_l_t
+{
+	margin-left: 10px;
+}
+.p_l_tw
+{
+	padding-left: 20px;
+}
+.m_l_tw
+{
+	margin-left: 20px;
+}
+.p_l_th
+{
+	padding-left: 30px;
+}
+.m_l_th
+{
+	margin-left: 30px;
+}
+.p_r_t
+{
+	padding-right: 10px;
+}
+.m_r_t
+{
+	margin-right: 10px;
+}
+.p_r_tw
+{
+	padding-right: 20px;
+}
+.m_r_tw
+{
+	margin-right: 20px;
+}
+.p_r_th
+{
+	padding-right: 30px;
+}
+.m_r_th
+{
+	margin-right: 30px;
+}
+.reveal-modal 
+{
+    max-width: 95%;
+}
+
+/*-----------------------------pads en margs-------------------------------------*/
+
+#btnSubmitVraag
+{
+	height: 47px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+}
+#vraag_title, #vraag_description
+{
+	margin-bottom: 0px;
+}
+#vraag_description
+{
+	resize: vertical; 
+	height: 100px; 
+	border-radius: 3px;
+}
+#slidingDiv_vraagform
+{
+    height: auto;
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.show_hide_vraag_form
+{
+    display:none;
+}
+.user_name_dropdown
+{
+	background-color: transparent !important;
 }

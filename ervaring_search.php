@@ -33,6 +33,8 @@ if (isset($_GET["zoek_filter"]))
         if (!empty($zoek_word)) 
         {
             $zoek_words_result[] = "tag_name='$zoek_word'";
+            $sql_search_tags = "insert into tbl_search_tags(search_tag, fk_user_id) values ('".$zoek_word."', '".$_SESSION['userid']."')";
+            $result_search_tags = $db->query($sql_search_tags);
         }
     }
 

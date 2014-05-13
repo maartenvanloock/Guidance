@@ -3,7 +3,7 @@
 session_start();
 
 require ("classes/connection.class.php");
-require ("classes/ervaring.class.php");
+require ("classes/vraag.class.php");
 require ("classes/ervaring_categorie.class.php");
 
 $username = $_SESSION['username'];
@@ -20,12 +20,12 @@ if(empty($username))
 
 /*---------------------aanmaken van een nieuwe ervaring----------------------*/
 
-if(isset($_POST['btnSubmitErvaring']))
+if(isset($_POST['btnSubmitVraag']))
 {
     try
     {
 
-    $tag_string = $_POST['ervaring_tags'];
+    $tag_string = $_POST['vraag_tags'];
     $tags = preg_split("/[\s,]+/", $tag_string);
     $result = array_unique($tags);
     $tags_lim = count($result);
@@ -43,22 +43,22 @@ if(isset($_POST['btnSubmitErvaring']))
       }
       else
       {
-        $e = new Ervaring();
-        $ervaring_title = mysql_real_escape_string($_POST['ervaring_title']);
-        $e->Title = htmlspecialchars($ervaring_title);
+        $vr = new Vraag();
+        $vraag_title = mysql_real_escape_string($_POST['vraag_title']);
+        $vr->Title = htmlspecialchars($vraag_title);
 
-        $ervaring_description = mysql_real_escape_string($_POST['ervaring_description']);
-        $e->Description = htmlspecialchars($ervaring_description);
+        $vraag_description = mysql_real_escape_string($_POST['vraag_description']);
+        $vr->Description = htmlspecialchars($vraag_description);
 
-        $e->User = $username;
-        $e->User_id = $userid;
+        $vr->User = $username;
+        $vr->User_id = $userid;
         
         $category_color = $_POST['categorie_name'];
         $categorie_arr = explode(",", $category_color, 2);
         $categorie_name = $categorie_arr[0];
         $categorie_color = $categorie_arr[1];
-        $e->Categorie_name = mysql_real_escape_string($categorie_name);
-        $e->Categorie_color = $categorie_color;
+        $vr->Categorie_name = mysql_real_escape_string($categorie_name);
+        $vr->Categorie_color = $categorie_color;
 
         $mons = array(1 => "Januari", 2 => "Februari", 3 => "Maart", 4 => "April", 5 => "Mei", 6 => "Juni", 7 => "Juli", 8 => "Augustus", 9 => "September", 10 => "October", 11 => "November", 12 => "December");
 
@@ -69,14 +69,14 @@ if(isset($_POST['btnSubmitErvaring']))
 
         $month_name = $mons[$month];
 
-        $ervaring_date = $current_day.' '.$month_name;
-        $e->Date = $ervaring_date;
+        $vraag_date = $current_day.' '.$month_name;
+        $vr->Date = $vraag_date;
 
-        $last_ervaring_id = $e->Save();
+        $last_vraag_id = $vr->Save();
 
         for ($x = 0; $x < $tags_lim; $x++)
         {
-            $sql = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$last_ervaring_id."', '".$userid."')";
+            $sql = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$last_vraag_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
       }
@@ -127,7 +127,7 @@ if (isset($_GET["filter"]))
 { 
     $filter  = $_GET["filter"]; 
 
-    $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
+    $sql = "select count(*) from tbl_vragen where fk_categorie_name = '$filter'";
     $result = $db->query($sql);
 }
 else if (isset($_GET["filter_e"]))
@@ -136,23 +136,23 @@ else if (isset($_GET["filter_e"]))
 
     if($filter_e == "eigen_ervaringen")
     {
-      $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
+      $sql = "select count(*) from tbl_vragen where fk_user_id=$userid";
       $result = $db->query($sql);
     }
     else if($filter_e == "beantwoord")
     {
-      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=1";
+      $sql = "select count(*) from tbl_vragen where vraag_solved=1";
       $result = $db->query($sql);
     }
     else if($filter_e == "onbeantwoord")
     {
-      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=0";
+      $sql = "select count(*) from tbl_vragen where vraag_solved=0";
       $result = $db->query($sql);
     } 
 }
 else
 {
-    $sql = "select count(*) from tbl_ervaringen";
+    $sql = "select count(*) from tbl_vragen";
     $result = $db->query($sql);
 }
 
@@ -172,15 +172,15 @@ if($pages > 1)
     {
         if (isset($_GET["filter"]))
         { 
-            $pagination .= '<li><a href="ervaring.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            $pagination .= '<li><a href="vraag.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
         }
         else if (isset($_GET["filter_e"]))
         {
-            $pagination .= '<li><a href="ervaring.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            $pagination .= '<li><a href="vraag.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
         }
         else
         {
-            $pagination .= '<li><a href="ervaring.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            $pagination .= '<li><a href="vraag.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
         }
     }
 
@@ -200,24 +200,6 @@ else
 }
 
 $start_from = ($page-1) * $item_per_page;
-
-/*---------------------aanmaken van filters----------------------*/
-
-/*if (isset($_GET["filter"]))
-{ 
-  $filter  = $_GET["filter"]; 
-} 
-else 
-{ 
-  
-}
-
-echo $filter;*/
-
-/*$sql_color = "select categorie_color from tbl_categorie_ervaringen where categorie_name = $row['fk_categorie_name']";
-$result_color = $db->query($sql_color);
-echo $result_color;*/
-                                  
 
 ?>
 
@@ -247,7 +229,7 @@ echo $result_color;*/
 
     <?php include("require/include_header_norm.php"); ?>
 
-    <!--filters en add ervaring-->
+    <!--filters en add nieuwe vraag-->
 
     <div class="row">
     <br/>
@@ -259,18 +241,18 @@ echo $result_color;*/
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="ervaring.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Eigen ervaringen</a></dd>
                       <?php } ?>
-                      <dd><a href="ervaring.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Beantwoord</a></dd>
-                      <dd><a href="ervaring.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Onbeantwoord</a></dd>
                       <?php  
-                          $sql = "select * from tbl_categorie_ervaringen";
+                          $sql = "select * from tbl_categorie_vragen";
                           $result = $db->query($sql);
 
                           if(mysqli_num_rows($result) > 0)
@@ -287,7 +269,7 @@ echo $result_color;*/
                                                 echo 'class="active"';
                                             } 
                                         } ?>>
-                              <a href="ervaring.php?filter=<?php echo $row['categorie_name']; ?>"
+                              <a href="vraag.php?filter=<?php echo $row['categorie_name']; ?>"
                                  onMouseOver="this.style.backgroundColor='<?php echo $row['categorie_color'] ?>', this.style.color='#ffffff'" 
                                  onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='<?php echo $row['categorie_color'] ?>'"
                                  <?php  
@@ -309,22 +291,22 @@ echo $result_color;*/
                     </dl>
                 </div>
 
-                <?php if($user_privilege == 'false')
-                {?>
-                <div class="large-3 columns btn_add">
-                    <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
-                </div>
-                <?php } 
+          <?php if($user_privilege == 'false')
+                { ?>
+                    <div class="large-3 columns btn_add">
+                        <button type="submit" href="#" class="show_hide_vraag_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe vraag</button>
+                    </div>
+          <?php } 
                 else
-                {?>
-                <div class="large-3 columns btn_add">
-                    <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
-                </div>
-                <?php } ?>
+                { ?>
+                    <div class="large-3 columns btn_add">
+                        <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
+                    </div>
+          <?php } ?>
             </div>
         </div>
 
-    <!--filters en add ervaring small-->
+    <!--filters en add vraag small-->
 
     <div class="large-4 columns show-for-small-up hide-for-large-up">
             <div class="large-12 columns s_pad">
@@ -337,7 +319,7 @@ echo $result_color;*/
 
                         <?php 
 
-                              $sql = "select * from tbl_categorie_ervaringen";
+                              $sql = "select * from tbl_categorie_vragen";
                               $result = $db->query($sql);
 
                               if(mysqli_num_rows($result) > 0)
@@ -364,10 +346,10 @@ echo $result_color;*/
             <div class="large-12 columns s_pad">
           <?php if($user_privilege == 'false')
                 {?>
-                  <button type="submit" href="#" class="show_hide_ervaring_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
+                  <button type="submit" href="#" class="show_hide_vraag_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
           <?php } 
                 else
-                {?>
+                { ?>
                   <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe categorie</button>
           <?php } ?>
             </div>
@@ -397,18 +379,18 @@ echo $result_color;*/
         </div>
     </div>
 
-    <!--nieuwe ervaring toevoegen-->
+    <!--nieuwe vraag toevoegen-->
 
-    <div class="row" id="slidingDiv_ervaringform">
+    <div class="row" id="slidingDiv_vraagform">
         <div class="large-12 small-12 columns ervaring_form">
                 <form action="" method="post" id="ervaring_form" data-abide>
                     <div class="large-12 small-12 columns">
-                        <h4>Voeg een nieuwe ervaring toe</h4>
+                        <h4>Stel een nieuwe vraag</h4>
                     </div>
 
                       <div class="large-8 columns">
-                        <input type="text" placeholder="Stel hier je hoofdvraag waar je graag een antwoord op wilt" id="ervaring_title" name="ervaring_title" required>
-                        <small class="error">Geef je hoofdvraag in</small>
+                        <input type="text" placeholder="Stel hier je hoofdvraag waar je graag een antwoord op wilt" id="vraag_title" name="vraag_title" required>
+                        <small class="error">Geef de hoofdvraag in waar je graag een antwoord op wil krijgen</small>
                         <ul class="chars_left">
                           <li><p class="title_chars"></p></li>
                           <li><p>characters left</p></li>
@@ -417,7 +399,7 @@ echo $result_color;*/
 
                       <div class="large-4 columns">
                           <select id="categorie_name" name="categorie_name" required>
-                              <option value="" disabled selected>Plaats ervaring in categorie:</option>
+                              <option value="" disabled selected>Plaats vraag in categorie:</option>
                               <?php require ("require/ervaring_categories_dropdown.php"); ?>
                           </select>
                       </div>
@@ -428,8 +410,8 @@ echo $result_color;*/
                       </div>
 
                       <div class="large-8 columns">
-                        <textarea type="text" placeholder="Geef hier wat meer informatie over je ervaring en je bijbehorende vraag" id="ervaring_description" name="ervaring_description" required></textarea>
-                        <small class="error">Geef wat informatie over je ervaring en bijbehorende vraag</small>
+                        <textarea type="text" placeholder="Geef hier wat meer informatie over je vraag" id="vraag_description" name="vraag_description" required></textarea>
+                        <small class="error">Geef wat informatie over je vraag, zo kan ze sneller beantwoord worden</small>
                         <ul class="chars_left">
                           <li><p class="description_chars"></p></li>
                           <li><p>characters left</p></li>
@@ -437,9 +419,9 @@ echo $result_color;*/
                       </div>
 
                       <div class="large-4 columns">
-                        <input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
+                        <input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="vraag_tags" name="vraag_tags" required>
                         <small class="error">Je mag maar 5 tags ingeven</small>
-                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitErvaring" name="btnSubmitErvaring">Voeg ervaring toe
+                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitVraag" name="btnSubmitVraag">Voeg vraag toe
                             </button>
                       </div>
                 </form>
@@ -483,7 +465,7 @@ echo $result_color;*/
 
     <?php echo $pagination; ?>
 
-    <!--overzicht van ervaringen-->
+    <!--overzicht van vragen-->
 
     <div class="row">
         <div class="large-12 small-12 columns ervaringen" id="results">
@@ -493,7 +475,7 @@ echo $result_color;*/
               if (isset($_GET["filter"]))
               { 
                 $filter  = $_GET["filter"];
-                $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                $sql = "select * from tbl_vragen where fk_categorie_name = '$filter' order by vraag_id desc LIMIT $start_from, $item_per_page";
                 $results = $db->query($sql); 
               } 
               else if (isset($_GET["filter_e"]))
@@ -502,27 +484,23 @@ echo $result_color;*/
 
                 if($filter_e == "eigen_ervaringen")
                 {
-                  $sql = "select * from tbl_ervaringen where fk_user_id=$userid order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_vragen where fk_user_id=$userid order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else if($filter_e == "beantwoord")
                 {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=1 order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_vragen where vraag_solved=1 order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else if($filter_e == "onbeantwoord")
                 {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=0 order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                  $sql = "select * from tbl_vragen where vraag_solved=0 order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
-                }
-                else
-                {
-
                 }
               }
               else 
               { 
-                $sql = "select * from tbl_ervaringen order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                $sql = "select * from tbl_vragen order by vraag_id desc LIMIT $start_from, $item_per_page";
                 $results = $db->query($sql);
               }
               
@@ -534,7 +512,7 @@ echo $result_color;*/
                   $results_user = $db->query($sql_user);
                   $row_user = mysqli_fetch_assoc($results_user); ?>
                     <div class="large-4 columns dashboard_container">
-                            <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
+                            <a href="vraag_details.php?id=<?php echo $row['vraag_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
                             <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                 <ul class="small-block-grid-2 profile_info">
                                     <li class="n_p_btm" style="width: 12%; padding-right: 0;">
@@ -543,32 +521,32 @@ echo $result_color;*/
                                     <li class="p_l_t" style="width: 88%; padding-bottom: 0;">
                                         <p class="ervaring_title_pre" style="color: #7b868c;">
                                             <?php 
-                                            if (strlen($row['ervaring_title']) > 70)
+                                            if (strlen($row['vraag_title']) > 70)
                                             {
-                                              echo htmlspecialchars(substr($row['ervaring_title'], 0, 70))."...";
+                                              echo htmlspecialchars(substr($row['vraag_title'], 0, 70))."...";
                                             }
                                             else
                                             {
-                                               echo htmlspecialchars($row['ervaring_title']);
+                                              echo htmlspecialchars($row['vraag_title']);
                                             } ?>
                                         </p>
-                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row['fk_user_name']; ?></p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
                                         <p class="ervaring_desc_pre" style="color: #a5b1b8;">
-                                            <?php
-                                            if (strlen($row['ervaring_description']) > 70)
+                                            <?php 
+                                            if (strlen($row['vraag_description']) > 118)
                                             {
-                                              echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."...";
+                                              echo htmlspecialchars(substr($row['vraag_description'], 0, 118))."...";
                                             }
                                             else
                                             {
-                                               echo htmlspecialchars($row['ervaring_description']);
+                                              echo htmlspecialchars($row['vraag_description']);
                                             } ?>
                                         </p>
                                     </li>
-                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['ervaring_date']; ?></li>
+                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['vraag_date']; ?></li>
                                     <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
-                                        <img src="img/icons/like.png" class="p_r_t"><?php echo $row['ervaring_likes']; ?>
-                                        <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row['ervaring_reacties']; ?>
+                                        <img src="img/icons/like.png" class="p_r_t"><?php echo $row['vraag_likes']; ?>
+                                        <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row['vraag_reacties']; ?>
                                     </li>
                                 </ul>
                             </div></a>
@@ -579,29 +557,10 @@ echo $result_color;*/
               else
               {?>
                 <div class="small-12 large-centered columns" style="margin-top: 25%; text-align: center;">
-                    <p>er zijn nog geen ervaringen toevoegd aan het platform</p>
+                    <p>er zijn nog geen vragen gesteld op het platform</p>
                 </div>
               <?php
               } ?>
-
-        <!--<div class="large-4 columns dashboard_container">
-                    <div class="panel ervaring_panel">
-                        <ul class="small-block-grid-2 profile_info">
-                            <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="img/profile_img.png" style="border-radius: 20px;"></li>
-                            <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                <p style="padding-bottom: 0px; margin-bottom: 5px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-weight: 600;">Waar kan ik een lijst terug vinden met alle beschikbare zorgdiensten?</p>
-                                <p style="padding-bottom: 10px; margin-bottom:0; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 14px;">Maarten Van Loock</p>
-                                <p style="margin-bottom: 5; color: #a5b1b8; font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: italic;">
-                                Onlangs had ik een probleem met het verzorgen van mijn dementerende vader. Ik kan de zorg niet langer alleen meer aan en heb dus heb hulp nodig bij dagelijse taken. Weet iemand waar ik een lijst met alle beschikbare zorgdiensten kan terug vinden?</p>
-                            </li>
-                            <li class="left" style="padding-bottom: 0; width: 100px; height: 25px; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">12 maart</li>
-                            <li class="right" style="padding-bottom:0; width: auto; color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
-                                <img src="img/icons/like.png" style="padding-right: 10px;">8
-                                <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;">15
-                            </li>
-                        </ul>
-                    </div>
-            </div>-->
         </div>
     </div>
     <br/>
@@ -646,10 +605,10 @@ echo $result_color;*/
         $(document).ready(function(){
 
           var elem_ervaring_title = $(".title_chars");
-          $("#ervaring_title").limiter(150, elem_ervaring_title);
+          $("#vraag_title").limiter(150, elem_ervaring_title);
 
           var elem_ervaring_description = $(".description_chars");
-          $("#ervaring_description").limiter(500, elem_ervaring_description);
+          $("#vraag_description").limiter(500, elem_ervaring_description);
 
           var elem_categorie_title = $(".categorie_title_chars");
           $("#categorie_title").limiter(50, elem_categorie_title);
@@ -657,7 +616,6 @@ echo $result_color;*/
         });
     </script>
 
-    <!--<script src="js/save_ervaring.js"></script>-->
     <script src="js/save_categorie_ervaring.js"></script>
     <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->

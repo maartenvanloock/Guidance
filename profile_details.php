@@ -3,6 +3,7 @@
 session_start();
 
 require ("classes/connection.class.php");
+require ("classes/user_details.class.php");
 
 $username = $_SESSION['username'];
 $userid = $_SESSION['userid'];
@@ -67,7 +68,7 @@ $pagination = '';
 if($pages > 1)
 {
     $pagination .= '<div class="row">
-                        <div class="large-12 columns">
+                        <div class="large-12 columns n_pad">
                             <div class="pagination-centered">
                                 <ul class="pagination">';
     for($i = 1; $i<=$pages; $i++)
@@ -101,14 +102,58 @@ $start_from = ($page-1) * $item_per_page;
 
 /*---------------------aanpassen van profile details---------------------*/
 
+$sql_user_details = "select * from tbl_user_details where fk_user_id = $userid limit 1";
+$results_user_details = $db->query($sql_user_details);
+$row_user_details = mysqli_fetch_assoc($results_user_details);
+
 if(isset($_POST['btnSubmitProfile']))
 {
-   $href_cropped_image = $_POST['image_hr'];
-   $img = preg_replace('#^data:image/[^;]+;base64,#', '', $href_cropped_image);
-   $movecroppedimage = file_put_contents('profile_imgs/profile_img_'.$userid.'.png', base64_decode($img));
+   try
+   {   
+       $profile_img_r = $_POST['image_hr'];
+       $profile_img = preg_replace('#^data:image/[^;]+;base64,#', '', $profile_img_r);
+       $profile_img_st = file_put_contents('profile_imgs/user_img_'.$userid.'.png', base64_decode($profile_img));
 
-   $sql = "update tbl_users set user_profile_path = 'profile_imgs/profile_img_$userid.png' where user_id = $userid";
-   $db->query($sql);
+       /*echo '<img src="user_img.png" id="profile_imgsmall_'.$userid.'.png" name="profile_imgsmall_'.$userid.'.png" width="40" height="40">';
+       echo '<img src="user_img.png" id="profile_imgsmall_'.$userid.'.png" name="profile_imgsmall_'.$userid.'r.png" width="80" height="80">';
+       echo '<img src="user_img.png" id="profile_imgsmall_'.$userid.'.png" name="profile_img_'.$userid.'r.png" width="400" height="400">';*/
+
+       if ($profile_img_st !== 3951)
+       {
+           $href_cropped_image = $_POST['image_hr'];
+           $img = preg_replace('#^data:image/[^;]+;base64,#', '', $href_cropped_image);
+           $movecroppedimage = file_put_contents('profile_imgs/profile_img_'.$userid.'.png', base64_decode($img));
+
+           $sql = "update tbl_users set user_profile_path = 'profile_imgs/profile_img_$userid.png' where user_id = $userid";
+           $db->query($sql);
+       }
+
+       $ud = new User_details();
+
+       $profile_zorg_voor = mysql_real_escape_string($_POST['profile_zorg_voor']);
+       $ud->Userzorgvoor = htmlspecialchars($profile_zorg_voor);
+
+       $profile_description = mysql_real_escape_string($_POST['profile_description']);
+       $ud->Userdesc = htmlspecialchars($profile_description);
+
+       $profile_location = mysql_real_escape_string($_POST['profile_location']);
+       $ud->Userwoonplaats = htmlspecialchars($profile_location);
+
+       $ud->Userid = htmlspecialchars($_SESSION['userid']);
+
+       if ($row_user_details != false)
+       {
+            $ud->Update();
+       }
+       else
+       {
+            $ud->Save();
+       }
+   }
+   catch (Exception $e)
+   {
+        $feedback = $e->getMessage();
+   }
 }
 
 ?>
@@ -143,8 +188,7 @@ if(isset($_POST['btnSubmitProfile']))
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    $('.cropimage')
-                        .attr('src', e.target.result);
+                    $('.cropimage').attr('src', e.target.result);
                 };
 
                 reader.readAsDataURL(input.files[0]);
@@ -174,8 +218,9 @@ if(isset($_POST['btnSubmitProfile']))
                   download.attr('href', img.getDataURL());
                   var href = $('#profile_image_cropped').attr('href');
                   $('#image_hr').val(href);
+                  $('#img_small').attr("src", href);
                 });
-          } );
+          });
 
           $('#select').on('change', function () {
               var size = parseInt(this.value);
@@ -193,14 +238,6 @@ if(isset($_POST['btnSubmitProfile']))
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
-
-    <div class="large-12 small-12 columns hide">
-        <form method="post" action="" Onchange="this.form.submit()" enctype="multipart/form-data"> 
-              <div class="large-4 columns">
-                <input type="file" Onchange="this.form.submit()" id="image" name="image">
-              </div>
-        </form>
-    </div>
 
     <!--profile details voor gebruiker-->
 
@@ -241,7 +278,7 @@ if(isset($_POST['btnSubmitProfile']))
                 </a>
             </div>
 
-            <div class="large-12 small-12 columns text-center" style="margin-top: 10px;">
+            <div class="large-12 small-12 columns text-center m_tp_t">
                     <i class="fi-star size-36" style="color: #ffffff;"></i>
                     <span id="profile_details_ptn" style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 28px; font-style: inherit; font-weight: 700; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
                     <?php echo $row['user_ptn']; ?></span>
@@ -249,11 +286,11 @@ if(isset($_POST['btnSubmitProfile']))
             </div>
     </div>
 
-    <div class="large-12 small-12 columns" style="background-color: #074e68; padding-bottom: 20px;">
+    <div class="large-12 small-12 columns p_btm_tw" style="background-color: #074e68;">
         <div class="row">
-            <div class="large-6 small-12 small-centered large-centered columns text-center" style="margin-top: 30px;">
+            <div class="large-12 small-12 small-centered large-centered columns n_pad text-center m_tp_th">
                 <ul class="inline-list text-center" style="display: inline-block;">
-                    <li style="padding-right: 20px; border-right: 3px solid #ffffff;">
+                    <li id="n_posts">
                         <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_posts = "select count(*) as posts from tbl_ervaringen where fk_user_id='".$userid."'";
@@ -263,10 +300,10 @@ if(isset($_POST['btnSubmitProfile']))
                                 echo $row_posts['posts'];
                             ?>
                         </h2>
-                        <h2 class="profile_details_smallinftext">posts</h2>
+                        <h2 class="profile_details_smallinftext">ervaringen</h2>
                     </li>
-                        
-                    <li style="padding-right: 20px; border-right: 3px solid #ffffff;">
+                    
+                    <li id="n_reacties">
                         <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_reacties = "select count(*) as reacties from tbl_reacties where fk_user_id='".$userid."'";
@@ -279,7 +316,7 @@ if(isset($_POST['btnSubmitProfile']))
                         <h2 class="profile_details_smallinftext">antwoorden</h2>
                     </li>
                         
-                    <li style="margin-right: 10px;">
+                    <li id="n_likes">
                         <h2 class="profile_details_smallinf">
                             <?php  
                                 $sql_reactielikes = "select count(reactie_likes) as reactielikes from tbl_reacties where fk_user_id='".$userid."'";
@@ -298,17 +335,29 @@ if(isset($_POST['btnSubmitProfile']))
 
     <!--aanpassen van profile details-->
     
-    <div class="large-12 small-12 columns">
-        <div id="edit_profile" class="reveal-modal large" style="padding: 40px;" data-reveal>
+        <div id="edit_profile" class="reveal-modal large" data-reveal>
             <div class="large-12 small-12 columns n_pad">
                 <h4>Edit profile</h4>
             </div>
 
             <form action="" method="post" data-abide>
-                <div class="large-12 small-12 columns n_pad" style="margin-bottom: 10px;">
+                <div class="large-12 small-12 columns n_pad m_btm_t">
                     <label style="margin-bottom: 10px;">CHANGE PROFILE PHOTO:</label>
                     <input type="file" name="image" onchange="readURL(this);">
-                    <img class="cropimage" alt="" src="img/user.png" cropwidth="200" cropheight="200"/>
+                    <!--<img class="cropimage" alt="" src="img/user.png" cropwidth="200" cropheight="200"/>-->
+                    <img class="cropimage" alt="" 
+                         src="<?php  
+                                $sql_user = "select * from tbl_users where user_id='".$_SESSION['userid']."'";
+                                $results_user = $db->query($sql_user);
+                                $row_user = mysqli_fetch_assoc($results_user);
+                                if ($row_user["user_profile_path"] !== 'img/user.png')
+                                {
+                                    echo $row_user['user_profile_path'];
+                                }
+                                else
+                                {
+                                    echo 'img/user.png';
+                                } ?>" cropwidth="200" cropheight="200"/>
 
                     <div class="results hide"> 
                         <b>X</b>: <span class="cropX"></span> 
@@ -322,18 +371,31 @@ if(isset($_POST['btnSubmitProfile']))
                     </div>
                 </div>    
 
-                <div class="large-12 small-12 columns n_pad hide">
+                <div class="large-12 small-12 columns n_pad">
                     <input type="text" id="image_hr" name="image_hr">
+                    <img src="#" id="img_small" width="40" height="40">
                 </div>
 
                 <div class="large-12 small-12 columns n_pad">
-                    <label style="margin-bottom: 10px;">IK ZORG VOOR:</label>
-                    <input type="text" id="profile_zorg_voor" name="profile_zorg_voor" placeholder="Ex: mijn dementerende vader">
+                    <label class="m_btm_t">IK ZORG VOOR:</label>
+                    <input type="text" id="profile_zorg_voor" name="profile_zorg_voor" 
+                           <?php
+
+                            if ($row_user_details["user_detail_zorgvoor"])
+                            {
+                                echo 'value="'.$row_user_details["user_detail_zorgvoor"].'"';
+                            }
+                            else
+                            {
+                                echo 'placeholder="Ex: mijn dementerende vader"';
+                            }
+
+                            ?> >
                 </div>
 
                 <div class="large-12 small-12 columns n_pad">
-                    <label style="margin-bottom: 10px;">ABOUT YOU</label>
-                    <textarea type="text" placeholder="Geef hier wat meer informatie over jezelf" id="profile_description" name="profile_description"></textarea>
+                    <label class="m_btm_t">OVER MIJ:</label>
+                    <textarea type="text" id="profile_description" name="profile_description"><?php echo trim($row_user_details["user_detail_desc"]); ?></textarea>
                     <ul class="chars_left">
                         <li><p class="profile_description_chars"></p></li>
                         <li><p>characters left</p></li>
@@ -341,8 +403,20 @@ if(isset($_POST['btnSubmitProfile']))
                 </div>
 
                 <div class="large-12 small-12 columns n_pad">
-                    <label style="margin-bottom: 10px;">LOCATIE</label>
-                    <input type="text" id="profile_location" name="profile_location" placeholder="Naam gemeente, Naam stad">
+                    <label class="m_btm_t">WOONPLAATS:</label>
+                    <input type="text" id="profile_location" name="profile_location" placeholder="Naam gemeente, Naam stad"
+                           <?php
+
+                                if ($row_user_details["user_detail_woonplaats"])
+                                {
+                                    echo 'value="'.$row_user_details["user_detail_woonplaats"].'"';
+                                }
+                                else
+                                {
+                                    echo 'placeholder="Naam gemeente, Naam stad"';
+                                }
+
+                                ?> >
                     <ul class="chars_left">
                         <li><p class="profile_location_chars"></p></li>
                         <li><p>characters left</p></li>
@@ -356,7 +430,6 @@ if(isset($_POST['btnSubmitProfile']))
 
             <a class="close-reveal-modal">&#215;</a>
         </div>
-    </div>
     
     <!--filters large and up-->
 
@@ -396,7 +469,7 @@ if(isset($_POST['btnSubmitProfile']))
     <!--filters small-->
 
     <div class="large-4 columns show-for-small-up hide-for-large-up">
-            <div class="large-12 columns n_pad">
+            <div class="large-12 columns n_pad" style="padding-left: 5px; padding-right: 5px;">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
@@ -431,7 +504,6 @@ if(isset($_POST['btnSubmitProfile']))
 
     <!--overzicht van ervaringen voor deze gebruiker-->
 
-    <div class="row">
         <div class="large-12 small-12 columns ervaringen" id="results_ervaringen">
             <?php
 
@@ -453,20 +525,20 @@ if(isset($_POST['btnSubmitProfile']))
                                     $row_user = mysqli_fetch_assoc($results_user); ?>
                                     <div class="large-4 columns dashboard_container">
                                         <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
-                                        <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                        <div class="panel ervaring_panel m_btm_t" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>;">
                                             <ul class="small-block-grid-2 profile_info">
-                                                <li style="width: 12%; padding-bottom: 0; padding-right: 0;">
+                                                <li class="n_p_btm n_p_r" style="width: 12%;">
                                                     <img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img">
                                                 </li>
-                                                <li style="width:88%; padding-left: 10; padding-bottom: 0;">
+                                                <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
                                                     <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
                                                     <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
                                                     <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
                                                 </li>
-                                                <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
-                                                <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
-                                                    <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_e['ervaring_likes']; ?>
-                                                    <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
+                                                <li class="left ervaring_date_pre n_p_btm" style="width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
+                                                <li class="right ervaring_likes_pre n_p_btm" style="width: auto;">
+                                                    <img src="img/icons/like.png" class="p_r_t"><?php echo $row_e['ervaring_likes']; ?>
+                                                    <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
                                                 </li>
                                             </ul>
                                         </div></a>
@@ -505,7 +577,7 @@ if(isset($_POST['btnSubmitProfile']))
                                                 >
                                             </div>
 
-                                            <div class="large-10 small-10 columns" style="padding-left: 0px;">
+                                            <div class="large-10 small-10 columns n_p_l">
                                                 <ul style="text-decoration: none; list-style: none;">
                                                   <li><?php echo htmlspecialchars($row_r['fk_user_name']).' '.htmlspecialchars($row_r['reactie_date']); ?></li>
                                                   <li class="reactie_desc"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
@@ -515,7 +587,7 @@ if(isset($_POST['btnSubmitProfile']))
 
                                             <div class="large-12 columns">
                                                     <ul class="small-block-grid-2" style="margin-bottom: 15px;">
-                                                        <li class="left" style="padding-bottom: 0; height: 30px; text-decoration: none;">
+                                                        <li class="left n_p_btm" style="height: 30px; text-decoration: none;">
                                                             <div class="row hide">
                                                                 <input type="text" placeholder="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" value="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" 
                                                                        id="reactie_id" name="reactie_id">
@@ -559,16 +631,16 @@ if(isset($_POST['btnSubmitProfile']))
                                 <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                     <ul class="small-block-grid-2 profile_info">
-                                        <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
-                                        <li style="width:88%; padding-left: 10; padding-bottom: 0;">
+                                        <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
+                                        <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
                                             <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
                                             <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
                                             <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
                                         </li>
                                         <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
                                         <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
-                                            <img src="img/icons/like.png" style="padding-right: 10px;"><?php echo $row_e['ervaring_likes']; ?>
-                                            <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
+                                            <img src="img/icons/like.png" class="p_r_t"><?php echo $row_e['ervaring_likes']; ?>
+                                            <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
                                         </li>
                                     </ul>
                                 </div></a>
@@ -582,7 +654,7 @@ if(isset($_POST['btnSubmitProfile']))
                         </div>
         <?php       } 
                 } ?>
-        </div>         
+        </div>       
     </div>
     <br/>
 
