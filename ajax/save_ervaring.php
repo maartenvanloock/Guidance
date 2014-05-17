@@ -1,6 +1,7 @@
 <?php  
     
     include_once("../classes/ervaring.class.php");
+    include_once("../classes/connection.class.php");
 
     $e = new Ervaring();
     $ervaring_title = mysql_real_escape_string($_POST['ervaring_title']);
@@ -9,8 +10,11 @@
     $ervaring_description = mysql_real_escape_string($_POST['ervaring_description']);
     $e->Description = htmlspecialchars($ervaring_description);
 
-    $e->User = mysql_real_escape_string($_POST['user_name']);
-    $e->User_id = mysql_real_escape_string($_POST['user_id']);
+    $e->User = $_POST['user_name']);
+    $e->User_id = $_POST['user_id']);
+
+    $tag_string = $_POST['ervaring_tags'];
+    $e->Tags = $tag_string;
       
     $category_color = $_POST['categorie_name'];
     $categorie_arr = explode(",", $category_color, 2);
@@ -31,6 +35,14 @@
     $ervaring_date = $current_day.' '.$month_name;
     $e->Date = $ervaring_date;
 
+    $sql = "select * from tbl_ervaringen order by ervaring_id desc limit 1";
+    $result = $db->query($sql);
+    $row = mysqli_fetch_assoc($result);
+
     $e->Save();
+
+    $last_ervaring_id = $row['ervaring_id']+1;
+
+    echo json_encode(array("ervaring_date" => $ervaring_date, "last_ervaring_id" => $last_ervaring_id, "categorie_color" => $categorie_color, "categorie_name_upd" => $categorie_name));
 
 ?>

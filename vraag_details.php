@@ -4,8 +4,8 @@ session_start();
 
 require ("classes/connection.class.php");
 require ("classes/reactie.class.php");
-require ("classes/reactie_vt.class.php");
-require ("classes/ervaring_vt.class.php");
+require ("classes/reactie_vt_vraag.class.php");
+require ("classes/vraag_vt.class.php");
 
 $username = $_SESSION['username'];
 $user_privilege = $_SESSION['userprivilege'];
@@ -57,7 +57,7 @@ if(isset($_POST['btnSubmitReactie']))
 
 /*---------------------aanmaken van een nieuwe reactie_vt----------------------*/
 
-if(isset($_POST['btnSubmitReactie_vt']))
+/*if(isset($_POST['btnSubmitReactie_vt']))
 {
     try
     {
@@ -115,21 +115,21 @@ if(isset($_POST['btnSubmitReactie_vt']))
     {
       $feedback = $e->getMessage();
     }
-}
+}*/
 
-/*---------------------aanmaken van een nieuwe ervaring_vt----------------------*/
+/*---------------------aanmaken van een nieuwe reactie_vt----------------------*/
 
-if(isset($_POST['btnSubmitErvaring_vt_up']))
+if(isset($_POST['btnSubmitReactie_vt_up']))
 {
     try
     {
-      $ervaring_vt_up = new Ervaring_vt();
-      $ervaring_vt_up->User_id = $userid;
-      $ervaring_vt_up->Ervaring_id = $_GET['id'];
-      $ervaring_vt_up->Ervaring_st = "up";
-      $ervaring_vt_up->User_id_m = $_POST['user_id_m'];
+      $reactie_vt_up = new Reactie_vt_vraag();
+      $reactie_vt_up->User_id = $userid;
+      $reactie_vt_up->Reactie_id = $_POST['reactie_id'];
+      $reactie_vt_up->Reactie_st = "up";
+      $reactie_vt_up->User_id_m = $_POST['user_id_m'];
 
-      $user_ervaring_up_val = ' ';
+      $user_reactie_up_val = ' ';
 
       $r1 = range(0, 249);
       $r2 = range(250, 499);
@@ -142,54 +142,54 @@ if(isset($_POST['btnSubmitErvaring_vt_up']))
       switch (true) 
       {
           case in_array($user_up_v, $r1) :
-               $user_ervaring_up_val = 5;
+               $user_reactie_up_val = 5;
           break;
 
           case in_array($user_up_v, $r2) :
-               $user_ervaring_up_val = 10;
+               $user_reactie_up_val = 10;
           break;
 
           case in_array($user_up_v, $r3) :
-               $user_ervaring_up_val = 15;
+               $user_reactie_up_val = 15;
           break;
 
           case in_array($user_up_v, $r4) :
-               $user_ervaring_up_val = 20;
+               $user_reactie_up_val = 20;
           break;
 
           case in_array($user_up_v, $r5) :
-               $user_ervaring_up_val = 25;
+               $user_reactie_up_val = 25;
           break;
 
           case in_array($user_up_v, $r6) :
-               $user_ervaring_up_val = 30;
+               $user_reactie_up_val = 30;
           break;
 
           case in_array($user_up_v, $r7) :
-               $user_ervaring_up_val = 35;
+               $user_reactie_up_val = 35;
           break;
       }
 
-      $ervaring_vt_up->User_up_v = $user_ervaring_up_val;
+      $reactie_vt_up->User_up_v = $user_reactie_up_val;
 
-      $ervaring_vt_up->Save();
+      $reactie_vt_up->Save();
     }
     catch (Exception $e)
     {
       $feedback = $e->getMessage();
     }
 }
-else if(isset($_POST['btnSubmitErvaring_vt_down']))
+else if(isset($_POST['btnSubmitReactie_vt_down']))
 {
     try
     {
-      $ervaring_vt_down = new Ervaring_vt();
-      $ervaring_vt_down->User_id = $userid;
-      $ervaring_vt_down->Ervaring_id = $_GET['id'];
-      $ervaring_vt_down->Ervaring_st = "down";
-      $ervaring_vt_down->User_id_m = $_POST['user_id_m'];
+      $reactie_vt_down = new Reactie_vt_vraag();
+      $reactie_vt_down->User_id = $userid;
+      $reactie_vt_down->Reactie_id = $_POST['reactie_id'];
+      $reactie_vt_down->Reactie_st = "down";
+      $reactie_vt_down->User_id_m = $_POST['user_id_m'];
 
-      $user_ervaring_down_val = ' ';
+      $user_reactie_down_val = ' ';
 
       $r1 = range(0, 249);
       $r2 = range(250, 499);
@@ -202,37 +202,160 @@ else if(isset($_POST['btnSubmitErvaring_vt_down']))
       switch (true) 
       {
           case in_array($user_up_v, $r1) :
-               $user_ervaring_down_val = 5;
+               $user_reactie_down_val = 5;
           break;
 
           case in_array($user_up_v, $r2) :
-               $user_ervaring_down_val = 10;
+               $user_reactie_down_val = 10;
           break;
 
           case in_array($user_up_v, $r3) :
-               $user_ervaring_down_val = 15;
+               $user_reactie_down_val = 15;
           break;
 
           case in_array($user_up_v, $r4) :
-               $user_ervaring_down_val = 20;
+               $user_reactie_down_val = 20;
           break;
 
           case in_array($user_up_v, $r5) :
-               $user_ervaring_down_val = 25;
+               $user_reactie_down_val = 25;
           break;
 
           case in_array($user_up_v, $r6) :
-               $user_ervaring_down_val = 30;
+               $user_reactie_down_val = 30;
           break;
 
           case in_array($user_up_v, $r7) :
-               $user_ervaring_down_val = 35;
+               $user_reactie_down_val = 35;
           break;
       }
 
-      $ervaring_vt_down->User_down_v = $user_ervaring_down_val;
+      $reactie_vt_down->User_down_v = $user_reactie_down_val;
 
-      $ervaring_vt_down->Save();
+      $reactie_vt_down->Save();
+    }
+    catch (Exception $e)
+    {
+      $feedback = $e->getMessage();
+    }
+}
+
+/*---------------------aanmaken van een nieuwe vraag_vt----------------------*/
+
+if(isset($_POST['btnSubmitVraag_vt_up']))
+{
+    try
+    {
+      $vraag_vt_up = new Vraag_vt();
+      $vraag_vt_up->User_id = $userid;
+      $vraag_vt_up->Vraag_id = $_GET['id'];
+      $vraag_vt_up->Vraag_st = "up";
+      $vraag_vt_up->User_id_m = $_POST['user_id_m'];
+
+      $user_vraag_up_val = ' ';
+
+      $r1 = range(0, 249);
+      $r2 = range(250, 499);
+      $r3 = range(500, 749);
+      $r4 = range(750, 999);
+      $r5 = range(1000, 1249);
+      $r6 = range(1250, 1499);
+      $r7 = range(1500, 5000);
+      
+      switch (true) 
+      {
+          case in_array($user_up_v, $r1) :
+               $user_vraag_up_val = 5;
+          break;
+
+          case in_array($user_up_v, $r2) :
+               $user_vraag_up_val = 10;
+          break;
+
+          case in_array($user_up_v, $r3) :
+               $user_vraag_up_val = 15;
+          break;
+
+          case in_array($user_up_v, $r4) :
+               $user_vraag_up_val = 20;
+          break;
+
+          case in_array($user_up_v, $r5) :
+               $user_vraag_up_val = 25;
+          break;
+
+          case in_array($user_up_v, $r6) :
+               $user_vraag_up_val = 30;
+          break;
+
+          case in_array($user_up_v, $r7) :
+               $user_vraag_up_val = 35;
+          break;
+      }
+
+      $vraag_vt_up->User_up_v = $user_vraag_up_val;
+
+      $vraag_vt_up->Save();
+    }
+    catch (Exception $e)
+    {
+      $feedback = $e->getMessage();
+    }
+}
+else if(isset($_POST['btnSubmitVraag_vt_down']))
+{
+    try
+    {
+      $vraag_vt_down = new Ervaring_vt();
+      $vraag_vt_down->User_id = $userid;
+      $vraag_vt_down->Vraag_id = $_GET['id'];
+      $vraag_vt_down->Vraag_st = "down";
+      $vraag_vt_down->User_id_m = $_POST['user_id_m'];
+
+      $user_vraag_down_val = ' ';
+
+      $r1 = range(0, 249);
+      $r2 = range(250, 499);
+      $r3 = range(500, 749);
+      $r4 = range(750, 999);
+      $r5 = range(1000, 1249);
+      $r6 = range(1250, 1499);
+      $r7 = range(1500, 5000);
+      
+      switch (true) 
+      {
+          case in_array($user_up_v, $r1) :
+               $user_vraag_down_val = 5;
+          break;
+
+          case in_array($user_up_v, $r2) :
+               $user_vraag_down_val = 10;
+          break;
+
+          case in_array($user_up_v, $r3) :
+               $user_vraag_down_val = 15;
+          break;
+
+          case in_array($user_up_v, $r4) :
+               $user_vraag_down_val = 20;
+          break;
+
+          case in_array($user_up_v, $r5) :
+               $user_vraag_down_val = 25;
+          break;
+
+          case in_array($user_up_v, $r6) :
+               $user_vraag_down_val = 30;
+          break;
+
+          case in_array($user_up_v, $r7) :
+               $user_vraag_down_val = 35;
+          break;
+      }
+
+      $vraag_vt_down->User_down_v = $user_vraag_down_val;
+
+      $vraag_vt_down->Save();
     }
     catch (Exception $e)
     {
@@ -323,6 +446,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css"/>
     <link rel="stylesheet" href="css/new.css"/>
+    <link rel="stylesheet" href="css/animate.min.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <script src="js/vendor/jquery.js"></script> <!--script voor foundation-->
     <script src="js/foundation/foundation.js"></script> <!--script voor foundation-->
@@ -377,9 +501,9 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                         </div>
 
                                         <span>
-                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
+                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
                                             <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
-                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
+                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
                                         </span>
                                     </form>
                           <?php }
@@ -392,9 +516,9 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                       </div>
 
                                       <span>
-                                          <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
+                                          <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
                                           <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
-                                          <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
+                                          <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
                                       </span>
                                   </form>
                           <?php } ?>
@@ -508,7 +632,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
-                                                  <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" 
+                                                  <button type="submit" class="btnSubmitVraag_vt_up" name="btnSubmitVraag_vt_up" 
                                                           style="width: 100%; background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
                                             </div>
 
@@ -517,7 +641,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
-                                                <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" 
+                                                <button type="submit" class="btnSubmitVraag_vt_down" name="btnSubmitVraag_vt_down" 
                                                         style="width: 100%; background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
                                             </div>
                                         </form>
@@ -535,7 +659,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
-                                                <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitErvaring_vt_up" 
+                                                <button type="submit" class="btnSubmitVraag_vt_up" name="btnSubmitVraag_vt_up" 
                                                         style="width: 100%; background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
                                             </div>
 
@@ -544,7 +668,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </div>
 
                                             <div class="large-5 small-5 columns" style="padding: 0px;">
-                                                <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitErvaring_vt_down" 
+                                                <button type="submit" class="btnSubmitVraag_vt_down" name="btnSubmitVraag_vt_down" 
                                                         style="width: 100%; background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
                                             </div>
                                         </form>
@@ -588,8 +712,9 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                     <div class="large-8 columns hide">
                                         <input type='text' id='user_name' name='user_name' value="<?php echo $username; ?>"/>
                                         <input type='text' id='user_id' name='user_id' value="<?php echo $userid; ?>"/>
+                                        <input type='text' id='user_profile' name='user_profile' value="<?php echo $row_user['user_profile_path']; ?>"/>
                                         <input type='text' id='user_privilege' name='user_privilege' value="<?php echo $user_privilege; ?>"/>
-                                        <input type='text' id='ervaring_id' name='ervaring_id' value="<?php echo $_GET['id']; ?>"/>
+                                        <input type='text' id='vraag_id' name='vraag_id' value="<?php echo $_GET['id']; ?>"/>
                                     </div>
 
                                     <div class="large-3 columns">
@@ -601,8 +726,8 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                     </div>
 
     <!--overzicht van comments-->
-    
-                    <div class="large-12 small-12 columns" style="padding: 0px;" id="reacties_update">
+
+                    <div class="large-12 small-12 columns" style="padding: 0px;">
                         <?php 
                             $sql = "select * from tbl_reacties where fk_vraag_id='".$_GET['id']."' order by reactie_likes desc";
                             $result = $db->query($sql);
@@ -636,15 +761,15 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             </ul>
                                         </div>
 
-                                        <div class="large-12 columns">
-                                            <form action="" method="post" data-abide>
-                                                <ul class="small-block-grid-2" style="margin-bottom: 15px;">
-                                                    <li class="left" style="padding-bottom: 0; height: 30px; text-decoration: none;">
+                                        <div class="large-12 small-12 columns">
+                                            <form action="" method="post" class="n_m_btm" data-abide>
+                                                <ul class="small-block-grid-2" style="margin-bottom: 0px;">
+                                                    <li class="left n_pad" style="padding-bottom: 0; height: 30px; text-decoration: none; width: 100%;">
                                                         <div class="row hide">
                                                             <input type="text" placeholder="<?php echo htmlspecialchars($row['reactie_id']); ?>" value="<?php echo htmlspecialchars($row['reactie_id']); ?>" 
                                                                    id="reactie_id" name="reactie_id">
                                                             <input type="text" placeholder="<?php echo htmlspecialchars($row['fk_user_id']); ?>" value="<?php echo htmlspecialchars($row['fk_user_id']); ?>" 
-                                                                   id="user_id_m" name="user_id_m">      
+                                                                   id="user_id_m" name="user_id_m">  
                                                         </div>
                                                         <?php  
                                                         $reactie_id = $row['reactie_id'];
@@ -655,30 +780,38 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                                         
                                                         if ($row_vt != false)
                                                         { ?>
-                                                            <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                            <!--<button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
                                                                     style="background-color: #e6e6e6; color: #7b868c;" disabled>
                                                                     <i class="fi-check size-16"></i>
                                                                     <span class="reactie_helpful">Helpful</span>
                                                                     <span class="reactie_vt_n">
-                                                                    <?php echo htmlspecialchars($row['reactie_likes']); ?></span>
-                                                            </button>
+                                                                    <?php /*echo htmlspecialchars($row['reactie_likes']);*/ ?></span>
+                                                            </button>-->
+
+                                                            <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
+                                                                <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
+                                                                <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;" disabled><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
+                                                                <li><button type="submit" class="btnSubmitReactie_vt_down" name="btnSubmitReactie_vt_down" style="background-color: none; color: #7b868c;" disabled><i class="fi-dislike size-18" style="margin-right: 10px;"></i>dislike</button></li>
+                                                            </ul>    
                                                   <?php 
                                                         }
                                                         else if (empty($row_vt['fk_reactie_id']))
                                                         { ?>
-                                                            <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                            <!--<button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
                                                                     style="background-color: #e6e6e6; color: #7b868c;">
                                                                     <i class="fi-check size-16"></i>
                                                                     <span class="reactie_helpful">Helpful</span>
                                                                     <span class="reactie_vt_n">
-                                                                    <?php echo htmlspecialchars($row['reactie_likes']); ?></span>
-                                                            </button>
+                                                                    <?php /*echo htmlspecialchars($row['reactie_likes']);*/ ?></span>
+                                                            </button>-->
+                                                            
+                                                            <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
+                                                                <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
+                                                                <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;"><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
+                                                                <li><button type="submit" class="btnSubmitReactie_vt_down" name="btnSubmitReactie_vt_down" style="background-color: none; color: #7b868c;"><i class="fi-dislike size-18" style="margin-right: 10px;"></i>dislike</button></li>
+                                                            </ul>
+                                                            
                                                   <?php } ?>          
-                                                    </li>
-
-                                                    <li class="right" style="padding-bottom:0; width: auto; text-decoration: none; padding-top: 3px;">
-                                                        <a href="#" style="color: #7b868c; font-family: 'Open Sans', sans-serif; font-size: 16px; font-weight: 600;">
-                                                        <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;">reply</a>
                                                     </li>
                                                 </ul>
                                             </form>
@@ -690,16 +823,18 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             else
                             { ?>
                                 <div class="row" style="text-align: center;">
-                                    <p>er zijn nog geen antwoorden geplaatst op deze vraag</p>
+                                    <p>er zijn nog geen antwoorden gegeven op deze vraag</p>
                                 </div>
                           <?php  
                             } ?>
                       </div>
+
+                      <div class="large-12 small-12 columns n_pad" id="reacties_update"></div>
                 </div>
 
     <!--overzicht van relevante ervaringen large-->
 
-        <div class="large-4 small-12 columns show-for-medium-up n_pad">
+        <div class="large-4 small-12 columns show-for-large-up n_pad">
                 <div class="large-12 small-12 columns n_pad">
                     <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Relevante Vragen</h4>
                 </div>
@@ -726,7 +861,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                           $row_user = mysqli_fetch_assoc($results_user); ?>
 
                           <div class="large-12 small-12 columns dashboard_container">
-                                  <a href="ervaring_details.php?id=<?php echo $row_find_er['ervaring_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                  <a href="vraag_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
                                           <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
@@ -785,7 +920,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                           $row_user = mysqli_fetch_assoc($results_user); ?>
 
                           <div class="large-12 small-12 columns dashboard_container">
-                                  <a href="ervaring_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
+                                  <a href="vraag_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
                                           <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
@@ -825,8 +960,74 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
       $(document).foundation();
     </script>
 
+    <!--aanmaken van een reactie-->
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+          $("#btnSubmitReactie").on("click", function(e){
+          
+              e.preventDefault();
+              
+              var reactie_description = $('#reactie_description').val();
+              var user_name = $('#user_name').val();
+              var user_id = $('#user_id').val();
+              var user_profile = $('#user_profile').val();
+              var user_privilege = $('#user_privilege').val();
+              var vraag_id = $('#vraag_id').val();
+
+              $.ajax({
+                  type: "POST",
+                  dataType: "json",
+                  url: "ajax/save_reactie_vraag.php",
+                  data: { reactie_description : reactie_description, user_name : user_name, user_id : user_id, user_privilege : user_privilege, vraag_id : vraag_id },
+                  cache: false,
+                  success: function(data) {
+
+                      var reactie_update = '<div class="large-12 columns reactie">'+
+                                              '<div class="large-1 small-2 columns w_h_auto">'+
+                                                  '<a href="profile_details.php?user='+user_id+'">'+
+                                                      '<img src="'+user_profile+'" width="40" height="40" class="reactie_profile_img">'+
+                                                  '</a>'+
+                                              '</div>'+
+
+                                              '<div class="large-11 small-10 columns n_pad_left">'+
+                                                  '<ul class="ul_reacties_evenementen">'+
+                                                      '<li>'+user_name+' - '+data.vraag_date+'</li>'+
+                                                      '<li class="hide">'+user_id+'</li>'+
+                                                      '<li class="reactie_desc">'+reactie_description+'</li>'+
+                                                  '</ul>'+
+                                              '</div>'+
+
+                                              '<div class="large-12 small-12 columns">'+
+                                                '<ul class="small-block-grid-2" style="margin-bottom: 15px;">'+
+                                                  '<li class="left" style="padding-bottom: 0; height: 30px; text-decoration: none;">'+
+                                                    '<button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                             style="background-color: #e6e6e6; color: #7b868c;">'+
+                                                             '<i class="fi-check size-16"></i>'+
+                                                             '<span class="reactie_helpful">'+'Helpful'+'</span>'+
+                                                             '<span class="reactie_vt_n">'+'0'+'</span>'+
+                                                    '</button>'+       
+                                                  '</li>'+
+                                                '</ul>'+
+                                              '</div>'+
+                                           '</div>';
+
+                      $('#reactie_description').html("");
+                      $('#reacties_update').prepend(reactie_update).addClass('animated bounceIn');
+                  },
+                  error: function() {
+                      $('#feedback_message').html("Er is en probleem opgetreden, hierdoor is je reactie is niet toegevoegd. Probeer het nog eens.");
+                      $('#feedback').slideDown();
+                  }
+              });
+
+          });
+      });
+    </script>
+
     <script src="js/form_animations.js"></script>
-    <script src="js/save_reactie.js"></script>
+    <!--<script src="js/save_reactie.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

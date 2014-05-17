@@ -298,11 +298,9 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 
 /*-----------------------------ervaring pre-------------------------------------*/
 
-.ervaring_profile_pre
+.ervaring_profile_pre, .vraag_profile_pre
 {
 	border-radius: 20px;
-	width: 40px;
-	height: 40px;
 }
 .ervaring_title_pre
 {
@@ -442,7 +440,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	border-radius: 3px; 
 	background-color: #ffffff; 
-	padding: 10px; 
+	padding: 10px;
 	margin-bottom: 20px; 
 	border: 1px solid #d8d8d8;
 }
@@ -617,6 +615,14 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     font-style: inherit;
     padding: 6px;
 }
+#profile_reactie_ervcomment
+{
+	border-radius: 20px; 
+	margin-top: 5px;
+	width: 40px; 
+	height: 40px; 
+	margin-left: 40%;
+}
 
 /*--------------------------- feedback ---------------------------*/
 
@@ -680,6 +686,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	border-radius: 20px; 
 	margin-top: 5px;
+	margin-left: 40%;
 }
 
 /*--------------------------- pagination ervaringen ---------------------------*/
@@ -1116,6 +1123,25 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	width: 28px;
 }
 
+/*-----------------------------vraag details vote-------------------------------------*/
+
+.btnSubmitVraag_vt_up, .btnSubmitVraag_vt_down
+{
+	border-radius: 3px; 
+	background-color: #e6e6e6; 
+	padding: 7px; 
+	padding-top: 5px;
+	padding-bottom: 5px;  
+	margin-bottom: 0px;
+    color: #7b868c;
+}
+#vt_ervaring
+{
+	padding: 6px; 
+	margin-bottom: 0px; 
+	width: 28px;
+}
+
 /*-----------------------------profile details-------------------------------------*/
 
 .profile_details_img
@@ -1126,12 +1152,11 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 .profile_reactie_panel
 {
-	height: 150px; 
-	background-color: #ffffff; 
+	padding: 20px; 
 	border-radius: 3px; 
-	border: 1px solid #d8d8d8; 
-	margin-bottom: 10px; 
-	padding: 20px;
+	background-color: #ffffff; 
+	border: solid 1px #d8d8d8; 
+	margin-bottom: 10px;
 }
 .reactie_helpful
 {
@@ -1214,6 +1239,14 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 #n_likes
 {
 	margin-right: 20px;
+}
+.filter_profile_fi
+{
+	color: #7b868c; 
+	border-radius: 3px; 
+	padding-top: 10px; 
+	padding-bottom: 10px;
+	margin-bottom: 0px;
 }
 
 /*-----------------------------edit profile-------------------------------------*/
@@ -1415,7 +1448,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     max-width: 95%;
 }
 
-/*-----------------------------pads en margs-------------------------------------*/
+/*-----------------------------nieuwe vraag form-------------------------------------*/
 
 #btnSubmitVraag
 {
@@ -1446,6 +1479,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     padding: 20px;
     padding-top: 0px;
     padding-bottom: 0px;
+    display: none;
 }
 .show_hide_vraag_form
 {
@@ -1455,3 +1489,330 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 {
 	background-color: transparent !important;
 }
+
+/*-----------------------------nieuw evenement form-------------------------------------*/
+
+.evenement_container
+{
+	height: auto !important;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+#btnSubmitEvenement
+{
+	height: 47px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #5db0c6;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-style: inherit;
+    font-weight: 600;
+    padding: 5px;
+}
+#slidingDiv_evenementform
+{
+    height: auto;
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+#evenement_description
+{
+	resize: vertical; 
+	height: 153px; 
+	border-radius: 3px;
+}
+#evenement_title, #evenement_description
+{
+	margin-bottom: 0px;
+}
+
+/*-----------------------------evenement-------------------------------------*/
+
+.google_map
+{
+	width: 100%; 
+	height: 200px; 
+	overflow: hidden; 
+	border-top-left-radius: 3px; 
+	border-top-right-radius: 3px;
+}
+.evenement_pre_panel
+{
+	border-bottom-left-radius: 3px; 
+	border-bottom-right-radius: 3px;
+}
+.evenement_pre_date_panel
+{
+	background-color: #5db0c6; 
+	color: #ffffff; 
+	height: auto; 
+	border-bottom-left-radius: 3px;
+}
+.evenement_pre_date_day, .evenement_pre_date_month
+{
+	color: #ffffff; 
+	font-family: 'Open Sans', sans-serif; 
+	font-style: inherit; 
+	font-weight: 600;
+}
+.evenement_pre_title_panel
+{
+	background-color: #ffffff; 
+	padding: 10px; 
+	height: auto;
+}
+.evenement_pre_title
+{
+	color: #7b868c; 
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 14px; 
+	font-style: inherit; 
+	font-weight: 400; 
+	margin-bottom: 5px; 
+	margin-top: 0px;
+}
+.evenement_pre_adress
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 14px; 
+	font-style: inherit; 
+	font-weight: 400; 
+	margin-bottom: 1px;
+}
+.evenement_pre_aanwezigen_panel
+{
+	background-color: #e6e6e6; 
+	height: auto; 
+	padding: 10px; 
+	border-bottom-right-radius: 3px;
+}
+.evenement_pre_nvisit, .evenement_pre_aanw
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-style: inherit; 
+	font-weight: 600;
+}
+
+/*-----------------------------evenement details-------------------------------------*/
+
+.evenement_panel
+{
+	border-radius: 3px;
+	background-color: #ffffff;
+	margin-bottom: 10px;
+	border: none;
+}
+.deelnemen_btn
+{
+	width: 190px;
+	height: 35px;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 4px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+}
+.deelnemen_btn_di
+{
+	width: 190px;
+	height: 35px;
+	border-radius: 3px;
+	background-color: #e6e6e6;
+	color: #7b868c;
+	padding: 4px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+}
+.deelnemen_btn_small
+{
+	width: 100%;
+	height: auto;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 4px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.deelnemen_btn_small_di
+{
+	width: 100%;
+	height: auto;
+	border-radius: 3px;
+	background-color: #e6e6e6;
+	color: #7b868c;
+	padding: 4px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.btn_add_deelnemen
+{
+	width: auto; 
+	height: auto; 
+}
+.evenement_icon
+{
+	padding-bottom: 4px;
+	padding-right: 10px;
+	padding-top: 2px;
+}
+#map-canvas
+{
+	width: 100%;
+	height: 400px;
+}
+.evenement_details_panel
+{
+	padding: 20px; 
+	background-color: #ffffff; 
+	border-bottom-left-radius: 3px; 
+	border-bottom-right-radius: 3px;
+}
+.evenement_details_date_panel
+{
+	background-color: #5db0c6; 
+	color: white; 
+	height: auto; 
+	border-radius: 3px; 
+	padding-left: 10px;
+}
+.evenement_details_day, .evenement_details_month
+{ 
+	font-family: 'Open Sans', sans-serif; 
+	font-style: inherit; 
+	font-weight: 600;
+	color: #ffffff;
+}
+.evenement_details_title_panel
+{
+	padding-left: 20px; 
+	margin-bottom: 10px;
+}
+.evenement_details_title
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 18px; 
+	font-style: inherit; 
+	font-weight: 500; 
+	margin-bottom: 10px;
+}
+.evenement_details_desc
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: italic;
+	margin-bottom: 0px;
+}
+.evenement_details_panel_small
+{
+	padding: 20px; 
+	background-color: #ffffff; 
+	border-bottom-left-radius: 3px; 
+	border-bottom-right-radius: 3px; 
+}
+.evenement_details_title_smallpanel
+{
+	background-color: #5db0c6; 
+	color: white; 
+	height: auto; 
+	border-radius: 3px; 
+	margin-bottom: 20px;
+}
+.evenement_details_title_smallday, .evenement_details_title_smallmonth
+{
+	color: #ffffff; 
+	font-family: 'Open Sans', sans-serif; 
+	font-style: inherit;
+	font-weight: 600;
+}
+#evenement_details_title_small
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: inherit; 
+	font-size: 18px; 
+	font-weight: 600; 
+	margin-bottom: 10px;
+}
+#evenement_details_description_small
+{
+	font-family: 'Open Sans', sans-serif; 
+	font-size: 16px; 
+	font-style: italic;
+}
+#profile_reactie_evcomment
+{
+	border-radius: 20px; 
+	margin-top: 5px;
+	width: 40px; 
+	height: 40px; 
+	margin-left: 40%;
+}
+#reactie_description
+{
+	resize: vertical; 
+	height: 38px; 
+	border-radius: 3px;
+}
+.ul_reacties_evenementen
+{
+	text-decoration: none; 
+	list-style: none; 
+	margin: 0px;
+}
+.btnSubmitReactie_vt_up
+{
+	border-radius: 3px; 
+	background-color: #e6e6e6; 
+	padding: 5px; 
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 15px;
+	padding-right: 15px;  
+	margin-bottom: 0px;
+    color: #7b868c;
+}
+.btnSubmitReactie_vt_down
+{
+	border-radius: 3px; 
+	background-color: #e6e6e6; 
+	padding: 5px; 
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 15px;
+	padding-right: 15px;  
+	margin-bottom: 0px;
+    color: #7b868c;
+}
+.btnSubmitReactie_vt_up:hover 
+{
+	background-color: #5db0c6;
+}
+.btnSubmitReactie_vt_down:hover 
+{
+	background-color: #5db0c6;
+}
+button:disabled 
+{
+	background-color: #e6e6e6; 
+}
+button[disabled]:hover 
+{
+  background-color: #e6e6e6; 
+}	

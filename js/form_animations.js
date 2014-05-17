@@ -19,6 +19,9 @@ $(document).ready(function(){
       $("#slidingDiv_vraagform").hide();
       $(".show_hide_vraag_form").show();
 
+      $("#slidingDiv_evenementform").hide();
+      $(".show_hide_evenement_form").show();
+
       $(".show_hide_ervaring_form").click(function(){
       $("#slidingDiv_ervaringform").slideToggle();
       });
@@ -41,6 +44,10 @@ $(document).ready(function(){
 
       $(".show_hide_vraag_form").click(function(){
       $("#slidingDiv_vraagform").slideToggle();
+      });
+
+      $(".show_hide_evenement_form").click(function(){
+      $("#slidingDiv_evenementform").slideToggle();
       });
 
   });

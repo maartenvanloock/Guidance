@@ -47,6 +47,11 @@ if (isset($_GET["filter"]))
         $sql = "select count(*) from tbl_ervaringen where fk_user_id='".$userid."'";
         $result = $db->query($sql);
     }
+    else if($filter == "vragen")
+    {
+        $sql = "select count(*) from tbl_vragen where fk_user_id='".$userid."'";
+        $result = $db->query($sql);
+    }
     else if($filter == "reacties")
     {
         $sql = "select count(*) from tbl_reacties where fk_user_id='".$userid."'";
@@ -371,7 +376,7 @@ if(isset($_POST['btnSubmitProfile']))
                     </div>
                 </div>    
 
-                <div class="large-12 small-12 columns n_pad">
+                <div class="large-12 small-12 columns n_pad hide">
                     <input type="text" id="image_hr" name="image_hr">
                     <img src="#" id="img_small" width="40" height="40">
                 </div>
@@ -433,71 +438,176 @@ if(isset($_POST['btnSubmitProfile']))
     
     <!--filters large and up-->
 
-    <div class="row">
-    <br/>
-        <div class="small-6 large-centered columns text-center show-for-large-up">
-            <dl class="sub-nav" style="display: inline-block;">
-                <dd <?php if (isset($_GET["filter"]))
-                          { 
-                                $categorie_filter_large = $_GET["filter"];
+    <?php  
 
-                                if($categorie_filter_large == 'ervaringen')
-                                {
-                                    echo 'class="active"';
-                                } 
-                          } ?> >
-                    <a href="profile_details.php?user=<?php echo $userid; ?>&filter=ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
-                       onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                       class="filter_ervaring_fi">ervaringen</a>
-                </dd>
-                <dd <?php if (isset($_GET["filter"]))
-                          { 
-                                $filter_large = $_GET["filter"];
+    if ($user_privilege == 'false')
+    { ?>
+        <div class="row">
+        <br/>
+            <div class="small-6 large-centered columns text-center show-for-large-up n_pad">
+                <dl class="sub-nav" style="display: inline-block; text-align: center;">
+                    <dd <?php if (isset($_GET["filter"]))
+                              { 
+                                    $filter_large = $_GET["filter"];
 
-                                if($filter_large == 'reacties')
-                                {
-                                    echo 'class="active"';
-                                } 
-                          } ?> >
-                    <a href="profile_details.php?user=<?php echo $userid; ?>&filter=reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
-                       onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                       class="filter_ervaring_fi">reacties</a>
-                </dd>
-            </dl>
-        </div>
+                                    if($filter_large == 'vragen')
+                                    {
+                                        echo 'class="active"';
+                                    } 
+                              } ?> >
+                        <a href="profile_details.php?user=<?php echo $userid; ?>&filter=vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                           onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                           class="filter_profile_fi">vragen</a>
+                    </dd>
+                    <dd <?php if (isset($_GET["filter"]))
+                              { 
+                                    $categorie_filter_large = $_GET["filter"];
+
+                                    if($categorie_filter_large == 'ervaringen')
+                                    {
+                                        echo 'class="active"';
+                                    } 
+                              } ?> >
+                        <a href="profile_details.php?user=<?php echo $userid; ?>&filter=ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                           onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                           class="filter_profile_fi">ervaringen</a>
+                    </dd>
+                    <dd <?php if (isset($_GET["filter"]))
+                              { 
+                                    $filter_large = $_GET["filter"];
+
+                                    if($filter_large == 'reacties')
+                                    {
+                                        echo 'class="active"';
+                                    } 
+                              } ?> >
+                        <a href="profile_details.php?user=<?php echo $userid; ?>&filter=reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                           onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                           class="filter_profile_fi">reacties</a>
+                    </dd>
+                </dl>
+            </div>
+    <?php
+    }
+    else
+    { ?>
+        <div class="row">
+        <br/>
+            <div class="small-6 large-centered columns text-center show-for-large-up n_pad">
+                <dl class="sub-nav" style="display: inline-block; text-align: center;">
+                    <dd <?php if (isset($_GET["filter"]))
+                              { 
+                                    $filter_large = $_GET["filter"];
+
+                                    if($filter_large == 'informatie')
+                                    {
+                                        echo 'class="active"';
+                                    } 
+                              } ?> >
+                        <a href="profile_details.php?user=<?php echo $userid; ?>&filter=informatie" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                           onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                           class="filter_profile_fi">informatie</a>
+                    </dd>
+                    <dd <?php if (isset($_GET["filter"]))
+                              { 
+                                    $filter_large = $_GET["filter"];
+
+                                    if($filter_large == 'reacties')
+                                    {
+                                        echo 'class="active"';
+                                    } 
+                              } ?> >
+                        <a href="profile_details.php?user=<?php echo $userid; ?>&filter=reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                           onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
+                           class="filter_profile_fi">reacties</a>
+                    </dd>
+                </dl>
+            </div>
+    <?php    
+    } ?>
 
     <!--filters small-->
 
-    <div class="large-4 columns show-for-small-up hide-for-large-up">
+    <?php  
+
+    if ($user_privilege == 'false')
+    { ?>
+
+        <div class="large-4 columns show-for-small-up hide-for-large-up">
             <div class="large-12 columns n_pad" style="padding-left: 5px; padding-right: 5px;">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
+                        <option value="vragen" 
+                            <?php if (isset($_GET["filter"]))
+                                  { 
+                                    $filter_small = $_GET["filter"];
+
+                                    if($filter_small == 'vragen')
+                                    {
+                                        echo 'selected';
+                                    } 
+                                  } ?> >vragen</option>
                         <option value="ervaringen" 
                             <?php if (isset($_GET["filter"]))
                                   { 
-                                        $filter_small = $_GET["filter"];
+                                    $filter_small = $_GET["filter"];
 
-                                        if($filter_small == 'ervaringen')
-                                        {
-                                            echo 'selected';
-                                        } 
+                                    if($filter_small == 'ervaringen')
+                                    {
+                                        echo 'selected';
+                                    } 
                                   } ?> >ervaringen</option>
                         <option value="reacties" 
                             <?php if (isset($_GET["filter"]))
                                   { 
-                                        $filter_small = $_GET["filter"];
+                                    $filter_small = $_GET["filter"];
 
-                                        if($filter_small == 'reacties')
-                                        {
-                                            echo 'selected';
-                                        } 
+                                    if($filter_small == 'reacties')
+                                    {
+                                        echo 'selected';
+                                    } 
                                   } ?> >reacties</option>
                     </select>
                 </form>
             </div>
-    </div>
+        </div>
 
+    <?php
+    }
+    else
+    { ?>
+        <div class="large-4 columns show-for-small-up hide-for-large-up">
+            <div class="large-12 columns n_pad" style="padding-left: 5px; padding-right: 5px;">
+                <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
+                    <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
+                        <option value="" disabled selected>Filter op categorie:</option>
+                        <option value="informatie" 
+                            <?php if (isset($_GET["filter"]))
+                                  { 
+                                    $filter_small = $_GET["filter"];
+
+                                    if($filter_small == 'informatie')
+                                    {
+                                        echo 'selected';
+                                    } 
+                                  } ?> >informatie</option>
+                        <option value="reacties" 
+                            <?php if (isset($_GET["filter"]))
+                                  { 
+                                    $filter_small = $_GET["filter"];
+
+                                    if($filter_small == 'reacties')
+                                    {
+                                        echo 'selected';
+                                    } 
+                                  } ?> >reacties</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    <?php
+    } ?>
     <!--pagination-->
 
     <?php echo $pagination; ?>
@@ -507,113 +617,153 @@ if(isset($_POST['btnSubmitProfile']))
         <div class="large-12 small-12 columns ervaringen" id="results_ervaringen">
             <?php
 
+            if ($user_privilege == 'false')
+            {
                 if (isset($_GET["filter"]))
                 { 
-                        $filter = $_GET["filter"];
+                    $filter = $_GET["filter"];
 
-                        if($filter == 'ervaringen')
+                    if($filter == 'ervaringen')
+                    {
+                        $sql_e = "select * from tbl_ervaringen where fk_user_id='".$userid."' order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                        $result_e = $db->query($sql_e);
+
+                        if(mysqli_num_rows($result_e) > 0)
                         {
-                            $sql_e = "select * from tbl_ervaringen where fk_user_id='".$userid."' order by ervaring_id desc LIMIT $start_from, $item_per_page";
-                            $result_e = $db->query($sql_e);
+                            while ($row_e = mysqli_fetch_assoc($result_e))
+                            { 
+                                $sql_user = "select * from tbl_users where user_id='".$row_e['fk_user_id']."'";
+                                $results_user = $db->query($sql_user);
+                                $row_user = mysqli_fetch_assoc($results_user); ?>
+                                <div class="large-4 columns dashboard_container">
+                                    <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
+                                    <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                        <ul class="small-block-grid-2 profile_info">
+                                            <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
+                                            <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
+                                                <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
+                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
+                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                            </li>
+                                            <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
+                                            <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                                <img src="img/icons/like.png" class="p_r_t"><?php echo $row_e['ervaring_likes']; ?>
+                                                <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
+                                            </li>
+                                        </ul>
+                                    </div></a>
+                                </div>
+            <?php           }
+                        }
+                        else
+                        { ?>
+                            <div class="small-12 large-centered columns" style="margin-top: 15%; text-align: center;">
+                                <p>Deze gebruiker heeft nog geen ervaringen geplaatst op het platform</p>
+                            </div>
+            <?php       } 
+                    }
+                    else if($filter == 'reacties')
+                    {
+                        $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from, $item_per_page";
+                        $result_r = $db->query($sql_r);
 
-                            if(mysqli_num_rows($result_e) > 0)
-                            {
-                                while ($row_e = mysqli_fetch_assoc($result_e))
-                                { 
-                                    $sql_user = "select * from tbl_users where user_id='".$row_e['fk_user_id']."'";
-                                    $results_user = $db->query($sql_user);
-                                    $row_user = mysqli_fetch_assoc($results_user); ?>
-                                    <div class="large-4 columns dashboard_container">
-                                        <a href="ervaring_details.php?id=<?php echo $row_e['ervaring_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
-                                        <div class="panel ervaring_panel m_btm_t" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>;">
-                                            <ul class="small-block-grid-2 profile_info">
-                                                <li class="n_p_btm n_p_r" style="width: 12%;">
-                                                    <img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img">
-                                                </li>
-                                                <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
-                                                    <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
-                                                    <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
-                                                    <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
-                                                </li>
-                                                <li class="left ervaring_date_pre n_p_btm" style="width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
-                                                <li class="right ervaring_likes_pre n_p_btm" style="width: auto;">
-                                                    <img src="img/icons/like.png" class="p_r_t"><?php echo $row_e['ervaring_likes']; ?>
-                                                    <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_e['ervaring_reacties']; ?>
+                        if(mysqli_num_rows($result_r) > 0)
+                        {
+                            while ($row_r = mysqli_fetch_assoc($result_r))
+                            { 
+                                $sql_user = "select * from tbl_users where user_id='".$row_r['fk_user_id']."'";
+                                $results_user = $db->query($sql_user);
+                                $row_user = mysqli_fetch_assoc($results_user); ?>
+                                <div class="large-6 small-12 columns" style="padding-left: 5px; padding-right: 5px;">
+                                    <div class="large-12 small-12 columns profile_reactie_panel">
+                                        <div class="large-2 small-2 columns w_h_auto n_pad">
+                                            <img src="<?php echo $row_user['user_profile_path']; ?>" class="reactie_profile_img"
+                                    <?php 
+                                            if ($row_r['fk_user_privilege'] == "true")
+                                            { ?>
+                                                style="border-radius: 20px; border: 2px solid #5db0c6;"
+                                    <?php 
+                                            } ?> >
+                                        </div>
+
+                                        <div class="large-10 small-10 columns n_p_l n_pad">
+                                            <ul style="text-decoration: none; list-style: none;">
+                                                <li><?php echo htmlspecialchars($row_r['fk_user_name']).' '.htmlspecialchars($row_r['reactie_date']); ?></li>
+                                                <li class="reactie_desc"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
                                                 </li>
                                             </ul>
-                                        </div></a>
-                                    </div>
-                <?php           }
-                            }
-                            else
-                            { ?>
-                                <div class="small-12 large-centered columns" style="margin-top: 25%; text-align: center;">
-                                    <p>er zijn geen ervaringen</p>
-                                </div>
-                <?php       } 
-                        }
-                        else if($filter == 'reacties')
-                        {
-                            $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from, $item_per_page";
-                            $result_r = $db->query($sql_r);
+                                        </div>
 
-                            if(mysqli_num_rows($result_r) > 0)
-                            {
-                                while ($row_r = mysqli_fetch_assoc($result_r))
-                                { 
-                                    $sql_user = "select * from tbl_users where user_id='".$row_r['fk_user_id']."'";
-                                    $results_user = $db->query($sql_user);
-                                    $row_user = mysqli_fetch_assoc($results_user); ?>
-                                    <div class="large-6 small-12 columns" style="padding-left: 5px; padding-right: 5px;">
-                                         <div class="panel profile_reactie_panel">
-                                            <div class="large-2 columns w_h_auto">
-                                                <img src="<?php echo $row_user['user_profile_path']; ?>" class="reactie_profile_img"
-                                        <?php 
-                                                if ($row_r['fk_user_privilege'] == "true")
-                                                { ?>
-                                                  style="border-radius: 20px; border: 2px solid #5db0c6;"
-                                        <?php 
-                                                } ?>
-                                                >
-                                            </div>
+                                        <div class="large-12 small-12 columns n_pad">
+                                            <ul class="small-block-grid-2">
+                                                <li class="left n_p_btm" style="height: 30px; text-decoration: none;">
+                                                    <div class="row hide">
+                                                        <input type="text" placeholder="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" value="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" 
+                                                               id="reactie_id" name="reactie_id">
+                                                    </div>
 
-                                            <div class="large-10 small-10 columns n_p_l">
-                                                <ul style="text-decoration: none; list-style: none;">
-                                                  <li><?php echo htmlspecialchars($row_r['fk_user_name']).' '.htmlspecialchars($row_r['reactie_date']); ?></li>
-                                                  <li class="reactie_desc"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
-                                                  </li>
-                                                </ul>
-                                            </div>
+                                            <?php  
+                                                    $reactie_id = $row_r['reactie_id'];
 
-                                            <div class="large-12 columns">
-                                                    <ul class="small-block-grid-2" style="margin-bottom: 15px;">
-                                                        <li class="left n_p_btm" style="height: 30px; text-decoration: none;">
-                                                            <div class="row hide">
-                                                                <input type="text" placeholder="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" value="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" 
-                                                                       id="reactie_id" name="reactie_id">
-                                                            </div>
-                                                            <?php  
-                                                            $reactie_id = $row_r['reactie_id'];
+                                                    $sql_vt = "select * from tbl_reacties_vt where fk_reactie_id='".$reactie_id."' and fk_user_id='".$userid."' limit 1";
+                                                    $result_vt = $db->query($sql_vt);
+                                                    $row_vt = mysqli_fetch_array($result_vt); ?>
 
-                                                            $sql_vt = "select * from tbl_reacties_vt where fk_reactie_id='".$reactie_id."' and fk_user_id='".$userid."' limit 1";
-                                                            $result_vt = $db->query($sql_vt);
-                                                            $row_vt = mysqli_fetch_array($result_vt); ?>
-
-                                                            <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
-                                                                    style="background-color: #e6e6e6; color: #7b868c;" disabled>
-                                                                    <i class="fi-check size-16"></i>
-                                                                    <span class="reactie_helpful">Helpful</span>
-                                                                    <span class="reactie_vt_n">
-                                                                    <?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                            </div>
+                                                    <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                            style="background-color: #e6e6e6; color: #7b868c;" disabled>
+                                                            <i class="fi-check size-16"></i>
+                                                            <span class="reactie_helpful">Helpful</span>
+                                                            <span class="reactie_vt_n">
+                                                            <?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
+                                                    </button>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
-                <?php           }
-                            } 
+                                </div>
+                <?php       }
+                        } 
+                    }
+                    else if($filter == 'vragen')
+                    {
+                        $sql_e = "select * from tbl_vragen where fk_user_id='".$userid."' order by vraag_id desc LIMIT $start_from, $item_per_page";
+                        $result_e = $db->query($sql_e);
+
+                        if(mysqli_num_rows($result_e) > 0)
+                        {
+                            while ($row_e = mysqli_fetch_assoc($result_e))
+                            { 
+                                $sql_user = "select * from tbl_users where user_id='".$row_e['fk_user_id']."'";
+                                $results_user = $db->query($sql_user);
+                                $row_user = mysqli_fetch_assoc($results_user); ?>
+
+                                <div class="large-4 columns dashboard_container">
+                                    <a href="vraag_details.php?id=<?php echo $row_e['vraag_id']; ?>&categorie_name=<?php echo $row_e['fk_categorie_name']; ?>" class="a_ervaring">
+                                    <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_e['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                        <ul class="small-block-grid-2 profile_info">
+                                            <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
+                                            <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
+                                                <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['vraag_title']; ?></p>
+                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
+                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['vraag_description'], 0, 118))."..."; ?></p>
+                                            </li>
+                                            <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['vraag_date']; ?></li>
+                                            <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                                <img src="img/icons/like.png" class="p_r_t"><?php echo $row_e['vraag_likes']; ?>
+                                                <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_e['vraag_reacties']; ?>
+                                            </li>
+                                        </ul>
+                                    </div></a>
+                                </div>
+                <?php       }
                         }
+                        else
+                        { ?>
+                            <div class="small-12 large-centered columns" style="margin-top: 15%; text-align: center;">
+                                <p>Deze gebruiker heeft nog geen vragen gesteld op het platform</p>
+                            </div>
+                <?php   } 
+                    }
                 } 
                 else
                 {
@@ -649,11 +799,138 @@ if(isset($_POST['btnSubmitProfile']))
                     }
                     else
                     { ?>
-                        <div class="small-12 large-centered columns" style="margin-top: 25%; text-align: center;">
-                            <p>er zijn geen ervaringen</p>
+                        <div class="small-12 large-centered columns" style="margin-top: 15%; text-align: center;">
+                            <p>Deze gebruiker heeft nog geen ervaringen geplaatst op het platform</p>
                         </div>
         <?php       } 
-                } ?>
+                }
+            }
+            else if ($user_privilege == 'true')
+            {
+                if (isset($_GET["filter"]))
+                {
+                    $filter = $_GET["filter"];
+
+                    if($filter == 'reacties')
+                    {
+                        $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from, $item_per_page";
+                        $result_r = $db->query($sql_r);
+
+                        if(mysqli_num_rows($result_r) > 0)
+                        {
+                            while ($row_r = mysqli_fetch_assoc($result_r))
+                            { 
+                                $sql_user = "select * from tbl_users where user_id='".$row_r['fk_user_id']."'";
+                                $results_user = $db->query($sql_user);
+                                $row_user = mysqli_fetch_assoc($results_user); ?>
+
+                                <div class="large-6 small-12 columns" style="padding-left: 5px; padding-right: 5px;">
+                                    <div class="large-12 small-12 columns profile_reactie_panel">
+                                        <div class="large-2 small-2 columns w_h_auto n_pad">
+                                            <img src="<?php echo $row_user['user_profile_path']; ?>" class="reactie_profile_img"
+                                    <?php 
+                                            if ($row_r['fk_user_privilege'] == "true")
+                                            { ?>
+                                                style="border-radius: 20px; border: 2px solid #5db0c6;"
+                                    <?php 
+                                            } ?> >
+                                        </div>
+
+                                        <div class="large-10 small-10 columns n_p_l n_pad">
+                                            <ul style="text-decoration: none; list-style: none;">
+                                                <li><?php echo htmlspecialchars($row_r['fk_user_name']).' '.htmlspecialchars($row_r['reactie_date']); ?></li>
+                                                <li class="reactie_desc"><?php echo htmlspecialchars($row_r['reactie_description']); ?>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="large-12 small-12 columns n_pad">
+                                            <ul class="small-block-grid-2">
+                                                <li class="left n_p_btm" style="height: 30px; text-decoration: none;">
+                                                    <div class="row hide">
+                                                        <input type="text" placeholder="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" value="<?php echo htmlspecialchars($row_r['reactie_id']); ?>" 
+                                                               id="reactie_id" name="reactie_id">
+                                                    </div>
+
+                                                    <?php  
+                                                        $reactie_id = $row_r['reactie_id'];
+
+                                                        $sql_vt = "select * from tbl_reacties_vt where fk_reactie_id='".$reactie_id."' and fk_user_id='".$userid."' limit 1";
+                                                        $result_vt = $db->query($sql_vt);
+                                                        $row_vt = mysqli_fetch_array($result_vt); ?>
+
+                                                        <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
+                                                                style="background-color: #e6e6e6; color: #7b868c;" disabled>
+                                                            <i class="fi-check size-16"></i>
+                                                            <span class="reactie_helpful">Helpful</span>
+                                                            <span class="reactie_vt_n"><?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
+                                                        </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                <?php       }
+                        }
+                    }
+                    else if ($filter == 'informatie')
+                    {
+                        $sql_info = "select * from tbl_informatieblok order by informatieblok_id desc LIMIT $start_from, $item_per_page";
+                        $results_info = $db->query($sql_info);
+              
+                        if(mysqli_num_rows($results_info) > 0)
+                        {
+                            while ($row_info = mysqli_fetch_assoc($results_info))
+                            { ?>
+                                <div class="large-4 columns dashboard_container">
+                                    <a href="algemene_info_details.php?id=<?php echo $row_info['informatieblok_id']; ?>" class="a_ervaring">
+                                        <div class="panel ervaring_panel m_btm_t">
+                                            <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row_info['informatieblok_title']; ?></p>
+                                            <p class="informatieblok_desc" style="color: #a5b1b8;"><?php echo strip_tags(substr($row_info['informatieblok_description'], 0, 250))."..."; ?></p>      
+                                        </div>
+                                    </a>
+                                </div>
+                <?php 
+                            } 
+                        }
+                        else
+                        { ?>
+                            <div class="small-6 large-centered columns" style="margin-top: 25%; text-align: center;">
+                                <p>Deze organisatie heeft nog geen informatie op het platform geplaatst</p>
+                            </div>
+                <?php
+                        } 
+                    }
+                }
+                else
+                {
+                    $sql_info = "select * from tbl_informatieblok order by informatieblok_id desc LIMIT $start_from, $item_per_page";
+                    $results_info = $db->query($sql_info);
+              
+                    if(mysqli_num_rows($results_info) > 0)
+                    {
+                        while ($row_info = mysqli_fetch_assoc($results_info))
+                        { ?>
+                            <div class="large-4 columns dashboard_container">
+                                <a href="algemene_info_details.php?id=<?php echo $row_info['informatieblok_id']; ?>" class="a_ervaring">
+                                    <div class="panel ervaring_panel m_btm_t">
+                                        <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row_info['informatieblok_title']; ?></p>
+                                        <p class="informatieblok_desc" style="color: #a5b1b8;"><?php echo strip_tags(substr($row_info['informatieblok_description'], 0, 250))."..."; ?></p>      
+                                    </div>
+                                </a>
+                            </div>
+                <?php 
+                        } 
+                    }
+                    else
+                    { ?>
+                        <div class="small-6 large-centered columns" style="margin-top: 25%; text-align: center;">
+                            <p>Deze organisatie heeft nog geen informatie op het platform geplaatst</p>
+                        </div>
+                <?php
+                    } 
+                }
+            } ?>
         </div>       
     </div>
     <br/>

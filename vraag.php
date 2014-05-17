@@ -24,8 +24,7 @@ if(isset($_POST['btnSubmitVraag']))
 {
     try
     {
-
-    $tag_string = $_POST['vraag_tags'];
+    /*$tag_string = $_POST['vraag_tags'];
     $tags = preg_split("/[\s,]+/", $tag_string);
     $result = array_unique($tags);
     $tags_lim = count($result);
@@ -42,7 +41,7 @@ if(isset($_POST['btnSubmitVraag']))
               </div>';
       }
       else
-      {
+      {*/
         $vr = new Vraag();
         $vraag_title = mysql_real_escape_string($_POST['vraag_title']);
         $vr->Title = htmlspecialchars($vraag_title);
@@ -52,6 +51,9 @@ if(isset($_POST['btnSubmitVraag']))
 
         $vr->User = $username;
         $vr->User_id = $userid;
+
+        $tag_string = $_POST['vraag_tags'];
+        $vr->Tags = $tag_string;
         
         $category_color = $_POST['categorie_name'];
         $categorie_arr = explode(",", $category_color, 2);
@@ -74,12 +76,12 @@ if(isset($_POST['btnSubmitVraag']))
 
         $last_vraag_id = $vr->Save();
 
-        for ($x = 0; $x < $tags_lim; $x++)
+        /*for ($x = 0; $x < $tags_lim; $x++)
         {
             $sql = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$last_vraag_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
-      }
+      }*/
     }
     catch (Exception $e)
     {
@@ -134,7 +136,7 @@ else if (isset($_GET["filter_e"]))
 {
     $filter_e = $_GET["filter_e"];
 
-    if($filter_e == "eigen_ervaringen")
+    if($filter_e == "eigen_vragen")
     {
       $sql = "select count(*) from tbl_vragen where fk_user_id=$userid";
       $result = $db->query($sql);
@@ -241,9 +243,9 @@ $start_from = ($page-1) * $item_per_page;
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="vraag.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter_e=eigen_vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Eigen ervaringen</a></dd>
+                             class="filter_ervaring_fi">Eigen vragen</a></dd>
                       <?php } ?>
                       <dd><a href="vraag.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
@@ -313,7 +315,7 @@ $start_from = ($page-1) * $item_per_page;
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
-                        <option value="eigen_ervaringen">Eigen ervaringen</option>
+                        <option value="eigen_vragen">Eigen ervaringen</option>
                         <option value="beantwoord">Beantwoord</option>
                         <option value="onbeantwoord">Onbeantwoord</option>
 
@@ -383,7 +385,7 @@ $start_from = ($page-1) * $item_per_page;
 
     <div class="row" id="slidingDiv_vraagform">
         <div class="large-12 small-12 columns ervaring_form">
-                <form action="" method="post" id="ervaring_form" data-abide>
+                <form action="" method="post" id="vraag_form" data-abide>
                     <div class="large-12 small-12 columns">
                         <h4>Stel een nieuwe vraag</h4>
                     </div>
@@ -407,6 +409,7 @@ $start_from = ($page-1) * $item_per_page;
                       <div class="large-4 columns hide">
                           <input type="text" id="user_name" name="user_name" value="<?php echo $username; ?>">
                           <input type="text" id="user_id" name="user_id" value="<?php echo $userid; ?>">
+                          <input type="text" id="user_profile" name="user_profile" value="<?php echo $row_user['user_profile_path']; ?>">
                       </div>
 
                       <div class="large-8 columns">
@@ -482,7 +485,7 @@ $start_from = ($page-1) * $item_per_page;
               { 
                 $filter_e  = $_GET["filter_e"];
 
-                if($filter_e == "eigen_ervaringen")
+                if($filter_e == "eigen_vragen")
                 {
                   $sql = "select * from tbl_vragen where fk_user_id=$userid order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
@@ -516,7 +519,7 @@ $start_from = ($page-1) * $item_per_page;
                             <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                 <ul class="small-block-grid-2 profile_info">
                                     <li class="n_p_btm" style="width: 12%; padding-right: 0;">
-                                      <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="ervaring_profile_pre">
+                                      <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
                                     </li>
                                     <li class="p_l_t" style="width: 88%; padding-bottom: 0;">
                                         <p class="ervaring_title_pre" style="color: #7b868c;">
@@ -530,7 +533,7 @@ $start_from = ($page-1) * $item_per_page;
                                               echo htmlspecialchars($row['vraag_title']);
                                             } ?>
                                         </p>
-                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gepost door: '.$row['fk_user_name']); ?></p>
                                         <p class="ervaring_desc_pre" style="color: #a5b1b8;">
                                             <?php 
                                             if (strlen($row['vraag_description']) > 118)
@@ -616,8 +619,16 @@ $start_from = ($page-1) * $item_per_page;
         });
     </script>
 
+    <script type="text/javascript">
+      $(document).ajaxStart(function() {
+          $('#ajax_load').show(); // show the gif image when ajax starts
+      }).ajaxStop(function() {
+          $('#ajax_load').hide(); // hide the gif image when ajax completes
+      });
+    </script>
+
+    <script src="js/save_vraag.js"></script>
     <script src="js/save_categorie_ervaring.js"></script>
-    <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

@@ -33,7 +33,7 @@
 						<li id="vragen_li"><a href="vraag.php"><img src="img/icons/vragen.png" id="vragen_icon" width="20" height="20" class="nav_icon">Vragen</a></li>
 	     				<li id="ervaringen_li"><a href="ervaring.php"><img src="img/icons/ervaringen.png" id="ervaringen_icon" width="19" height="20" class="nav_icon">Ervaringen</a></li>
 	     				<li id="algemene_info_li"><a href="algemene_info.php"><img src="img/icons/info.png" id="algemene_info_icon" width="16" height="20" class="nav_icon">Algemene info</a></li>
-	     				<li id="evenementen_li"><a href="#"><img src="img/icons/evenementen.png" width="19" id="evenementen_icon" height="20" class="nav_icon">Evenementen</a></li>
+	     				<li id="evenementen_li"><a href="evenement.php"><img src="img/icons/evenementen.png" width="19" id="evenementen_icon" height="20" class="nav_icon">Evenementen</a></li>
 	     				<li id="search_li"><a href="ervaring_search.php"><img src="img/icons/search.png" id="search_icon" width="20" height="20" class="nav_icon">Zoeken</a></li>
 	     				<!--<li class="has-form">
 	  						<div class="row collapse">
@@ -69,9 +69,13 @@
 								 	$sql_user = "select * from tbl_users where user_id='".$_SESSION['userid']."'";
                                  	$results_user = $db->query($sql_user);
                                  	$row_user = mysqli_fetch_assoc($results_user); ?>
+
+                                <form action="" method="post" class="hide" data-abide>
+                                	<input type="text" id="user_priv" name="user_priv" value="<?php echo $row_user['user_privilege']; ?>" required>
+                                </form>
 								<img src="<?php echo $row_user['user_profile_path']; ?>" width="35" height="35" id="profile_img" 
 								<?php 
-								if ($_SESSION['userprivilege'] == 'true')
+								if ($row_user['user_privilege'] == 'true')
 								{
 								?>
 									style="border: 3px solid #5db0c6;"
@@ -139,13 +143,26 @@
         $("#search_icon").attr("src", "img/icons/search.png");
     });
 
-    $("#user_dropdown a")
-    .mouseover(function () {
-        $("#profile_img").css("border", "solid 3px #ffffff");
-        $(".user_name_dropdown").css("color", "#ffffff");
-    })
-    .mouseout(function () {
-        $("#profile_img").css("border", "solid 3px #5db0c6");
-        $(".user_name_dropdown").css("color", "#7b868c");
-    });
+    if ($('#user_priv').val() == 'true')
+    {
+	    $("#user_dropdown a")
+	    .mouseover(function () {
+	        $("#profile_img").css("border", "solid 3px #ffffff");
+	        $(".user_name_dropdown").css("color", "#ffffff");
+	    })
+	    .mouseout(function () {
+	        $("#profile_img").css("border", "solid 3px #5db0c6");
+	        $(".user_name_dropdown").css("color", "#7b868c");
+	    });
+	}
+	else
+	{
+		$("#user_dropdown a")
+	    .mouseover(function () {
+	        $(".user_name_dropdown").css("color", "#ffffff");
+	    })
+	    .mouseout(function () {
+	        $(".user_name_dropdown").css("color", "#7b868c");
+	    });
+	}
 </script>

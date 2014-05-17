@@ -1,10 +1,10 @@
 <?php  
 
-Class Ervaring_vt {
+Class Vraag_vt {
 
 	private $m_iUser_id;
-	private $m_iErvaring_id;
-	private $m_sErvaring_st;
+	private $m_iVraag_id;
+	private $m_sVraag_st;
 	private $m_iUser_id_m;
 	private $m_iUser_up_v;
 	private $m_iUser_down_v;
@@ -18,12 +18,12 @@ Class Ervaring_vt {
 			$this->m_iUser_id = $p_vValue;
 			break;
 
-			case "Ervaring_id":
-			$this->m_iErvaring_id = $p_vValue;
+			case "Vraag_id":
+			$this->m_iVraag_id = $p_vValue;
 			break;
 
-			case "Ervaring_st":
-			$this->m_sErvaring_st = $p_vValue;
+			case "Vraag_st":
+			$this->m_sVraag_st = $p_vValue;
 			break;
 
 			case "User_id_m":
@@ -48,12 +48,12 @@ Class Ervaring_vt {
 			return $this->m_iUser_id;
 			break;
 
-			case "Ervaring_id": 
-			return $this->m_iErvaring_id;
+			case "Vraag_id": 
+			return $this->m_iVraag_id;
 			break;
 
-			case "Ervaring_st":
-			return $this->m_sErvaring_st;
+			case "Vraag_st":
+			return $this->m_sVraag_st;
 			break;
 
 			case "User_id_m":
@@ -74,21 +74,21 @@ Class Ervaring_vt {
 	{	
 		require ("connection.class.php");
 
-		if ($this->Ervaring_st == "up")
+		if ($this->Vraag_st == "up")
 		{
-			$sql = "insert into tbl_ervaringen_vt(fk_user_id, fk_ervaring_id) 
-					values ('$this->User_id', '$this->Ervaring_id');
+			$sql = "insert into tbl_vragen_vt (fk_user_id, fk_vraag_id) 
+					values ('$this->User_id', '$this->Vraag_id');
 
-					update tbl_ervaringen set ervaring_likes = ervaring_likes+1 where ervaring_id = $this->Ervaring_id;
+					update tbl_vragen set vraag_likes = vraag_likes+1 where vraag_id = $this->Vraag_id;
 
 					update tbl_users set user_ptn = user_ptn+$this->User_up_v where user_id = $this->User_id_m;";
 		}
-		else if ($this->Ervaring_st == "down")
+		else if ($this->Vraag_st == "down")
 		{
-			$sql = "insert into tbl_ervaringen_vt(fk_user_id, fk_ervaring_id) 
-					values ('$this->User_id', '$this->Ervaring_id');
+			$sql = "insert into tbl_vragen_vt (fk_user_id, fk_vraag_id) 
+					values ('$this->User_id', '$this->Vraag_id');
 
-					update tbl_ervaringen set ervaring_likes = ervaring_likes-1 where ervaring_id = $this->Ervaring_id;
+					update tbl_vragen set vraag_likes = vraag_likes-1 where vraag_id = $this->Vraag_id;
 
 					update tbl_users set user_ptn = user_ptn-$this->User_down_v where user_id = $this->User_id_m;";
 		}

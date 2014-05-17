@@ -25,7 +25,7 @@ if(isset($_POST['btnSubmitErvaring']))
     try
     {
 
-    $tag_string = $_POST['ervaring_tags'];
+    /*$tag_string = $_POST['ervaring_tags'];
     $tags = preg_split("/[\s,]+/", $tag_string);
     $result = array_unique($tags);
     $tags_lim = count($result);
@@ -42,7 +42,7 @@ if(isset($_POST['btnSubmitErvaring']))
               </div>';
       }
       else
-      {
+      {*/
         $e = new Ervaring();
         $ervaring_title = mysql_real_escape_string($_POST['ervaring_title']);
         $e->Title = htmlspecialchars($ervaring_title);
@@ -52,6 +52,9 @@ if(isset($_POST['btnSubmitErvaring']))
 
         $e->User = $username;
         $e->User_id = $userid;
+
+        $tag_string = $_POST['ervaring_tags'];
+        $e->Tags = $tag_string;
         
         $category_color = $_POST['categorie_name'];
         $categorie_arr = explode(",", $category_color, 2);
@@ -74,12 +77,12 @@ if(isset($_POST['btnSubmitErvaring']))
 
         $last_ervaring_id = $e->Save();
 
-        for ($x = 0; $x < $tags_lim; $x++)
+        /*for ($x = 0; $x < $tags_lim; $x++)
         {
             $sql = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$last_ervaring_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
-      }
+      }*/
     }
     catch (Exception $e)
     {
@@ -137,16 +140,6 @@ else if (isset($_GET["filter_e"]))
     if($filter_e == "eigen_ervaringen")
     {
       $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
-      $result = $db->query($sql);
-    }
-    else if($filter_e == "beantwoord")
-    {
-      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=1";
-      $result = $db->query($sql);
-    }
-    else if($filter_e == "onbeantwoord")
-    {
-      $sql = "select count(*) from tbl_ervaringen where ervaring_solved=0";
       $result = $db->query($sql);
     } 
 }
@@ -263,12 +256,7 @@ echo $result_color;*/
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Eigen ervaringen</a></dd>
                       <?php } ?>
-                      <dd><a href="ervaring.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
-                             onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Beantwoord</a></dd>
-                      <dd><a href="ervaring.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
-                             onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Onbeantwoord</a></dd>
+      
                       <?php  
                           $sql = "select * from tbl_categorie_ervaringen";
                           $result = $db->query($sql);
@@ -425,6 +413,7 @@ echo $result_color;*/
                       <div class="large-4 columns hide">
                           <input type="text" id="user_name" name="user_name" value="<?php echo $username; ?>">
                           <input type="text" id="user_id" name="user_id" value="<?php echo $userid; ?>">
+                          <input type="text" id="user_profile" name="user_profile" value="<?php echo $row_user['user_profile_path']; ?>">
                       </div>
 
                       <div class="large-8 columns">
@@ -503,16 +492,6 @@ echo $result_color;*/
                 if($filter_e == "eigen_ervaringen")
                 {
                   $sql = "select * from tbl_ervaringen where fk_user_id=$userid order by ervaring_id desc LIMIT $start_from, $item_per_page";
-                  $results = $db->query($sql);
-                }
-                else if($filter_e == "beantwoord")
-                {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=1 order by ervaring_id desc LIMIT $start_from, $item_per_page";
-                  $results = $db->query($sql);
-                }
-                else if($filter_e == "onbeantwoord")
-                {
-                  $sql = "select * from tbl_ervaringen where ervaring_solved=0 order by ervaring_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else
@@ -657,9 +636,7 @@ echo $result_color;*/
         });
     </script>
 
-    <!--<script src="js/save_ervaring.js"></script>-->
     <script src="js/save_categorie_ervaring.js"></script>
-    <!--<script type="text/javascript" src="js/pagination.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

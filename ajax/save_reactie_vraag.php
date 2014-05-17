@@ -14,14 +14,17 @@
 
     $month_name = $mons[$month];
 
-    $ervaring_date = $current_day.' '.$month_name;
-    $r->Ervaring_id = mysql_real_escape_string($_POST['ervaring_id']);
-    $r->Date = $ervaring_date;
-    $r->Evenement_id = 0;
+    $vraag_date = $current_day.' '.$month_name;
+    
+    $r->Vraag_id = mysql_real_escape_string($_POST['vraag_id']);
+    $r->Ervaring_id = 0;
+    $r->Evenements_id = 0;
+    $r->Date = $vraag_date;
     $r->User_id = mysql_real_escape_string($_POST['user_id']);
     $r->User = mysql_real_escape_string($_POST['user_name']);
     $r->User_privilege = mysql_real_escape_string($_POST['user_privilege']);
 
     $r->Save();
 
+    echo json_encode(array("vraag_date" => $vraag_date));
 ?>

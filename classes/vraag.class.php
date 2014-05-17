@@ -93,10 +93,21 @@ Class Vraag {
 
 		$sql = "insert into tbl_vragen(vraag_title, vraag_description, vraag_likes, vraag_reacties, vraag_solved, vraag_date, fk_user_id, fk_user_name, fk_categorie_name, fk_categorie_color) 
 				values ('$this->Title', '$this->Description', 0, 0, 0, '$this->Date', '$this->User_id', '$this->User', '$this->Categorie_name', '$this->Categorie_color')";
+
 		$db->query($sql);
 
 		$reactie_id_tags = mysqli_insert_id($db);
-    	return $reactie_id_tags;
+    	/*return $reactie_id_tags;*/
+
+    	$tags = preg_split("/[\s,]+/", $this->Tags);
+	    $result = array_unique($tags);
+	    $tags_lim = count($result);
+
+		for ($x = 0; $x < $tags_lim; $x++)
+	    {
+	        $sql = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$reactie_id_tags."', '".$this->User_id."')";
+	        $result_q = $db->query($sql);
+	    }
 	}
 }
 

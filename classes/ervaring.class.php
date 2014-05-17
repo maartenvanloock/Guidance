@@ -91,12 +91,23 @@ Class Ervaring {
 	{	
 		require ("connection.class.php");
 
-		$sql = "insert into tbl_ervaringen(ervaring_title, ervaring_description, ervaring_likes, ervaring_reacties, ervaring_solved, ervaring_date, fk_user_id, fk_user_name, fk_categorie_name, fk_categorie_color) 
+		$sql = "insert into tbl_ervaringen (ervaring_title, ervaring_description, ervaring_likes, ervaring_reacties, ervaring_solved, ervaring_date, fk_user_id, fk_user_name, fk_categorie_name, fk_categorie_color) 
 				values ('$this->Title', '$this->Description', 0, 0, 0, '$this->Date', '$this->User_id', '$this->User', '$this->Categorie_name', '$this->Categorie_color')";
+
 		$db->query($sql);
 
 		$reactie_id_tags = mysqli_insert_id($db);
-    	return $reactie_id_tags;
+    	/*return $reactie_id_tags;*/
+
+    	$tags = preg_split("/[\s,]+/", $this->Tags);
+    	$result = array_unique($tags);
+    	$tags_lim = count($result);
+
+    	for ($x = 0; $x < $tags_lim; $x++)
+        {
+            $sql_tags = "insert into tbl_tags (tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$reactie_id_tags."', '".$this->User_id."')";
+            $result_tags = $db->query($sql_tags);
+        }
 	}
 }
 
