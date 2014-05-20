@@ -23,7 +23,7 @@ if(isset($_POST['btnLogIn']))
     if($numRows == 1)
     {
         $_SESSION['username'] = $username;
-        header("Location:dashboard.php");
+        header("Location:vraag.php");
     }
     else
     {
@@ -39,7 +39,7 @@ if(isset($_POST['btnLogIn']))
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Log in</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/new_v1.css"/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -49,6 +49,13 @@ if(isset($_POST['btnLogIn']))
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation-->
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -57,7 +64,7 @@ if(isset($_POST['btnLogIn']))
 
     <?php include("require/include_header.php"); ?>
     <div class="row row_center">
-        <div class="small-6 large-centered columns" id="login_form">
+        <div class="large-6 small-8 large-centered small-centered columns" id="login_form">
             <h2>Log in</h2>
             
             <!--log in form-->
@@ -98,6 +105,8 @@ if(isset($_POST['btnLogIn']))
       $(document).foundation();
     </script>
     
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->
     <script src="js/foundation.min.js"></script> <!--script voor foundation-->

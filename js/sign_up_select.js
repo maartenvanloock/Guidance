@@ -1,11 +1,13 @@
 $(document).ready(function(e){
 
+	/*--large--*/
+
 	$('#mantelzorger_optie').css("background-color", "#5db0c6");
 	$('#mantelzorger').css("color", "white");
 	document.getElementById("mantelzorger_profile").src="img/mantelzorger_selected.png";
 	$('#user_privilege').val('false');
 
-	$('#mantelzorger').click(function(e){
+	$('#mantelzorger_optie').click(function(e){
 
 	   e.preventDefault();
 
@@ -22,7 +24,7 @@ $(document).ready(function(e){
 	   document.getElementById("zorgorganisatie_profile").src="img/zorgorganisatie_unselected.png";
 	});         
 
-	$('#zorgorganisatie').click(function(e){
+	$('#zorgorganisatie_optie').click(function(e){
 
 	   e.preventDefault();
 

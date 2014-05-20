@@ -43,7 +43,7 @@ if(isset($_POST['btnSubmitEditInformatie']))
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Algemene info details</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css"/>
     <link rel="stylesheet" href="css/new.css"/>
@@ -73,6 +73,12 @@ if(isset($_POST['btnSubmitEditInformatie']))
       });
     </script>-->
 
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -83,7 +89,7 @@ if(isset($_POST['btnSubmitEditInformatie']))
 
     <!--overzicht van informatieblok-->
 
-    <div class="row">
+    <div class="row p_tw">
     <br/>
     <br/>
 
@@ -215,6 +221,8 @@ if(isset($_POST['btnSubmitEditInformatie']))
       });
     </script>
 
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/save_informatieblok_ed.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->

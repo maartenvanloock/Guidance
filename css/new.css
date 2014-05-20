@@ -68,6 +68,7 @@ footer
 }
 
 /*-----------------------------top bar-------------------------------------*/
+
 .nav-wrapper, .top-bar, .top-bar-section *, .dashboard_wrap, .contain-to-grid, nav *, .top-bar-section ul, .right ul
 {
 	background-color: white !important;
@@ -129,6 +130,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 
 /*-----------------------------sign up-------------------------------------*/
+
 .row_center
 {
 	text-align: center;
@@ -139,7 +141,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 #signup_form
 {
 	background-color: #ffffff;
-	margin-top: 15%;
+	margin-top: 10%;
 	margin-left: 25%;
 	border-radius: 3px;
 	border: 1px solid #cecdcd;
@@ -218,6 +220,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 
 /*-----------------------------log in-------------------------------------*/
+
 #login_form
 {
 	background-color: #ffffff;
@@ -250,6 +253,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 
 /*-----------------------------dashboard mantelzorgers-------------------------------------*/
+
 .dashboard_container
 {
 	height: auto !important;
@@ -525,6 +529,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
     font-size: 16px; 
     font-style: inherit; 
     font-weight: 600;
+    margin-bottom: 0px;
 }
 #btnSubmitNewTagsSmall
 {
@@ -805,6 +810,12 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 	font-size: 16px; 
 	font-style: italic;
 }
+.algemene_info_container
+{
+	height: auto !important;
+	padding-right: 5px;
+	padding-left: 5px;
+}
 
 /*-----------------------------nieuwe categorie form-------------------------------------*/
 
@@ -859,6 +870,10 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 .size-24 
 { 
 	font-size: 24px; 
+}
+.size-28 
+{ 
+	font-size: 28px; 
 }
 .size-36 
 { 
@@ -1227,7 +1242,7 @@ box-shadow: 0px 10px 0px 1px #7b868c, 0px 16px 0px 1px #7b868c, 0px 22px 0px 1px
 }
 #n_posts
 {
-	margin-left: 0px;
+	margin-left: 15px;
 	padding-right: 20px; 
 	border-right: 3px solid #ffffff;
 }
@@ -1816,3 +1831,170 @@ button[disabled]:hover
 {
   background-color: #e6e6e6; 
 }	
+.title_small
+{
+	margin-top: 0px; 
+	margin-left: 5px; 
+	padding-top: 0px; 
+	font-size: 20px; 
+	font-style: inherit; 
+	font-weight: 600;
+}
+.v_center 
+{
+  margin-top: 50px;
+}
+.dashboard_container_small
+{
+	height: auto !important;
+	padding-right: 0px;
+	padding-left: 0px;
+}
+#new_added_tags
+{
+	margin-bottom: 0px;
+}
+#BtnLogoutsmall
+{
+	float: left; 
+	background-color #ffffff; 
+	padding: 0px; 
+	margin: 0;
+	padding-left: 3%; 
+	padding-top: 3%; 
+	width: auto; 
+	height: auto;
+}
+#Btnsmallnohover:hover 
+{
+	background-color: #ffffff; 
+	background: #ffffff; 
+}
+#BtnUserprofilesmall
+{
+	float:right; 
+	background-color #ffffff; 
+	background: #ffffff; 
+	padding: 0px; 
+	margin: 0px; 
+	padding-right: 3%; 
+	padding-top: 3%; 
+	width: auto; 
+	height: auto;
+}
+#categorie_name
+{
+	border-radius: 3px;
+}
+.select_round_c
+{
+	border-radius: 3px;
+}
+.btnBeantwoord
+{
+	width: 100%;
+	height: auto;
+	border-radius: 3px;
+	background-color: #5db0c6;
+	color: white;
+	padding: 10px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+}
+.btnBeantwoord:disabled 
+{
+	background-color: #5db0c6;
+	opacity: 1;
+}
+.btnBeantwoord[disabled]:hover 
+{
+	background-color: #5db0c6;
+	opacity: 1;
+}
+.ul_profile_details
+{
+	text-decoration: none; 
+	list-style: none; 
+	float: none;
+	text-align: center;
+	margin: 0px;
+	width: auto;
+	margin-right: 0px;
+	padding-right: 0px;
+	padding: 0px;
+}
+.ul_profile_details li
+{
+	display: inline-block;
+	margin-left: 10px;
+}
+.profile_details_icon
+{
+	margin-right: 15px;
+	width: auto;
+	height: auto;
+	color: #ffffff;
+}
+.profile_details_t
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	font-style: inherit;
+	font-weight: 600;
+	color: #ffffff;
+}
+.evenement_reactie_img
+{
+	margin-top: 5px;
+}
+
+/*-----------------------------media only-------------------------------------*/
+
+@media only screen and (max-width: 40em) { 
+
+.reactie_img_small_d
+{
+	padding-right: 5px;
+	padding-left: 5px;
+}
+.reactie_like_d
+{
+	padding-right: 0px;
+	padding-left: 10px;
+}
+.reactie_desc_d
+{
+	padding-left: 28px;
+	padding-right: 0px;
+}
+.reactie_desc_ul
+{
+	margin-left: 0px;
+}
+.title-area
+{
+	background-color: #d8d8d8;
+	background: #d8d8d8;
+}
+.evenement_reactie_img
+{
+	margin-top: 15px;
+}
+#login_form
+{
+	margin-top: 25%;
+	margin-left: 2%;
+}
+
+}
+
+@media only screen and (min-width: 64.063em) { 
+
+.dashboard_container
+{
+	min-height: 268px;
+}
+
+}

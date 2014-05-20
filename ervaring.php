@@ -25,24 +25,11 @@ if(isset($_POST['btnSubmitErvaring']))
     try
     {
 
-    /*$tag_string = $_POST['ervaring_tags'];
-    $tags = preg_split("/[\s,]+/", $tag_string);
-    $result = array_unique($tags);
-    $tags_lim = count($result);
+        $tag_string = $_POST['ervaring_tags'];
+        $tags = preg_split("/[\s,]+/", $tag_string);
+        $result = array_unique($tags);
+        $tags_lim = count($result);
 
-      if ($tags_lim > 5)
-      {
-        echo '<div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
-                  <div class="large-12 columns">
-                      <div data-alert="" class="alert-box alert radius">
-                          <p id="feedback_message" style="font-size: 16px; font-style: inherit; font-weight: 600;">je mag maar 5 tags toevoegen</p>
-                          <a class="close" href="#">×</a>
-                      </div>
-                  </div>
-              </div>';
-      }
-      else
-      {*/
         $e = new Ervaring();
         $ervaring_title = mysql_real_escape_string($_POST['ervaring_title']);
         $e->Title = htmlspecialchars($ervaring_title);
@@ -77,12 +64,11 @@ if(isset($_POST['btnSubmitErvaring']))
 
         $last_ervaring_id = $e->Save();
 
-        /*for ($x = 0; $x < $tags_lim; $x++)
+        for ($x = 0; $x < $tags_lim; $x++)
         {
             $sql = "insert into tbl_tags(tag_name, fk_ervaring_id, fk_user_id) values ('".$tags[$x]."', '".$last_ervaring_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
-      }*/
     }
     catch (Exception $e)
     {
@@ -130,18 +116,16 @@ if (isset($_GET["filter"]))
 { 
     $filter  = $_GET["filter"]; 
 
-    $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
-    $result = $db->query($sql);
-}
-else if (isset($_GET["filter_e"]))
-{
-    $filter_e = $_GET["filter_e"];
-
-    if($filter_e == "eigen_ervaringen")
+    if($filter == "eigen_ervaringen")
     {
       $sql = "select count(*) from tbl_ervaringen where fk_user_id=$userid";
       $result = $db->query($sql);
-    } 
+    }
+    else
+    {
+      $sql = "select count(*) from tbl_ervaringen where fk_categorie_name = '$filter'";
+      $result = $db->query($sql);
+    }
 }
 else
 {
@@ -167,10 +151,6 @@ if($pages > 1)
         { 
             $pagination .= '<li><a href="ervaring.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
         }
-        else if (isset($_GET["filter_e"]))
-        {
-            $pagination .= '<li><a href="ervaring.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-        }
         else
         {
             $pagination .= '<li><a href="ervaring.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
@@ -192,25 +172,7 @@ else
     $page = 1; 
 }
 
-$start_from = ($page-1) * $item_per_page;
-
-/*---------------------aanmaken van filters----------------------*/
-
-/*if (isset($_GET["filter"]))
-{ 
-  $filter  = $_GET["filter"]; 
-} 
-else 
-{ 
-  
-}
-
-echo $filter;*/
-
-/*$sql_color = "select categorie_color from tbl_categorie_ervaringen where categorie_name = $row['fk_categorie_name']";
-$result_color = $db->query($sql_color);
-echo $result_color;*/
-                                  
+$start_from = ($page-1) * $item_per_page;                  
 
 ?>
 
@@ -220,7 +182,7 @@ echo $result_color;*/
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Ervaringen</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/new.css"/>
     <link rel="stylesheet" type="text/css" href="spectrum.css">
@@ -232,6 +194,13 @@ echo $result_color;*/
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
     <script type="text/javascript" src="spectrum.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -252,7 +221,7 @@ echo $result_color;*/
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="ervaring.php?filter_e=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="ervaring.php?filter=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Eigen ervaringen</a></dd>
                       <?php } ?>
@@ -319,9 +288,18 @@ echo $result_color;*/
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
-                        <option value="eigen_ervaringen">Eigen ervaringen</option>
-                        <option value="beantwoord">Beantwoord</option>
-                        <option value="onbeantwoord">Onbeantwoord</option>
+                        <option value="eigen_ervaringen"
+                        <?php 
+                          if (isset($_GET["filter"]))
+                          { 
+                              $categorie_filter_small = $_GET["filter"];
+
+                              if($categorie_filter_small == 'eigen_ervaringen')
+                              {
+                                  echo 'selected';
+                              } 
+                          } ?> >Eigen ervaringen
+                        </option>
 
                         <?php 
 
@@ -399,7 +377,7 @@ echo $result_color;*/
                         <small class="error">Geef je hoofdvraag in</small>
                         <ul class="chars_left">
                           <li><p class="title_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                         </ul>
                       </div>
 
@@ -421,13 +399,13 @@ echo $result_color;*/
                         <small class="error">Geef wat informatie over je ervaring en bijbehorende vraag</small>
                         <ul class="chars_left">
                           <li><p class="description_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                         </ul>
                       </div>
 
                       <div class="large-4 columns">
-                        <input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
-                        <small class="error">Je mag maar 5 tags ingeven</small>
+                        <input type="text" placeholder="Geef hier je tags in, scheidt ze van elkaar met een komma" id="ervaring_tags" name="ervaring_tags" required>
+                        <small class="error">Voeg een aantal tags toe die je ervaring beschrijven</small>
                             <button type="submit" href="#" class="button [radius round]" id="btnSubmitErvaring" name="btnSubmitErvaring">Voeg ervaring toe
                             </button>
                       </div>
@@ -450,7 +428,7 @@ echo $result_color;*/
                       <small class="error">Geef de nieuwe categorie een titel</small>
                       <ul class="chars_left">
                           <li><p class="categorie_title_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                       </ul>
                     </div>
 
@@ -482,23 +460,18 @@ echo $result_color;*/
               if (isset($_GET["filter"]))
               { 
                 $filter  = $_GET["filter"];
-                $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' order by ervaring_id desc LIMIT $start_from, $item_per_page";
-                $results = $db->query($sql); 
-              } 
-              else if (isset($_GET["filter_e"]))
-              { 
-                $filter_e  = $_GET["filter_e"];
-
-                if($filter_e == "eigen_ervaringen")
+                
+                if($filter == "eigen_ervaringen")
                 {
                   $sql = "select * from tbl_ervaringen where fk_user_id=$userid order by ervaring_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
                 else
                 {
-
+                  $sql = "select * from tbl_ervaringen where fk_categorie_name = '$filter' order by ervaring_id desc LIMIT $start_from, $item_per_page";
+                  $results = $db->query($sql); 
                 }
-              }
+              } 
               else 
               { 
                 $sql = "select * from tbl_ervaringen order by ervaring_id desc LIMIT $start_from, $item_per_page";
@@ -531,10 +504,10 @@ echo $result_color;*/
                                                echo htmlspecialchars($row['ervaring_title']);
                                             } ?>
                                         </p>
-                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row['fk_user_name']; ?></p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo 'gepost door: '.$row['fk_user_name']; ?></p>
                                         <p class="ervaring_desc_pre" style="color: #a5b1b8;">
                                             <?php
-                                            if (strlen($row['ervaring_description']) > 70)
+                                            if (strlen($row['ervaring_description']) > 118)
                                             {
                                               echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."...";
                                             }
@@ -636,6 +609,8 @@ echo $result_color;*/
         });
     </script>
 
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/save_categorie_ervaring.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->

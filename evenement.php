@@ -54,6 +54,63 @@ if(isset($_POST['btnSubmitEvenement']))
       $feedback = $e->getMessage();
     } 
 }
+
+/*---------------------aanmaken van pagination----------------------*/
+
+$item_per_page = 9;
+
+if (isset($_GET["filter"]))
+{ 
+    $sql = "select count(*) from tbl_evenementen order by evenement_id desc";
+    $result = $db->query($sql);   
+}
+else 
+{ 
+    $sql = "select count(*) from tbl_evenementen order by evenement_id desc";
+    $result = $db->query($sql);
+}
+
+$get_all_rows = mysqli_fetch_array($result);
+
+$pages = ceil($get_all_rows[0]/$item_per_page);
+
+$pagination = '';
+
+if($pages > 1)
+{
+    $pagination .= '<div class="row">
+                        <div class="large-12 columns">
+                            <div class="pagination-centered">
+                                <ul class="pagination">';
+    for($i = 1; $i<=$pages; $i++)
+    {
+        if (isset($_GET["filter"]))
+        { 
+            $pagination .= '<li><a href="vraag.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+        }
+        else
+        {
+            $pagination .= '<li><a href="vraag.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+        }
+    }
+
+    $pagination .= '</ul>
+                </div>
+            </div>
+        </div>';
+  }
+
+if (isset($_GET["page"]))
+{ 
+    $page  = $_GET["page"]; 
+} 
+else 
+{ 
+    $page = 1; 
+}
+
+$start_from = ($page-1) * $item_per_page;
+
 ?>
 
 <!doctype html>
@@ -79,6 +136,13 @@ if(isset($_POST['btnSubmitEvenement']))
     <!--[if lt IE 9]>
         <link rel="stylesheet" type="text/css" href="css/DateTimePicker-ltie9.css"/>
         <script type="text/javascript" src="js/DateTimePicker-ltie9.js"></script>
+    <![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
   </head>
 
@@ -215,17 +279,14 @@ if(isset($_POST['btnSubmitEvenement']))
                       </div>
 
                       <div class="large-4 columns">
-                        <!--<input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="vraag_tags" name="vraag_tags" required>-->
-                        <small class="error">Je mag maar 5 tags ingeven</small>
-                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitEvenement" name="btnSubmitEvenement">Voeg evenement toe
-                            </button>
+                            <button type="submit" href="#" class="button [radius round]" id="btnSubmitEvenement" name="btnSubmitEvenement">Voeg evenement toe</button>
                       </div>
                 </form>
                 <div id="dtBox"></div>
         </div>
     </div>
 
-    <!--overzicht van vragen-->
+    <!--overzicht van evenementen-->
 
     <div class="row">
         <div class="large-12 small-12 columns ervaringen" id="results">
@@ -262,68 +323,77 @@ if(isset($_POST['btnSubmitEvenement']))
               {
                 while ($row = mysqli_fetch_assoc($results))
                 { 
-                  $mons = array(1 => "Jan", 2 => "Feb", 3 => "Mar", 4 => "Apr", 5 => "Mei", 6 => "Jun", 7 => "Jul", 8 => "Aug", 9 => "Sep", 10 => "Oct", 11 => "Nov", 12 => "Dec");
-                  $date = $row['evenement_date'];
-                  $date_st = explode("-", $date);
-                  $month = ltrim($date_st[1], '0');
-                  $month_name = $mons[$month];
-                  $day = $date_st[2];
-                  $year = $date_st[0];
+                  $timenow_date_fi = date('Y-m-d', time());
 
-                  $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
-                  $results_user = $db->query($sql_user);
-                  $row_user = mysqli_fetch_assoc($results_user); ?>
-                    <div class="large-4 columns evenement_container m_btm_tw">
-                        <a href="evenement_details.php?id=<?php echo $row['evenement_id']; ?>" class="a_ervaring">
-                            <div class="panel evenement_panel n_pad n_marg">
-                                <div class="large-12 columns">
-                                    <!--<input type="text" id="address" name="address" value="<?php /*echo $row['evenement_adress'];*/ ?>">-->
-                                    <input type="submit" onclick="mapAddress('<?php echo 'map_canvas_'.$row['evenement_id']; ?>', '<?php echo $row['evenement_adress']; ?>')">
-                                </div>
+                  if ($row['evenement_date'] < $timenow_date_fi)
+                  {
+                      $sql_del_evenement = "delete * from tbl_evenementen where evenement_id='".$row['evenement_id']."'";
+                      $result_del_evenement = $db->query($sql_del_evenement);
+                  }
+                  else
+                  {
+                      $mons = array(1 => "Jan", 2 => "Feb", 3 => "Mar", 4 => "Apr", 5 => "Mei", 6 => "Jun", 7 => "Jul", 8 => "Aug", 9 => "Sep", 10 => "Oct", 11 => "Nov", 12 => "Dec");
+                      $date = $row['evenement_date'];
+                      $date_st = explode("-", $date);
+                      $month = ltrim($date_st[1], '0');
+                      $month_name = $mons[$month];
+                      $day = $date_st[2];
+                      $year = $date_st[0];  
 
-                                <!--<div id="map-canvas" style="width: 100%; height: 200px; overflow: hidden; border-top-left-radius: 3px; border-top-right-radius: 3px;"></div>-->
-                                <div id="<?php echo 'map_canvas_'.$row['evenement_id']; ?>" class="google_map"></div>
+                      $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
+                      $results_user = $db->query($sql_user);
+                      $row_user = mysqli_fetch_assoc($results_user); ?>
+                        <div class="large-4 columns evenement_container m_btm_tw">
+                            <a href="evenement_details.php?id=<?php echo $row['evenement_id']; ?>" class="a_ervaring">
+                                <div class="panel evenement_panel n_pad n_marg">
+                                    <div class="large-12 columns">
+                                        <!--<input type="text" id="address" name="address" value="<?php /*echo $row['evenement_adress'];*/ ?>">-->
+                                        <!--<input type="submit" onclick="mapAddress('<?php echo 'map_canvas_'.$row['evenement_id']; ?>', '<?php echo $row['evenement_adress']; ?>')">-->
+                                    </div>
 
-                                <div class="large-12 small-12 columns n_pad n_marg evenement_pre_panel">
-                                <div class="large-2 small-2 columns text-center n_pad p_t evenement_pre_date_panel">
-                                    <p class="evenement_pre_date_day n_m_btm text-center" style="color: #ffffff;"><?php echo $day; ?></p>
-                                    <p class="evenement_pre_date_month n_m_btm text-center" style="color: #ffffff;"><?php echo $month_name; ?></p>
-                                </div>
+                                    <!--<div id="map-canvas" style="width: 100%; height: 200px; overflow: hidden; border-top-left-radius: 3px; border-top-right-radius: 3px;"></div>-->
+                                    <!--<div id="<?php /*echo 'map_canvas_'.$row['evenement_id'];*/ ?>" class="google_map"></div>-->
 
-                                <div class="large-8 small-8 columns evenement_pre_title_panel">
-                                    <p class="evenement_pre_title">
-                                    <?php 
-                                        if (strlen($row['evenement_title']) > 30)
-                                        {
-                                            echo htmlspecialchars(substr($row['evenement_title'], 0, 30))."...";
-                                        }
-                                        else
-                                        {
-                                            echo htmlspecialchars($row['evenement_title']);
-                                        } ?>
-                                    </p>
-                                    <p class="evenement_pre_adress" style="color: #7b868c;">
-                                    <?php 
-                                        if (strlen($row['evenement_adress']) > 30)
-                                        {
-                                            echo htmlspecialchars(substr($row['evenement_adress'], 0, 30))."...";
-                                        }
-                                        else
-                                        {
-                                            echo htmlspecialchars($row['evenement_adress']);
-                                        } ?>
+                                    <div class="large-12 small-12 columns n_pad n_marg evenement_pre_panel">
+                                    <div class="large-2 small-2 columns text-center n_pad p_t evenement_pre_date_panel">
+                                        <p class="evenement_pre_date_day n_m_btm text-center" style="color: #ffffff;"><?php echo $day; ?></p>
+                                        <p class="evenement_pre_date_month n_m_btm text-center" style="color: #ffffff;"><?php echo $month_name; ?></p>
+                                    </div>
+
+                                    <div class="large-8 small-8 columns evenement_pre_title_panel">
+                                        <p class="evenement_pre_title">
+                                        <?php 
+                                            if (strlen($row['evenement_title']) > 30)
+                                            {
+                                                echo htmlspecialchars(substr($row['evenement_title'], 0, 30))."...";
+                                            }
+                                            else
+                                            {
+                                                echo htmlspecialchars($row['evenement_title']);
+                                            } ?>
                                         </p>
-                                </div>
+                                        <p class="evenement_pre_adress" style="color: #7b868c;">
+                                        <?php 
+                                            if (strlen($row['evenement_adress']) > 30)
+                                            {
+                                                echo htmlspecialchars(substr($row['evenement_adress'], 0, 30))."...";
+                                            }
+                                            else
+                                            {
+                                                echo htmlspecialchars($row['evenement_adress']);
+                                            } ?>
+                                            </p>
+                                    </div>
 
-                                <div class="large-2 small-2 columns text-center n_pad evenement_pre_aanwezigen_panel">
-                                    <p class="evenement_pre_nvisit n_pad n_marg" style="color: #7b868c;"><?php echo $row['evenement_n_visit']; ?></p>
-                                    <p class="evenement_pre_aanw n_pad n_marg" style="color: #7b868c;">aanw.</p>
+                                    <div class="large-2 small-2 columns text-center n_pad evenement_pre_aanwezigen_panel">
+                                        <p class="evenement_pre_nvisit n_pad n_marg" style="color: #7b868c;"><?php echo $row['evenement_n_visit']; ?></p>
+                                        <p class="evenement_pre_aanw n_pad n_marg" style="color: #7b868c;">aanw.</p>
+                                    </div>
+                                    </div>
                                 </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                <?php 
+                            </a>
+                        </div>
+          <?php   }
                 } 
               }
               else
@@ -453,6 +523,8 @@ if(isset($_POST['btnSubmitEvenement']))
         });
     </script>
 
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/save_categorie_ervaring.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->

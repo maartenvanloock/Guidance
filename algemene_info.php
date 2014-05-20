@@ -111,7 +111,7 @@ $start_from = ($page-1) * $item_per_page;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Algemene info</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css"/>
     <link rel="stylesheet" href="css/new.css"/>
@@ -125,6 +125,13 @@ $start_from = ($page-1) * $item_per_page;
 
     <script src="parser_rules/advanced.js"></script>
     <script src="dist/wysihtml5-0.4.0pre.min.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -234,7 +241,7 @@ $start_from = ($page-1) * $item_per_page;
                         <small class="error">Geef de nieuwe informatieblok een titel</small>
                         <ul class="chars_left">
                             <li><p class="informatie_title_chars"></p></li>
-                            <li><p>characters left</p></li>
+                            <li><p>overige karakters</p></li>
                         </ul>
                     </div>
 
@@ -295,10 +302,11 @@ $start_from = ($page-1) * $item_per_page;
               {
                 while ($row = mysqli_fetch_assoc($results))
                 { ?>
-                    <div class="large-4 columns dashboard_container">
+                    <div class="large-4 columns algemene_info_container">
                             <a href="algemene_info_details.php?id=<?php echo $row['informatieblok_id']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel m_btm_t">
                                     <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row['informatieblok_title']; ?></p>
+                                    <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gepost door: '.$row['fk_user_name']); ?></p>
                                     <p class="informatieblok_desc" style="color: #a5b1b8;"><?php echo strip_tags(substr($row['informatieblok_description'], 0, 250))."..."; ?></p>      
                                 </div>
                             </a>
@@ -351,7 +359,8 @@ $start_from = ($page-1) * $item_per_page;
         });
     </script>
 
-    <!--<script type="text/javascript" src="js/pagination.js"></script>-->
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

@@ -7,13 +7,24 @@ require ("classes/vraag.class.php");
 require ("classes/ervaring_categorie.class.php");
 
 $username = $_SESSION['username'];
-$user_privilege = $_SESSION['userprivilege'];
-$userid = $_SESSION['userid'];
-$user_up_v = $_SESSION['user_up_v'];
 
 /*---------------------nagaan of de gebruiker bestaat en is ingelogd----------------------*/
 
-if(empty($username))
+if(!empty($username))
+{
+    $sql = "select * from tbl_users where user_name='$username'";
+    $result = $db->query($sql);
+    $row = mysqli_fetch_assoc($result);
+
+    $user_privilege = $row['user_privilege'];
+    $userid = $row['user_id'];
+    $user_up_v = $row['user_ptn'];
+
+    $_SESSION['userprivilege'] = $user_privilege;
+    $_SESSION['userid'] = $userid;
+    $_SESSION['user_up_v'] = $user_up_v;
+}
+else if(empty($username))
 {
     header("Location:login.php");
 }
@@ -24,24 +35,11 @@ if(isset($_POST['btnSubmitVraag']))
 {
     try
     {
-    /*$tag_string = $_POST['vraag_tags'];
-    $tags = preg_split("/[\s,]+/", $tag_string);
-    $result = array_unique($tags);
-    $tags_lim = count($result);
+        $tag_string = $_POST['vraag_tags'];
+        $tags = preg_split("/[\s,]+/", $tag_string);
+        $result = array_unique($tags);
+        $tags_lim = count($result);
 
-      if ($tags_lim > 5)
-      {
-        echo '<div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
-                  <div class="large-12 columns">
-                      <div data-alert="" class="alert-box alert radius">
-                          <p id="feedback_message" style="font-size: 16px; font-style: inherit; font-weight: 600;">je mag maar 5 tags toevoegen</p>
-                          <a class="close" href="#">×</a>
-                      </div>
-                  </div>
-              </div>';
-      }
-      else
-      {*/
         $vr = new Vraag();
         $vraag_title = mysql_real_escape_string($_POST['vraag_title']);
         $vr->Title = htmlspecialchars($vraag_title);
@@ -76,12 +74,11 @@ if(isset($_POST['btnSubmitVraag']))
 
         $last_vraag_id = $vr->Save();
 
-        /*for ($x = 0; $x < $tags_lim; $x++)
+        for ($x = 0; $x < $tags_lim; $x++)
         {
             $sql = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$last_vraag_id."', '".$userid."')";
             $result_q = $db->query($sql);
         }
-      }*/
     }
     catch (Exception $e)
     {
@@ -129,28 +126,26 @@ if (isset($_GET["filter"]))
 { 
     $filter  = $_GET["filter"]; 
 
-    $sql = "select count(*) from tbl_vragen where fk_categorie_name = '$filter'";
-    $result = $db->query($sql);
-}
-else if (isset($_GET["filter_e"]))
-{
-    $filter_e = $_GET["filter_e"];
-
-    if($filter_e == "eigen_vragen")
+    if($filter == "eigen_vragen")
     {
       $sql = "select count(*) from tbl_vragen where fk_user_id=$userid";
       $result = $db->query($sql);
     }
-    else if($filter_e == "beantwoord")
+    else if($filter == "beantwoord")
     {
       $sql = "select count(*) from tbl_vragen where vraag_solved=1";
       $result = $db->query($sql);
     }
-    else if($filter_e == "onbeantwoord")
+    else if($filter == "onbeantwoord")
     {
       $sql = "select count(*) from tbl_vragen where vraag_solved=0";
       $result = $db->query($sql);
-    } 
+    }
+    else
+    {
+      $sql = "select count(*) from tbl_vragen where fk_categorie_name = '$filter'";
+      $result = $db->query($sql);
+    }
 }
 else
 {
@@ -175,10 +170,6 @@ if($pages > 1)
         if (isset($_GET["filter"]))
         { 
             $pagination .= '<li><a href="vraag.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-        }
-        else if (isset($_GET["filter_e"]))
-        {
-            $pagination .= '<li><a href="vraag.php?filter_e='.$filter_e.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
         }
         else
         {
@@ -211,7 +202,7 @@ $start_from = ($page-1) * $item_per_page;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Vragen</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/new.css"/>
     <link rel="stylesheet" type="text/css" href="spectrum.css">
@@ -223,6 +214,13 @@ $start_from = ($page-1) * $item_per_page;
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
     <script type="text/javascript" src="spectrum.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -243,14 +241,14 @@ $start_from = ($page-1) * $item_per_page;
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="vraag.php?filter_e=eigen_vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter=eigen_vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Eigen vragen</a></dd>
                       <?php } ?>
-                      <dd><a href="vraag.php?filter_e=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Beantwoord</a></dd>
-                      <dd><a href="vraag.php?filter_e=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd><a href="vraag.php?filter=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
                              class="filter_ervaring_fi">Onbeantwoord</a></dd>
                       <?php  
@@ -315,9 +313,44 @@ $start_from = ($page-1) * $item_per_page;
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
                     <select id="filter" name="filter" onchange='this.form.submit()' style="margin-bottom: 10px;" required>
                         <option value="" disabled selected>Filter op categorie:</option>
-                        <option value="eigen_vragen">Eigen ervaringen</option>
-                        <option value="beantwoord">Beantwoord</option>
-                        <option value="onbeantwoord">Onbeantwoord</option>
+                        <option value="eigen_vragen" 
+                        <?php 
+                          if (isset($_GET["filter"]))
+                          { 
+                              $categorie_filter_small = $_GET["filter"];
+
+                              if($categorie_filter_small == 'eigen_vragen')
+                              {
+                                  echo 'selected';
+                              } 
+                          } ?> >Eigen vragen
+                        </option>
+
+                        <option value="beantwoord"
+                        <?php 
+                          if (isset($_GET["filter"]))
+                          { 
+                              $categorie_filter_small = $_GET["filter"];
+
+                              if($categorie_filter_small == 'beantwoord')
+                              {
+                                  echo 'selected';
+                              } 
+                          } ?> >Beantwoord
+                        </option>
+
+                        <option value="onbeantwoord"
+                        <?php 
+                          if (isset($_GET["filter"]))
+                          { 
+                              $categorie_filter_small = $_GET["filter"];
+
+                              if($categorie_filter_small == 'onbeantwoord')
+                              {
+                                  echo 'selected';
+                              } 
+                          } ?> >Onbeantwoord
+                        </option>
 
                         <?php 
 
@@ -348,7 +381,7 @@ $start_from = ($page-1) * $item_per_page;
             <div class="large-12 columns s_pad">
           <?php if($user_privilege == 'false')
                 {?>
-                  <button type="submit" href="#" class="show_hide_vraag_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe ervaring</button>
+                  <button type="submit" href="#" class="show_hide_vraag_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuwe vraag</button>
           <?php } 
                 else
                 { ?>
@@ -395,7 +428,7 @@ $start_from = ($page-1) * $item_per_page;
                         <small class="error">Geef de hoofdvraag in waar je graag een antwoord op wil krijgen</small>
                         <ul class="chars_left">
                           <li><p class="title_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                         </ul>
                       </div>
 
@@ -417,13 +450,13 @@ $start_from = ($page-1) * $item_per_page;
                         <small class="error">Geef wat informatie over je vraag, zo kan ze sneller beantwoord worden</small>
                         <ul class="chars_left">
                           <li><p class="description_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                         </ul>
                       </div>
 
                       <div class="large-4 columns">
-                        <input type="text" placeholder="Geef hier max. 5 tags in, scheidt ze van elkaar met een komma" id="vraag_tags" name="vraag_tags" required>
-                        <small class="error">Je mag maar 5 tags ingeven</small>
+                        <input type="text" placeholder="Geef hier je tags in, scheidt ze van elkaar met een komma" id="vraag_tags" name="vraag_tags" required>
+                        <small class="error">Voeg een aantal tags toe die je vraag beschrijven</small>
                             <button type="submit" href="#" class="button [radius round]" id="btnSubmitVraag" name="btnSubmitVraag">Voeg vraag toe
                             </button>
                       </div>
@@ -446,7 +479,7 @@ $start_from = ($page-1) * $item_per_page;
                       <small class="error">Geef de nieuwe categorie een titel</small>
                       <ul class="chars_left">
                           <li><p class="categorie_title_chars"></p></li>
-                          <li><p>characters left</p></li>
+                          <li><p>overige karakters</p></li>
                       </ul>
                     </div>
 
@@ -478,26 +511,25 @@ $start_from = ($page-1) * $item_per_page;
               if (isset($_GET["filter"]))
               { 
                 $filter  = $_GET["filter"];
-                $sql = "select * from tbl_vragen where fk_categorie_name = '$filter' order by vraag_id desc LIMIT $start_from, $item_per_page";
-                $results = $db->query($sql); 
-              } 
-              else if (isset($_GET["filter_e"]))
-              { 
-                $filter_e  = $_GET["filter_e"];
 
-                if($filter_e == "eigen_vragen")
+                if($filter == "eigen_vragen")
                 {
                   $sql = "select * from tbl_vragen where fk_user_id=$userid order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
-                else if($filter_e == "beantwoord")
+                else if($filter == "beantwoord")
                 {
                   $sql = "select * from tbl_vragen where vraag_solved=1 order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
-                else if($filter_e == "onbeantwoord")
+                else if($filter == "onbeantwoord")
                 {
                   $sql = "select * from tbl_vragen where vraag_solved=0 order by vraag_id desc LIMIT $start_from, $item_per_page";
+                  $results = $db->query($sql);
+                }
+                else
+                {
+                  $sql = "select * from tbl_vragen where fk_categorie_name = '$filter' order by vraag_id desc LIMIT $start_from, $item_per_page";
                   $results = $db->query($sql);
                 }
               }
@@ -533,7 +565,7 @@ $start_from = ($page-1) * $item_per_page;
                                               echo htmlspecialchars($row['vraag_title']);
                                             } ?>
                                         </p>
-                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gepost door: '.$row['fk_user_name']); ?></p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row['fk_user_name']); ?></p>
                                         <p class="ervaring_desc_pre" style="color: #a5b1b8;">
                                             <?php 
                                             if (strlen($row['vraag_description']) > 118)
@@ -560,7 +592,7 @@ $start_from = ($page-1) * $item_per_page;
               else
               {?>
                 <div class="small-12 large-centered columns" style="margin-top: 25%; text-align: center;">
-                    <p>er zijn nog geen vragen gesteld op het platform</p>
+                    <p>er zijn nog geen vragen als beantwoord aangeduid op het platform</p>
                 </div>
               <?php
               } ?>
@@ -627,7 +659,9 @@ $start_from = ($page-1) * $item_per_page;
       });
     </script>
 
-    <script src="js/save_vraag.js"></script>
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
+    <!--<script src="js/save_vraag.js"></script>-->
     <script src="js/save_categorie_ervaring.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->

@@ -154,6 +154,12 @@ if(isset($_POST['btnSubmitReactie_vt']))
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
 
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -373,7 +379,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                     $row_user = mysqli_fetch_assoc($results_user); ?>
 
                     <div class="large-12 columns reactie">
-                        <div class="large-1 small-2 columns w_h_auto">
+                        <div class="large-1 small-2 columns w_h_auto evenement_reactie_img">
                             <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>">
                             <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="reactie_profile_img"
                             <?php 
@@ -454,7 +460,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
 
     <!--aanmaken van een reactie-->
     
-    <script type="text/javascript">
+    <!--<script type="text/javascript">
       $(document).ready(function(){
 
           $("#btnSubmitReactie").on("click", function(e){
@@ -503,8 +509,10 @@ if(isset($_POST['btnSubmitReactie_vt']))
 
           });
       });
-    </script>
+    </script>-->
 
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

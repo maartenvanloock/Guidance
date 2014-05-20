@@ -28,82 +28,172 @@ if (isset($_GET["user"]))
     $row_privilege = mysqli_fetch_assoc($result_privilege);
 
     $user_privilege = $row_privilege['user_privilege'];
-} 
+}
+else if (isset($_POST["user"]))
+{
+    $userid = $_POST["user"];
+
+    $sql_privilege = "select * from tbl_users where user_id='$userid'";
+    $result_privilege = $db->query($sql_privilege);
+    $row_privilege = mysqli_fetch_assoc($result_privilege);
+
+    $user_privilege = $row_privilege['user_privilege'];
+}
 
 $sql = "select * from tbl_users where user_id='$userid'";
 $result = $db->query($sql);
 $row = mysqli_fetch_assoc($result);
 
-/*---------------------aanmaken van pagination----------------------*/
+/*---------------------aanmaken van pagination normal user----------------------*/
 
 $item_per_page = 9;
+$item_per_page_reacties = 8;
+
+$sql_user_det = "select * from tbl_users where user_id='".$userid."'";
+$result_user_det =  $db->query($sql_user_det);
+$row_user_det =  mysqli_fetch_assoc($result_user_det);
 
 if (isset($_GET["filter"]))
 {   
     $filter = $_GET["filter"];
 
-    if($filter == "ervaringen")
+    if ($row_user_det['user_privilege'] == 'false')
     {
-        $sql = "select count(*) from tbl_ervaringen where fk_user_id='".$userid."'";
-        $result = $db->query($sql);
+        if ($filter == "ervaringen")
+        {
+            $sql = "select count(*) from tbl_ervaringen where fk_user_id='".$userid."'";
+            $result = $db->query($sql);
+        }
+        else if ($filter == "vragen")
+        {
+            $sql = "select count(*) from tbl_vragen where fk_user_id='".$userid."'";
+            $result = $db->query($sql);
+        }
+        else if ($filter == "reacties")
+        {
+            $sql = "select count(*) from tbl_reacties where fk_user_id='".$userid."'";
+            $result = $db->query($sql);
+        }
     }
-    else if($filter == "vragen")
-    {
-        $sql = "select count(*) from tbl_vragen where fk_user_id='".$userid."'";
-        $result = $db->query($sql);
-    }
-    else if($filter == "reacties")
-    {
-        $sql = "select count(*) from tbl_reacties where fk_user_id='".$userid."'";
-        $result = $db->query($sql);
+    else if ($row_user_det['user_privilege'] == 'true')
+    { 
+        if ($filter == "informatie")
+        {
+            $sql = "select count(*) from tbl_informatieblok where fk_user_id='".$userid."'";
+            $result = $db->query($sql);
+        }
+        else if ($filter == "reacties")
+        {
+            $sql = "select count(*) from tbl_reacties where fk_user_id='".$userid."'";
+            $result = $db->query($sql);
+        }
     }
 }
 else
 {
-    $sql = "select count(*) from tbl_ervaringen where fk_user_id='".$userid."'";
-    $result = $db->query($sql);
+  if ($row_user_det['user_privilege'] == 'true')
+  {
+     $sql = "select count(*) from tbl_informatieblok where fk_user_id='".$userid."'";
+     $result = $db->query($sql);
+  }
+  else if ($row_user_det['user_privilege'] == 'false')
+  {
+      $sql = "select count(*) from tbl_vragen where fk_user_id='".$userid."'";
+      $result = $db->query($sql);
+  }
 }
 
-$get_all_rows = mysqli_fetch_array($result);
+/*-----normal pages------*/
 
-$pages = ceil($get_all_rows[0]/$item_per_page);
+    $get_all_rows = mysqli_fetch_array($result);
 
-$pagination = '';
+    $pages = ceil($get_all_rows[0]/$item_per_page);
 
-if($pages > 1)
-{
-    $pagination .= '<div class="row">
-                        <div class="large-12 columns n_pad">
-                            <div class="pagination-centered">
-                                <ul class="pagination">';
-    for($i = 1; $i<=$pages; $i++)
+    $pagination = '';
+
+    if($pages > 1)
     {
-        if (isset($_GET["filter"]))
-        { 
-            $pagination .= '<li><a href="profile_details.php?filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
-        }
-        else
+        $pagination .= '<div class="large-12 small-12 columns text-center">
+                            <div class="large-12 small-12 large-centered small-centered columns">
+                                <div class="pagination-centered">
+                                    <ul class="pagination">';
+        for($i = 1; $i<=$pages; $i++)
         {
-            $pagination .= '<li><a href="profile_details.php?page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            if (isset($_GET["filter"]))
+            { 
+                $pagination .= '<li><a href="profile_details.php?user='.$userid.'&filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            }
+            else
+            {
+                $pagination .= '<li><a href="profile_details.php?user='.$userid.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+            }
         }
+
+        $pagination .= '</ul>
+                    </div>
+                </div>
+            </div>';
     }
 
-    $pagination .= '</ul>
-                </div>
-            </div>
-        </div>';
+    if (isset($_GET["page"]))
+    { 
+        $page  = $_GET["page"]; 
+    } 
+    else 
+    { 
+        $page = 1; 
+    }
+
+    $start_from = ($page-1) * $item_per_page;
+
+/*-----reactie pages------*/
+
+if(isset($_GET["filter"]))
+{
+  if ($_GET["filter"] == "reacties")
+  {
+      $get_all_rows_reacties = mysqli_fetch_array($result);
+
+      $pages_reacties = ceil($get_all_rows[0]/$item_per_page_reacties);
+
+      $pagination = '';
+
+      if($pages_reacties > 1)
+      {
+          $pagination .= '<div class="large-12 small-12 columns text-center">
+                              <div class="large-12 small-12 large-centered small-centered columns">
+                                  <div class="pagination-centered">
+                                      <ul class="pagination">';
+          for($i = 1; $i<=$pages_reacties; $i++)
+          {
+              if (isset($_GET["filter"]))
+              { 
+                  $pagination .= '<li><a href="profile_details.php?user='.$userid.'&filter='.$filter.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+              }
+              else
+              {
+                  $pagination .= '<li><a href="profile_details.php?user='.$userid.'&page='.$i.'" class="paginate_click" id="'.$i.'-page">'.$i.'</a></li>';
+              }
+          }
+
+          $pagination .= '</ul>
+                      </div>
+                  </div>
+              </div>';
+      }
+
+      if (isset($_GET["page"]))
+      { 
+          $page  = $_GET["page"]; 
+      } 
+      else 
+      { 
+          $page = 1; 
+      }
+
+      $start_from_reacties = ($page-1) * $item_per_page_reacties;
   }
-
-if (isset($_GET["page"]))
-{ 
-    $page  = $_GET["page"]; 
-} 
-else 
-{ 
-    $page = 1; 
 }
-
-$start_from = ($page-1) * $item_per_page;
 
 /*---------------------aanpassen van profile details---------------------*/
 
@@ -182,7 +272,6 @@ if(isset($_POST['btnSubmitProfile']))
     <script src="js/vendor/modernizr.js"></script>
 
     <link rel="stylesheet" href="css/jquery.cropbox.css"/>
-    <!--<script src=​"http:​/​/​ajax.googleapis.com/​ajax/​libs/​jquery/​2.1.0/​jquery.min.js">​</script>​-->
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.10/hammer.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.11/jquery.mousewheel.js"></script>
     <script src="js/jquery.cropbox.js"></script>
@@ -236,6 +325,12 @@ if(isset($_POST['btnSubmitProfile']))
         });
     </script>
 
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -246,7 +341,7 @@ if(isset($_POST['btnSubmitProfile']))
 
     <!--profile details voor gebruiker-->
 
-    <div class="large-12 small-12 columns" style="background-color: #074e68;">
+    <div class="large-12 small-12 columns" style="background-color: #5db0c6;">
     <br/>
     <br/>
             <div class="large-12 small-12 columns text-center">
@@ -284,60 +379,156 @@ if(isset($_POST['btnSubmitProfile']))
             </div>
 
             <div class="large-12 small-12 columns text-center m_tp_t">
-                    <i class="fi-star size-36" style="color: #ffffff;"></i>
+                    <i class="fi-star size-28" style="color: #ffffff;"></i>
                     <span id="profile_details_ptn" style="color: #ffffff; font-family: 'Open Sans', sans-serif; font-size: 28px; font-style: inherit; font-weight: 700; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
                     <?php echo $row['user_ptn']; ?></span>
-                    <i class="fi-star size-36" style="color: #ffffff;"></i>
+                    <i class="fi-star size-28" style="color: #ffffff;"></i>
             </div>
     </div>
 
-    <div class="large-12 small-12 columns p_btm_tw" style="background-color: #074e68;">
-        <div class="row">
-            <div class="large-12 small-12 small-centered large-centered columns n_pad text-center m_tp_th">
-                <ul class="inline-list text-center" style="display: inline-block;">
-                    <li id="n_posts">
-                        <h2 class="profile_details_smallinf">
-                            <?php  
-                                $sql_posts = "select count(*) as posts from tbl_ervaringen where fk_user_id='".$userid."'";
-                                $result_posts = $db->query($sql_posts);
-                                $row_posts = mysqli_fetch_assoc($result_posts);
+    <?php 
+    if ($row_user_det['user_privilege'] == 'false')
+    { ?>
+        <div class="large-12 small-12 columns p_btm_tw" style="background-color: #5db0c6;">
+            <div class="row">
+                <div class="large-12 small-12 small-centered large-centered columns n_pad text-center m_tp_th">
+                    <ul class="inline-list text-center" style="display: inline-block;">
+                        <li id="n_posts">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_posts = "select count(*) as posts from tbl_ervaringen where fk_user_id='".$userid."'";
+                                    $result_posts = $db->query($sql_posts);
+                                    $row_posts = mysqli_fetch_assoc($result_posts);
 
-                                echo $row_posts['posts'];
-                            ?>
-                        </h2>
-                        <h2 class="profile_details_smallinftext">ervaringen</h2>
-                    </li>
-                    
-                    <li id="n_reacties">
-                        <h2 class="profile_details_smallinf">
-                            <?php  
-                                $sql_reacties = "select count(*) as reacties from tbl_reacties where fk_user_id='".$userid."'";
-                                $result_reacties = $db->query($sql_reacties);
-                                $row_reacties = mysqli_fetch_assoc($result_reacties);
-
-                                echo $row_reacties['reacties'];
-                            ?>
-                        </h2>
-                        <h2 class="profile_details_smallinftext">antwoorden</h2>
-                    </li>
+                                    echo $row_posts['posts'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">ervaringen</h2>
+                        </li>
                         
-                    <li id="n_likes">
-                        <h2 class="profile_details_smallinf">
-                            <?php  
-                                $sql_reactielikes = "select count(reactie_likes) as reactielikes from tbl_reacties where fk_user_id='".$userid."'";
-                                $result_reactielikes = $db->query($sql_reactielikes);
-                                $row_reactielikes = mysqli_fetch_assoc($result_reactielikes);
+                        <li id="n_reacties">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_reacties = "select count(*) as reacties from tbl_reactie_beantwoord where fk_user_id='".$userid."'";
+                                    $result_reacties = $db->query($sql_reacties);
+                                    $row_reacties = mysqli_fetch_assoc($result_reacties);
 
-                                echo $row_reactielikes['reactielikes'];
-                            ?>
-                        </h2>
-                        <h2 class="profile_details_smallinftext">likes</h2>
-                    </li>
-                </ul>
+                                    echo $row_reacties['reacties'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">antwoorden</h2>
+                        </li>
+                            
+                        <li id="n_likes">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_reactielikes = "select count(vraag_id) as n_vragen from tbl_vragen where fk_user_id='".$userid."'";
+                                    $result_reactielikes = $db->query($sql_reactielikes);
+                                    $row_reactielikes = mysqli_fetch_assoc($result_reactielikes);
+
+                                    echo $row_reactielikes['n_vragen'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">vragen</h2>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="large-12 small-12 large-centered small-centered columns text-center n_pad">
+                    <?php
+                        $sql_user_edit = "select * from tbl_user_details where fk_user_id='".$userid."' limit 1";
+                        $result_user_edit = $db->query($sql_user_edit);
+                        $row_user_edit = mysqli_fetch_assoc($result_user_edit);
+                    if ($row_user_edit !=false)
+                    { ?>
+                    <ul class="ul_profile_details">
+                        <li><p class="n_p_btm n_m_btm profile_details_t"><i class="fi-marker size-24 profile_details_icon"></i><?php echo $row_user_edit['user_detail_woonplaats']; ?></p></li>
+                        <li style="padding-top: 8px;" class="profile_details_t">●</li>
+                        <li><p class="n_p_btm n_m_btm profile_details_t"><i class="fi-torsos size-24 profile_details_icon"></i><?php echo $row_user_edit['user_detail_zorgvoor']; ?></p></li>
+                    </ul>
+                    <?php 
+                    }
+                    else
+                    {
+
+                    } ?>
+                </div>
+
             </div>
         </div>
-    </div>
+    <?php  
+    }
+    else if ($row_user_det['user_privilege'] == 'true')
+    { ?>
+        <div class="large-12 small-12 columns p_btm_tw" style="background-color: #5db0c6;">
+            <div class="row">
+                <div class="large-12 small-12 small-centered large-centered columns n_pad text-center m_tp_th">
+                    <ul class="inline-list text-center" style="display: inline-block;">
+                        <li id="n_posts" style="margin-left: 0px;">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_posts = "select count(*) as evenementen from tbl_evenementen where fk_user_id='".$userid."'";
+                                    $result_posts = $db->query($sql_posts);
+                                    $row_posts = mysqli_fetch_assoc($result_posts);
 
+                                    echo $row_posts['evenementen'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">evenementen</h2>
+                        </li>
+                        
+                        <li id="n_reacties">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_reacties = "select count(*) as informatieblok from tbl_informatieblok where fk_user_id='".$userid."'";
+                                    $result_reacties = $db->query($sql_reacties);
+                                    $row_reacties = mysqli_fetch_assoc($result_reacties);
+
+                                    echo $row_reacties['informatieblok'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">informatie artikels</h2>
+                        </li>
+                            
+                        <li id="n_likes">
+                            <h2 class="profile_details_smallinf">
+                                <?php  
+                                    $sql_reactielikes = "select count(reactie_id) as reactie_ids from tbl_reacties where fk_user_id='".$userid."'";
+                                    $result_reactielikes = $db->query($sql_reactielikes);
+                                    $row_reactielikes = mysqli_fetch_assoc($result_reactielikes);
+
+                                    echo $row_reactielikes['reactie_ids'];
+                                ?>
+                            </h2>
+                            <h2 class="profile_details_smallinftext">reacties</h2>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="large-12 small-12 large-centered small-centered columns text-center n_pad">
+                    <?php
+                        $sql_user_edit = "select * from tbl_user_details where fk_user_id='".$userid."' limit 1";
+                        $result_user_edit = $db->query($sql_user_edit);
+                        $row_user_edit = mysqli_fetch_assoc($result_user_edit);
+                    if ($row_user_edit !=false)
+                    { ?>
+                    <ul class="ul_profile_details">
+                        <li><p class="n_p_btm n_m_btm profile_details_t"><i class="fi-marker size-24 profile_details_icon"></i><?php echo $row_user_edit['user_detail_woonplaats']; ?></p></li>
+                        <li style="padding-top: 8px;" class="profile_details_t">●</li>
+                        <li><p class="n_p_btm n_m_btm profile_details_t"><i class="fi-torsos size-24 profile_details_icon"></i><?php echo $row_user_edit['user_detail_zorgvoor']; ?></p></li>
+                    </ul>
+                    <?php 
+                    }
+                    else
+                    {
+
+                    } ?>
+                </div>
+
+            </div>
+        </div>
+    <?php 
+    } ?>
     <!--aanpassen van profile details-->
     
         <div id="edit_profile" class="reveal-modal large" data-reveal>
@@ -403,7 +594,7 @@ if(isset($_POST['btnSubmitProfile']))
                     <textarea type="text" id="profile_description" name="profile_description"><?php echo trim($row_user_details["user_detail_desc"]); ?></textarea>
                     <ul class="chars_left">
                         <li><p class="profile_description_chars"></p></li>
-                        <li><p>characters left</p></li>
+                        <li><p>overige karakters</p></li>
                     </ul>
                 </div>
 
@@ -424,7 +615,7 @@ if(isset($_POST['btnSubmitProfile']))
                                 ?> >
                     <ul class="chars_left">
                         <li><p class="profile_location_chars"></p></li>
-                        <li><p>characters left</p></li>
+                        <li><p>overige karakters</p></li>
                     </ul>
                 </div>
 
@@ -536,7 +727,11 @@ if(isset($_POST['btnSubmitProfile']))
         <div class="large-4 columns show-for-small-up hide-for-large-up">
             <div class="large-12 columns n_pad" style="padding-left: 5px; padding-right: 5px;">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
-                    <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
+                    <div class="large-12 small-12 columns hide">
+                        <input type="text" id="user" name="user" value="<?php echo $_GET["user"]; ?>">
+                    </div>
+                    
+                    <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" class="select_round_c" required>
                         <option value="" disabled selected>Filter op categorie:</option>
                         <option value="vragen" 
                             <?php if (isset($_GET["filter"]))
@@ -580,7 +775,11 @@ if(isset($_POST['btnSubmitProfile']))
         <div class="large-4 columns show-for-small-up hide-for-large-up">
             <div class="large-12 columns n_pad" style="padding-left: 5px; padding-right: 5px;">
                 <form action="" method="get" Onchange="this.form.submit()" style="margin-bottom: 0px;" data-abide>
-                    <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" required>
+                    <div class="large-12 small-12 columns hide">
+                        <input type="text" id="user" name="user" value="<?php echo $_GET["user"]; ?>">
+                    </div>
+
+                    <select id="filter" name="filter" Onchange="this.form.submit()" style="margin-bottom: 10px;" class="select_round_c" required>
                         <option value="" disabled selected>Filter op categorie:</option>
                         <option value="informatie" 
                             <?php if (isset($_GET["filter"]))
@@ -608,6 +807,7 @@ if(isset($_POST['btnSubmitProfile']))
         </div>
     <?php
     } ?>
+
     <!--pagination-->
 
     <?php echo $pagination; ?>
@@ -641,9 +841,29 @@ if(isset($_POST['btnSubmitProfile']))
                                         <ul class="small-block-grid-2 profile_info">
                                             <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
                                             <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
-                                                <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
+                                                <p class="ervaring_title_pre" style="color: #7b868c;">
+                                                    <?php 
+                                                    if (strlen($row_e['ervaring_title']) > 70)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_e['ervaring_title'], 0, 70))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                       echo htmlspecialchars($row_e['ervaring_title']);
+                                                    } ?>
+                                                </p>
                                                 <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
-                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                                    <?php
+                                                    if (strlen($row_e['ervaring_description']) > 118)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                       echo htmlspecialchars($row_e['ervaring_description']);
+                                                    } ?>
+                                                </p>
                                             </li>
                                             <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
                                             <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
@@ -664,7 +884,7 @@ if(isset($_POST['btnSubmitProfile']))
                     }
                     else if($filter == 'reacties')
                     {
-                        $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from, $item_per_page";
+                        $sql_r = "select * from tbl_reacties where fk_user_id='".$userid."' order by reactie_likes desc LIMIT $start_from_reacties, $item_per_page_reacties";
                         $result_r = $db->query($sql_r);
 
                         if(mysqli_num_rows($result_r) > 0)
@@ -710,11 +930,9 @@ if(isset($_POST['btnSubmitProfile']))
                                                     $row_vt = mysqli_fetch_array($result_vt); ?>
 
                                                     <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
-                                                            style="background-color: #e6e6e6; color: #7b868c;" disabled>
-                                                            <i class="fi-check size-16"></i>
-                                                            <span class="reactie_helpful">Helpful</span>
-                                                            <span class="reactie_vt_n">
-                                                            <?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
+                                                                style="background-color: #e6e6e6; color: #7b868c;" disabled>
+                                                            <i class="fi-like size-18"></i>
+                                                            <span class="reactie_helpful"><?php echo htmlspecialchars($row_r['reactie_likes']).' likes'; ?></span>
                                                     </button>
                                                 </li>
                                             </ul>
@@ -722,7 +940,13 @@ if(isset($_POST['btnSubmitProfile']))
                                     </div>
                                 </div>
                 <?php       }
-                        } 
+                        }
+                        else
+                        { ?>
+                            <div class="small-12 large-centered columns" style="margin-top: 15%; text-align: center;">
+                                <p>Deze gebruiker heeft nog geen reacties geplaatst op het platform</p>
+                            </div>
+              <?php     }
                     }
                     else if($filter == 'vragen')
                     {
@@ -743,9 +967,29 @@ if(isset($_POST['btnSubmitProfile']))
                                         <ul class="small-block-grid-2 profile_info">
                                             <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
                                             <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
-                                                <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['vraag_title']; ?></p>
-                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
-                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['vraag_description'], 0, 118))."..."; ?></p>
+                                                <p class="ervaring_title_pre" style="color: #7b868c;">
+                                                    <?php 
+                                                    if (strlen($row_e['vraag_title']) > 70)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_e['vraag_title'], 0, 70))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                       echo htmlspecialchars($row_e['vraag_title']);
+                                                    } ?>
+                                                </p>
+                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo 'gevraagd door: '.$row_e['fk_user_name']; ?></p>
+                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                                    <?php
+                                                    if (strlen($row_e['vraag_description']) > 118)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_e['vraag_description'], 0, 118))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                       echo htmlspecialchars($row_e['vraag_description']);
+                                                    } ?>
+                                                </p>
                                             </li>
                                             <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['vraag_date']; ?></li>
                                             <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
@@ -783,9 +1027,29 @@ if(isset($_POST['btnSubmitProfile']))
                                     <ul class="small-block-grid-2 profile_info">
                                         <li class="n_p_btm n_p_r" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="profile_details_img"></li>
                                         <li class="p_l_t n_p_btm" style="width:88%; padding-bottom: 0px;">
-                                            <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_e['ervaring_title']; ?></p>
-                                            <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_e['fk_user_name']; ?></p>
-                                            <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."..."; ?></p>
+                                            <p class="ervaring_title_pre" style="color: #7b868c;">
+                                                <?php 
+                                                if (strlen($row_e['ervaring_title']) > 70)
+                                                {
+                                                  echo htmlspecialchars(substr($row_e['ervaring_title'], 0, 70))."...";
+                                                }
+                                                else
+                                                {
+                                                   echo htmlspecialchars($row_e['ervaring_title']);
+                                                } ?>
+                                            </p>
+                                            <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo 'gepost door: '.$row_e['fk_user_name']; ?></p>
+                                            <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                                <?php
+                                                if (strlen($row_e['ervaring_description']) > 118)
+                                                {
+                                                  echo htmlspecialchars(substr($row_e['ervaring_description'], 0, 118))."...";
+                                                }
+                                                else
+                                                {
+                                                   echo htmlspecialchars($row_e['ervaring_description']);
+                                                } ?>
+                                            </p>
                                         </li>
                                         <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_e['ervaring_date']; ?></li>
                                         <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
@@ -831,7 +1095,7 @@ if(isset($_POST['btnSubmitProfile']))
                                     <?php 
                                             if ($row_r['fk_user_privilege'] == "true")
                                             { ?>
-                                                style="border-radius: 20px; border: 2px solid #5db0c6;"
+                                                style="border-radius: 20px; border: 3px solid #5db0c6;"
                                     <?php 
                                             } ?> >
                                         </div>
@@ -861,9 +1125,8 @@ if(isset($_POST['btnSubmitProfile']))
 
                                                         <button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
                                                                 style="background-color: #e6e6e6; color: #7b868c;" disabled>
-                                                            <i class="fi-check size-16"></i>
-                                                            <span class="reactie_helpful">Helpful</span>
-                                                            <span class="reactie_vt_n"><?php echo htmlspecialchars($row_r['reactie_likes']); ?></span>
+                                                            <i class="fi-like size-18"></i>
+                                                            <span class="reactie_helpful"><?php echo htmlspecialchars($row_r['reactie_likes']).' likes'; ?></span>
                                                         </button>
                                                 </li>
                                             </ul>
@@ -875,14 +1138,14 @@ if(isset($_POST['btnSubmitProfile']))
                     }
                     else if ($filter == 'informatie')
                     {
-                        $sql_info = "select * from tbl_informatieblok order by informatieblok_id desc LIMIT $start_from, $item_per_page";
+                        $sql_info = "select * from tbl_informatieblok where fk_user_id='".$userid."' order by informatieblok_id desc LIMIT $start_from, $item_per_page";
                         $results_info = $db->query($sql_info);
               
                         if(mysqli_num_rows($results_info) > 0)
                         {
                             while ($row_info = mysqli_fetch_assoc($results_info))
                             { ?>
-                                <div class="large-4 columns dashboard_container">
+                                <div class="large-4 columns algemene_info_container">
                                     <a href="algemene_info_details.php?id=<?php echo $row_info['informatieblok_id']; ?>" class="a_ervaring">
                                         <div class="panel ervaring_panel m_btm_t">
                                             <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row_info['informatieblok_title']; ?></p>
@@ -895,7 +1158,7 @@ if(isset($_POST['btnSubmitProfile']))
                         }
                         else
                         { ?>
-                            <div class="small-6 large-centered columns" style="margin-top: 25%; text-align: center;">
+                            <div class="small-6 large-centered columns" style="margin-top: 15%; text-align: center;">
                                 <p>Deze organisatie heeft nog geen informatie op het platform geplaatst</p>
                             </div>
                 <?php
@@ -911,7 +1174,7 @@ if(isset($_POST['btnSubmitProfile']))
                     {
                         while ($row_info = mysqli_fetch_assoc($results_info))
                         { ?>
-                            <div class="large-4 columns dashboard_container">
+                            <div class="large-4 columns algemene_info_container">
                                 <a href="algemene_info_details.php?id=<?php echo $row_info['informatieblok_id']; ?>" class="a_ervaring">
                                     <div class="panel ervaring_panel m_btm_t">
                                         <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row_info['informatieblok_title']; ?></p>
@@ -958,7 +1221,8 @@ if(isset($_POST['btnSubmitProfile']))
         });
     </script>
 
-    <!--<script type="text/javascript" src="js/pagination.js"></script>-->
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->

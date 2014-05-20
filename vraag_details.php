@@ -57,68 +57,6 @@ if(isset($_POST['btnSubmitReactie']))
 
 /*---------------------aanmaken van een nieuwe reactie_vt----------------------*/
 
-/*if(isset($_POST['btnSubmitReactie_vt']))
-{
-    try
-    {
-      $reactie_vt = new Reactie_vt();
-      $reactie_vt->User_id = $userid;
-      $reactie_vt->Reactie_id = $_POST['reactie_id'];
-      $reactie_vt->User_id_m = $_POST['user_id_m'];
-
-      $user_reactie_up_val = '';
-
-      $r1 = range(0, 249);
-      $r2 = range(250, 499);
-      $r3 = range(500, 749);
-      $r4 = range(750, 999);
-      $r5 = range(1000, 1249);
-      $r6 = range(1250, 1499);
-      $r7 = range(1500, 5000);
-      
-      switch (true) 
-      {
-          case in_array($user_up_v, $r1) :
-               $user_reactie_up_val = 5;
-          break;
-
-          case in_array($user_up_v, $r2) :
-               $user_reactie_up_val = 10;
-          break;
-
-          case in_array($user_up_v, $r3) :
-               $user_reactie_up_val = 15;
-          break;
-
-          case in_array($user_up_v, $r4) :
-               $user_reactie_up_val = 20;
-          break;
-
-          case in_array($user_up_v, $r5) :
-               $user_reactie_up_val = 25;
-          break;
-
-          case in_array($user_up_v, $r6) :
-               $user_reactie_up_val = 30;
-          break;
-
-          case in_array($user_up_v, $r7) :
-               $user_reactie_up_val = 35;
-          break;
-      }
-
-      $reactie_vt->User_up_v = $user_reactie_up_val;
-
-      $reactie_vt->Save();
-    }
-    catch (Exception $e)
-    {
-      $feedback = $e->getMessage();
-    }
-}*/
-
-/*---------------------aanmaken van een nieuwe reactie_vt----------------------*/
-
 if(isset($_POST['btnSubmitReactie_vt_up']))
 {
     try
@@ -363,9 +301,9 @@ else if(isset($_POST['btnSubmitVraag_vt_down']))
     }
 }
 
-/*---------------------toevoegen van nieuwe tags aan een ervaring----------------------*/
+/*---------------------toevoegen van nieuwe tags aan een vraag----------------------*/
 
-if (isset($_POST['btnSubmitNewTags']))
+if (isset($_POST['btnSubmitNewTags']) || isset($_POST['btnSubmitNewTagsSmall']))
 {
   try
   {
@@ -374,24 +312,10 @@ if (isset($_POST['btnSubmitNewTags']))
     $result_tags = array_unique($tags);
     $tags_lim = count($result_tags);
 
-    if ($tags_lim > 5)
+    for ($x = 0; $x < $tags_lim; $x++)
     {
-        echo '<div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
-                  <div class="large-12 columns">
-                      <div data-alert="" class="alert-box alert radius">
-                          <p id="feedback_message" style="font-size: 16px; font-style: inherit; font-weight: 600;">je mag maar 5 tags toevoegen</p>
-                          <a class="close" href="#">×</a>
-                      </div>
-                  </div>
-              </div>';
-    }
-    else
-    {
-       for ($x = 0; $x < $tags_lim; $x++)
-        {
-            $sql_tags = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
-            $result_q = $db->query($sql_tags);
-        }
+        $sql_tags = "insert into tbl_tags_vragen(tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
+        $result_q = $db->query($sql_tags);
     }
   }
   catch (Exception $e)
@@ -399,39 +323,20 @@ if (isset($_POST['btnSubmitNewTags']))
       $feedback = $e->getMessage();
   } 
 }
-else if (isset($_POST['btnSubmitNewTagsSmall']))
+
+/*---------------------Vraag markeren als beantwoorden----------------------*/
+
+if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoordsmall']))
 {
   try
   {
-    $tag_string = $_POST['new_added_tags'];
-    $tags = preg_split("/[\s,]+/", $tag_string);
-    $result_tags = array_unique($tags);
-    $tags_lim = count($result_tags);
-
-    if ($tags_lim > 5)
-    {
-        echo '<div class="row" id="feedback" style="margin-top: 0; padding: 0; text-align: center; display: none;">
-                  <div class="large-12 columns">
-                      <div data-alert="" class="alert-box alert radius">
-                          <p id="feedback_message" style="font-size: 16px; font-style: inherit; font-weight: 600;">je mag maar 5 tags toevoegen</p>
-                          <a class="close" href="#">×</a>
-                      </div>
-                  </div>
-              </div>';
-    }
-    else
-    {
-       for ($x = 0; $x < $tags_lim; $x++)
-        {
-            $sql_tags = "insert into tbl_tags_vragen (tag_name, fk_vraag_id, fk_user_id) values ('".$tags[$x]."', '".$_GET["id"]."', '".$_SESSION['userid']."')";
-            $result_q = $db->query($sql_tags);
-        }
-    }
+      $sql_beantwoord = "update tbl_vragen set vraag_solved=vraag_solved+1 where vraag_id='".$_GET['id']."'";
+      $result_beantwoord = $db->query($sql_beantwoord);
   }
   catch (Exception $e)
   {
       $feedback = $e->getMessage();
-  }
+  } 
 }
 
 ?>
@@ -442,7 +347,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foundation | Welcome</title>
+    <title>Guidance | Vraag details</title>
     <link rel="stylesheet" href="css/foundation.css"/>
     <link rel="stylesheet" href="css/foundation-icons/foundation-icons.css"/>
     <link rel="stylesheet" href="css/new.css"/>
@@ -454,6 +359,13 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation-->
     <script src="js/foundation/foundation.topbar.js"></script> <!--script voor foundation-->
     <script src="js/vendor/modernizr.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -462,7 +374,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
 
     <?php include("require/include_header_norm.php"); ?>
 
-    <!--overzicht van ervaring details-->
+    <!--overzicht van vraag details-->
 
     <div class="row">
     <br/>
@@ -480,19 +392,19 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                   $row_user_details = mysqli_fetch_assoc($results_user_details);
                 ?>
 
-    <!--overzicht van ervaring details medium and up-->
+    <!--overzicht van vraag details medium and up-->
 
                     <div class="panel ervaring_detail_panel show-for-medium-up">
                         <ul class="small-block-grid-2 profile_info">
                             <li class="n_p_r" style="width: 10%; padding-bottom: 0px;">
-                            <img src="<?php echo $row_user_details['user_profile_path']; ?>" style="width: 40px; height: 40px;" class="profile_img_details">
+                            <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>"><img src="<?php echo $row_user_details['user_profile_path']; ?>" style="width: 40px; height: 40px;" class="profile_img_details"></a>
                             <?php  
 
                                 $sql_ervaring_vt = "select * from tbl_vragen_vt where fk_vraag_id='".$_GET['id']."' and fk_user_id='".$userid."' limit 1";
                                 $result_ervaring_vt = $db->query($sql_ervaring_vt);
                                 $row_ervaring_vt = mysqli_fetch_array($result_ervaring_vt);
                                                         
-                                if ($row_ervaring_vt != false)
+                                if ($row_ervaring_vt != false || $row['fk_user_id'] == $userid)
                                 { ?>
                                     <form action="" method="post" class="vote_ervaring_med text-center" data-abide>
                                         <div class="row hide">
@@ -522,10 +434,40 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                       </span>
                                   </form>
                           <?php } ?>
+
+                                <form action="" method="post" class="n_m_btm m_tp_tw" style="margin-left: 5px;" data-abide>
+                                <?php  
+                                      $sql_vraag = "select * from tbl_vragen where vraag_id='".$_GET['id']."'";
+                                      $result_vraag = $db->query($sql_vraag);
+                                      $row_vraag = mysqli_fetch_assoc($result_vraag);
+
+                                      $sql_reacties_exist = "select * from tbl_reacties where fk_vraag_id='".$_GET['id']."' limit 1";
+                                      $result_reacties_exist = $db->query($sql_reacties_exist);
+                                      $row_reacties_exist = mysqli_fetch_assoc($result_reacties_exist);
+
+                                      if ($row_vraag['vraag_solved'] == 1)
+                                      { ?>
+                                          <button style="margin: 0px; padding: 0px; background-color: #ffffff;" disabled>
+                                              <img src="img/icons/beantwoord_selected.png" width="30" height="30" alt="Deze vraag is beantwoord" title="Deze vraag is beantwoord">
+                                          </button>
+                                <?php }
+                                      else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != false)
+                                      { ?>
+                                          <button id="btnMarkeerBeantwoord" name="btnMarkeerBeantwoord" style="margin: 0px; padding: 0px; background-color: #ffffff;">
+                                              <img src="img/icons/beantwoord.png" id="vraag_beantwoord" width="30" height="30" alt="Markeer deze vraag als beantwoord" title="Markeer deze vraag als beantwoord">
+                                          </button>
+                                <?php }
+                                      else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != true)
+                                      { ?>
+                                          <button style="margin: 0px; padding: 0px; background-color: #ffffff;" disabled>
+                                              <img src="img/icons/beantwoord.png" id="vraag_beantwoord" width="30" height="30" alt="Markeer deze vraag als beantwoord" title="Markeer deze vraag als beantwoord">
+                                          </button>
+                                <?php } ?>
+                                </form>
                             </li>
                             <li style="width: 90%; padding-left: 10px; padding-bottom: 0px;">
                                 <p class="ervaring_details_title" style="color: #7b868c;"><?php echo htmlspecialchars($row['vraag_title']); ?></p>
-                                <p class="ervaring_details_username" style="color: #7b868c;"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
+                                <p class="ervaring_details_username" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row['fk_user_name']); ?></p>
                                 <p class="ervaring_details_desc" style="color: #a5b1b8;"><?php echo htmlspecialchars($row['vraag_description']); ?></p>
                                   <?php  
                                       $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
@@ -537,7 +479,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             <dt style="margin-left: 10px;">Tags:</dt>
                                 <?php   while ($row_tags = mysqli_fetch_assoc($result_tags))
                                         { ?>
-                                            <dd class="active"><a href="ervaring_tags.php?tag=<?php echo $row_tags['tag_name'] ?>"><?php echo $row_tags['tag_name'] ?></a></dd>
+                                            <dd class="active"><a href="vraag_tags.php?tag=<?php echo $row_tags['tag_name'] ?>"><?php echo $row_tags['tag_name'] ?></a></dd>
                                 <?php  
                                         } ?>
                                             <dd class="active show_hide_tags_form">
@@ -549,27 +491,26 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                 <div class="row" id="slidingDiv_tagsform">
                                     <div class="large-12 small-12 columns n_pad">
                                         <form action="" method="post" data-abide>
-                                            <div class="large-8 small-8 columns">
+                                            <div class="large-8 small-8 columns n_m_btm">
                                                 <input type="text" id="new_added_tags" name="new_added_tags" placeholder="voeg nieuwe tags toe, scheidt ze van elkaar met een komma">
                                             </div>
 
                                             <div class="large-4 small-4 columns add_btn" style="padding-left: 0px;">
-                                                <button type="submit" href="#" class="button [radius round] right" id="btnSubmitNewTags" name="btnSubmitNewTags">Voeg tags toe</button>
+                                                <button type="submit" class="button [radius round] right" id="btnSubmitNewTags" name="btnSubmitNewTags">Voeg tags toe</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-
                             </li>
                         </ul>
                     </div>
 
-    <!--overzicht van ervaring details small-->
+    <!--overzicht van vraag details small-->
 
                     <div class="large-12 small-12 columns ervaring_details_small show-for-small hide-for-medium-up">
                         <ul class="profile_info" style="list-style: none; margin-bottom: 0px;">
                             <li class="profile_img_name text-center">
-                                <img src="<?php echo $row_user_details['user_profile_path']; ?>" class="profile_img_details_small" width="60" height="60">
+                                <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>"><img src="<?php echo $row_user_details['user_profile_path']; ?>" class="profile_img_details_small" width="60" height="60"></a>
                                 <p class="profile_name"><?php echo htmlspecialchars($row['fk_user_name']); ?></p>
                             </li>
 
@@ -591,14 +532,14 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                         { ?>
                                                 <div class="large-6 small-6 columns text-center n_pad">
                                                     <div class="panel tag_panel_small">
-                                                        <a href="ervaring_tags.php?tag=<?php echo $row_tags['tag_name'] ?>" style="color: #ffffff;"><?php echo $row_tags['tag_name'] ?></a>
+                                                        <a href="vraag_tags.php?tag=<?php echo $row_tags['tag_name'] ?>" style="color: #ffffff;"><?php echo $row_tags['tag_name'] ?></a>
                                                     </div>
                                                 </div>
                                   <?php  
                                         } ?>
                                                 <div class="large-12 small-12 columns text-center n_pad m_tp_t">
                                                     <div class="row" style="margin-left: 5px; margin-right: 5px;">
-                                                        <button class="show_hide_smalltags_form" type="submit" href="#" id="btnSubmitNewTagsSmall" name="btnSubmitNewTagsSmall"><img src="img/icons/add.png" class="add_icon">Voeg nieuwe tags toe</button>
+                                                        <button class="show_hide_smalltags_form" type="submit" id="btnSubmitNewTagsSmall" name="btnSubmitNewTagsSmall"><img src="img/icons/add.png" class="add_icon">Voeg nieuwe tags toe</button>
                                                     </div>
                                                 </div>
                                           </div>
@@ -607,7 +548,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                       <div class="row" id="slidingDiv_small_tagsform" style="margin-left: 5px; margin-right: 5px;">
                                           <div class="large-12 small-12 columns n_pad">
                                               <form action="" method="post" data-abide style="margin-bottom: 10px;">
-                                                      <input type="text" id="new_added_tags" name="new_added_tags" placeholder="voeg nieuwe tags toe, scheidt ze van elkaar met een komma">
+                                                      <input type="text" id="new_added_tags_small" name="new_added_tags" placeholder="voeg nieuwe tags toe, scheidt ze van elkaar met een komma">
                                                       <button type="submit" href="#" class="button [radius round] right" id="btnSubmitNewTags" name="btnSubmitNewTags">Voeg tags toe</button>
                                               </form>
                                           </div>
@@ -621,7 +562,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                             $result_vraag_vt = $db->query($sql_vraag_vt);
                             $row_vraag_vt = mysqli_fetch_array($result_vraag_vt);
                                                         
-                            if ($row_ervaring_vt != false)
+                            if ($row_ervaring_vt != false || $row['fk_user_id'] == $userid)
                             { ?>
                                 <div class="row n_marg_lr" style="margin-left: 0px; margin-right: 0px;">
                                     <div class="large-12 small-12 columns" style="padding: 0px; margin-top: 20px; margin-top: 0px;">
@@ -675,6 +616,30 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                     </div>
                                 </div>
                       <?php } ?>
+
+                            <form action="" method="post" class="n_m_btm m_tp_tw" style="margin-left: 5px;" data-abide>
+                                <?php  
+                                      if ($row_vraag['vraag_solved'] == 1)
+                                      { ?>
+
+                                <?php }
+                                      else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != false)
+                                      { ?>
+                                          <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring_s" 
+                                                  id="btnMarkeerBeantwoordsmall" name="btnMarkeerBeantwoordsmall" alt="Markeer deze vraag als beantwoord" 
+                                                  title="Markeer deze vraag als beantwoord">
+                                              <img src="img/icons/beantwoord_w_s.png" width="30" height="30" class="add_icon">Markeer als beantwoord
+                                          </button>
+                                <?php }
+                                      else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != true)
+                                      { ?>
+                                          <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right btnBeantwoord" 
+                                                  alt="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst"
+                                                  title="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst" disabled>
+                                                  <img src="img/icons/beantwoord_w_s.png" width="30" height="30" class="add_icon">Markeer als beantwoord
+                                          </button>
+                                <?php } ?>
+                            </form>
                     </div>
                 
     <!--reactie form-->
@@ -704,9 +669,13 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                     </div>
 
                                     <div class="large-8 columns">
-                                        <textarea type="text" placeholder="Geef hier een reactie in" 
+                                        <textarea type="text" placeholder="Geef hier je reactie in" 
                                                   style="resize: vertical; height: 38px; border-radius: 3px;" id="reactie_description" name="reactie_description" required></textarea>
                                         <small class="error">Geef een reactie in</small>
+                                        <ul class="chars_left hide">
+                                          <li><p class="description_chars"></p></li>
+                                          <li><p>characters left</p></li>
+                                        </ul>
                                     </div>
 
                                     <div class="large-8 columns hide">
@@ -725,9 +694,45 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                         </div>
                     </div>
 
+    <!--overzicht van het beste antwoord op de vraag-->
+
+            <?php 
+
+                    if ($row_vraag['vraag_solved'] == 1)
+                    { 
+                      $sql_beste_antwoord = "select * from tbl_reacties where fk_vraag_id='".$_GET['id']."' order by reactie_likes desc limit 1";
+                      $result_beste_antwoord = $db->query($sql_beste_antwoord);
+                      $row_beste_antwoord = mysqli_fetch_assoc($result_beste_antwoord); 
+                      $beste_antwoord = $row_beste_antwoord['fk_user_name']; 
+
+                      $sql_beste_antwoord_exist = "select * from tbl_reactie_beantwoord where fk_vraag_id='".$_GET['id']."' and fk_user_id='".$row_beste_antwoord['fk_user_id']."' limit 1";
+                      $result_beste_antwoord_exist = $db->query($sql_beste_antwoord_exist);
+                      $row_beste_antwoord_exist = mysqli_fetch_array($result_beste_antwoord_exist);
+                                                        
+                      if ($row_beste_antwoord_exist != true)
+                      {
+                          $sql_s_beste_antwoord = "insert into tbl_reactie_beantwoord (fk_vraag_id, fk_user_id, fk_user_name, fk_reactie_id) 
+                                                   values ('".$_GET['id']."', '".$row_beste_antwoord['fk_user_id']."', '".$row_beste_antwoord['fk_user_name']."', '".$row_beste_antwoord['reactie_id']."')";
+                          $result_s_beste_antwoord = $db->query($sql_s_beste_antwoord); 
+                      }
+                      else
+                      {
+
+                      } ?>
+
+                        <div class="row text-center">
+                            <div class="large-12 columns text-center">
+                               <div data-alert="" class="alert-box success radius">
+                                   <p id="conf_message" style="font-size: 16px;"><?php echo 'Deze vraag is beantwoord, het beste antwoord werd gegeven door: '.$beste_antwoord; ?></p>
+                               </div>
+                            </div>
+                        </div>
+            <?php  
+                    } ?>
+
     <!--overzicht van comments-->
 
-                    <div class="large-12 small-12 columns" style="padding: 0px;">
+                    <div class="large-12 small-12 columns n_pad m_btm_tw">
                         <?php 
                             $sql = "select * from tbl_reacties where fk_vraag_id='".$_GET['id']."' order by reactie_likes desc";
                             $result = $db->query($sql);
@@ -740,7 +745,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                   $results_user = $db->query($sql_user);
                                   $row_user = mysqli_fetch_assoc($results_user); ?>
                                     <div class="large-12 columns reactie">
-                                        <div class="large-1 small-2 columns w_h_auto">
+                                        <div class="large-1 small-2 columns w_h_auto reactie_img_small_d">
 
                                             <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>">
                                             <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="reactie_profile_img"
@@ -753,15 +758,15 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                             ></a>
                                         </div>
 
-                                        <div class="large-10 small-10 columns n_pad_left">
-                                            <ul style="text-decoration: none; list-style: none;">
-                                              <li><?php echo htmlspecialchars($row['fk_user_name']).' '.htmlspecialchars($row['reactie_date']); ?></li>
+                                        <div class="large-10 small-10 columns n_pad_left reactie_desc_d">
+                                            <ul class="reactie_desc_ul" style="text-decoration: none; list-style: none;">
+                                              <li><?php echo htmlspecialchars($row['fk_user_name']).' ● '.htmlspecialchars($row['reactie_date']); ?></li>
                                               <li class="hide"><?php echo htmlspecialchars($row['fk_user_id']) ?></li>
                                               <li class="reactie_desc"><?php echo htmlspecialchars($row['reactie_description']); ?></li>
                                             </ul>
                                         </div>
 
-                                        <div class="large-12 small-12 columns">
+                                        <div class="large-12 small-12 columns reactie_like_d">
                                             <form action="" method="post" class="n_m_btm" data-abide>
                                                 <ul class="small-block-grid-2" style="margin-bottom: 0px;">
                                                     <li class="left n_pad" style="padding-bottom: 0; height: 30px; text-decoration: none; width: 100%;">
@@ -778,16 +783,8 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                                         $result_vt = $db->query($sql_vt);
                                                         $row_vt = mysqli_fetch_array($result_vt);
                                                         
-                                                        if ($row_vt != false)
+                                                        if ($row_vt != false || $row['fk_user_id'] == $userid)
                                                         { ?>
-                                                            <!--<button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
-                                                                    style="background-color: #e6e6e6; color: #7b868c;" disabled>
-                                                                    <i class="fi-check size-16"></i>
-                                                                    <span class="reactie_helpful">Helpful</span>
-                                                                    <span class="reactie_vt_n">
-                                                                    <?php /*echo htmlspecialchars($row['reactie_likes']);*/ ?></span>
-                                                            </button>-->
-
                                                             <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
                                                                 <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;" disabled><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
@@ -797,14 +794,6 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                                         }
                                                         else if (empty($row_vt['fk_reactie_id']))
                                                         { ?>
-                                                            <!--<button type="submit" href="#" class="button [radius round] btnSubmitReactie_vt left" name="btnSubmitReactie_vt"
-                                                                    style="background-color: #e6e6e6; color: #7b868c;">
-                                                                    <i class="fi-check size-16"></i>
-                                                                    <span class="reactie_helpful">Helpful</span>
-                                                                    <span class="reactie_vt_n">
-                                                                    <?php /*echo htmlspecialchars($row['reactie_likes']);*/ ?></span>
-                                                            </button>-->
-                                                            
                                                             <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
                                                                 <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;"><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
@@ -832,11 +821,11 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                       <div class="large-12 small-12 columns n_pad" id="reacties_update"></div>
                 </div>
 
-    <!--overzicht van relevante ervaringen large-->
+    <!--overzicht van gerelateerde vragen large-->
 
         <div class="large-4 small-12 columns show-for-large-up n_pad">
                 <div class="large-12 small-12 columns n_pad">
-                    <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Relevante Vragen</h4>
+                    <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;">Gerelateerde vragen</h4>
                 </div>
 
                 <?php 
@@ -864,10 +853,10 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                                   <a href="vraag_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
-                                          <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
+                                          <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="ervaring_profile_pre"></li>
                                           <li class="p_l_t" style="width: 88%; padding-bottom: 0;">
                                               <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['vraag_title']; ?></p>
-                                              <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_find_er['fk_user_name']; ?></p>
+                                              <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo 'gevraagd door: '.$row_find_er['fk_user_name']; ?></p>
                                               <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['vraag_description'], 0, 118))."..."; ?></p>
                                           </li>
                                           <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['vraag_date']; ?></li>
@@ -884,18 +873,17 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                     else
                     {?>
                       <div class="large-12 small-12 columns" style="text-align: left; padding-left: 6px; padding-right: 0px;">
-                          <p>er zijn geen relevante vragen gevonden</p>
+                          <p>er zijn geen gerelateerde vragen gevonden</p>
                       </div>
                     <?php 
                     } ?>
         </div>
 
-        <!--overzicht van relevante ervaringen small-->
+        <!--overzicht van gerelateerde vragen small-->
 
-        <div class="large-4 small-12 columns show-for-small-up hide-for-large-up">
+        <div class="large-4 small-12 columns show-for-small-up hide-for-large-up m_btm_t">
                 <div class="large-12 small-12 columns n_pad text-center">
-                    <p style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px; font-size: 20px; font-style: inherit; font-weight: 600;" 
-                       class="show-for-small-only">Relevante Vragen</p>
+                    <p class="title_small show-for-small-up">Gerelateerde vragen</p>
                 </div>
 
                 <?php 
@@ -919,14 +907,14 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                           $results_user = $db->query($sql_user);
                           $row_user = mysqli_fetch_assoc($results_user); ?>
 
-                          <div class="large-12 small-12 columns dashboard_container">
+                          <div class="large-12 small-12 columns dashboard_container_small">
                                   <a href="vraag_details.php?id=<?php echo $row_find_er['vraag_id']; ?>" class="a_ervaring"><div class="panel ervaring_panel" 
                                        style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>;">
                                       <ul class="small-block-grid-2 profile_info">
-                                          <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" class="ervaring_profile_pre"></li>
+                                          <li class="n_p_btm" style="width: 12%; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="ervaring_profile_pre"></li>
                                           <li class="p_l_t" style="width:88%; padding-bottom: 0;">
                                               <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row_find_er['vraag_title']; ?></p>
-                                              <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row_find_er['fk_user_name']; ?></p>
+                                              <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo 'gevraagd door: '.$row_find_er['fk_user_name']; ?></p>
                                               <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row_find_er['vraag_description'], 0, 118))."..."; ?></p>
                                           </li>
                                           <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['vraag_date']; ?></li>
@@ -943,7 +931,7 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
                     else
                     {?>
                       <div class="large-12 small-12 columns" style="text-align: left; padding-left: 6px; padding-right: 0px;">
-                          <p>er zijn geen relevante vragen gevonden</p>
+                          <p>er zijn geen gerelateerde vragen gevonden</p>
                       </div>
                     <?php 
                     } ?>
@@ -1026,8 +1014,32 @@ else if (isset($_POST['btnSubmitNewTagsSmall']))
       });
     </script>
 
+    <!--char limit-->
+
+    <script src="js/char_limit.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+          var elem_ervaring_description = $(".description_chars");
+          $("#reactie_description").limiter(500, elem_ervaring_description);
+
+        });
+    </script>
+
+    <script type="text/javascript">
+      $("#btnMarkeerBeantwoord")
+      .mouseover(function () {
+          $("#vraag_beantwoord").attr("src", "img/icons/beantwoord_selected.png");
+      })
+      .mouseout(function () {
+          $("#vraag_beantwoord").attr("src", "img/icons/beantwoord.png");
+      });
+    </script>
+
+    <script src="js/rem.min.js"></script>
+    <script src="js/rem.js"></script>
     <script src="js/form_animations.js"></script>
-    <!--<script src="js/save_reactie.js"></script>-->
     <script src="js/foundation/foundation.alert.js"></script> <!--script voor foundation alerts-->
     <script src="js/foundation/foundation.dropdown.js"></script> <!--script voor foundation dropdowns-->
     <script src="js/sticky_footer.js"></script> <!--script voor sticky footer-->
