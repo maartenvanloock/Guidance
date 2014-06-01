@@ -144,10 +144,15 @@ $start_from = ($page-1) * $item_per_page;
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -202,7 +207,7 @@ $start_from = ($page-1) * $item_per_page;
             <div class="large-12 columns s_pad">
           <?php if($user_privilege == 'true')
                 {?>
-                  <button type="submit" href="#" class="show_hide_evenement_form button [radius round] right nieuwe_ervaring"><img src="img/icons/add.png" class="add_icon">Nieuw evenement</button>
+                  <button type="submit" href="#" class="show_hide_evenement_form button [radius round] right nieuwe_ervaring_s"><img src="img/icons/add.png" class="add_icon">Nieuw evenement</button>
           <?php } ?>
             </div>
         </div>
@@ -393,12 +398,55 @@ $start_from = ($page-1) * $item_per_page;
                                 </div>
                             </a>
                         </div>
+
+                        <div class="large-12 small-12 columns evenement_container_v_small m_btm_tw">
+                            <a href="evenement_details.php?id=<?php echo $row['evenement_id']; ?>" class="a_ervaring">
+                                <div class="panel evenement_panel n_pad n_marg">
+                                    <div class="large-12 small-12 columns n_pad n_marg evenement_pre_panel">
+                                        <div class="large-12 small-12 columns evenement_pre_title_panel">
+                                            <p class="evenement_pre_title">
+                                            <?php 
+                                                if (strlen($row['evenement_title']) > 50)
+                                                {
+                                                    echo htmlspecialchars(substr($row['evenement_title'], 0, 50))."...";
+                                                }
+                                                else
+                                                {
+                                                    echo htmlspecialchars($row['evenement_title']);
+                                                } ?>
+                                            </p>
+                                            <p class="evenement_pre_adress" style="color: #7b868c;">
+                                            <?php 
+                                                if (strlen($row['evenement_adress']) > 40)
+                                                {
+                                                    echo htmlspecialchars(substr($row['evenement_adress'], 0, 40))."...";
+                                                }
+                                                else
+                                                {
+                                                    echo htmlspecialchars($row['evenement_adress']);
+                                                } ?>
+                                                </p>
+                                        </div>
+
+                                        <div class="large-6 small-6 columns text-center n_pad p_t evenement_pre_date_panel">
+                                            <p class="evenement_pre_date_day n_m_btm text-center" style="color: #ffffff;"><?php echo $day; ?></p>
+                                            <p class="evenement_pre_date_month n_m_btm text-center" style="color: #ffffff;"><?php echo $month_name; ?></p>
+                                        </div>
+
+                                        <div class="large-6 small-6 columns text-center n_pad evenement_pre_aanwezigen_panel">
+                                            <p class="evenement_pre_nvisit n_pad n_marg" style="color: #7b868c;"><?php echo $row['evenement_n_visit']; ?></p>
+                                            <p class="evenement_pre_aanw n_pad n_marg" style="color: #7b868c;">aanw.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
           <?php   }
                 } 
               }
               else
               {?>
-                <div class="small-12 large-centered columns" style="margin-top: 25%; text-align: center;">
+                <div class="small-12 large-centered columns" style="margin-top: 15%; text-align: center;">
                     <p>er zijn momenteel nog geen evenementen aangemaakt op het platform</p>
                 </div>
               <?php

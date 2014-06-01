@@ -160,10 +160,15 @@ if(isset($_POST['btnSubmitReactie_vt']))
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -221,25 +226,29 @@ if(isset($_POST['btnSubmitReactie_vt']))
                         $result_evenement_evd = $db->query($sql_evenement_evd);
                         $row_evenement_evd = mysqli_fetch_array($result_evenement_evd);
                                                         
-                        if ($row_evenement_evd != false)
+                        if ($row_evenement_evd != false && $user_privilege == 'false')
                         { ?>
                             <div class="large-2 small-12 columns n_pad btn_add_deelnemen show-for-large-up">
                                 <form action="" method="post" data-abide>
-                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_di" class="btnSubmitDeelnemen_di" name="btnSubmitDeelnemen_di" disabled>
+                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_di" name="btnSubmitDeelnemen_di" disabled>
+                                        <img src="img/icons/deelnemen_selected.png" class="evenement_icon">Deelnemen
+                                    </button>
+                                </form>
+                            </div>
+                  <?php }
+                        else if ($row_evenement_evd != true && $user_privilege == 'false')
+                        { ?>
+                            <div class="large-2 small-12 columns n_pad btn_add_deelnemen show-for-large-up">
+                                <form action="" method="post" data-abide>
+                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn" name="btnSubmitDeelnemen">
                                         <img src="img/icons/deelnemen.png" class="evenement_icon">Deelnemen
                                     </button>
                                 </form>
                             </div>
                   <?php }
-                        else
+                        else if ($user_privilege == 'true')
                         { ?>
-                            <div class="large-2 small-12 columns n_pad btn_add_deelnemen show-for-large-up">
-                                <form action="" method="post" data-abide>
-                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn" class="btnSubmitDeelnemen" name="btnSubmitDeelnemen">
-                                        <img src="img/icons/deelnemen.png" class="evenement_icon">Deelnemen
-                                    </button>
-                                </form>
-                            </div>
+
                   <?php } ?>
                     <div class="large-12 small-12 columns n_pad n_m_btm">
                         <p class="evenement_details_desc" style="color: #a5b1b8;"><?php echo $row_evenement_details['evenement_description']; ?></p>
@@ -287,8 +296,8 @@ if(isset($_POST['btnSubmitReactie_vt']))
                         { ?>
                             <div class="large-12 columns n_pad show-for-small-up hide-for-large-up">
                                 <form action="" method="post" data-abide>
-                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_small_di" class="btnSubmitDeelnemen_di" name="btnSubmitDeelnemen_di" disabled>
-                                        <img src="img/icons/deelnemen.png" class="evenement_icon">Deelnemen
+                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_small_di" name="btnSubmitDeelnemen_di" disabled>
+                                        <img src="img/icons/deelnemen_selected.png" class="evenement_icon">Deelnemen
                                     </button>
                                 </form>
                             </div>
@@ -297,7 +306,7 @@ if(isset($_POST['btnSubmitReactie_vt']))
                         { ?>
                             <div class="large-12 columns n_pad p_t show-for-small-up hide-for-large-up">
                                 <form action="" method="post" data-abide>
-                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_small" class="btnSubmitDeelnemen" name="btnSubmitDeelnemen">
+                                    <button type="submit" href="#" class="button [radius round] right deelnemen_btn_small" name="btnSubmitDeelnemen">
                                         <img src="img/icons/deelnemen.png" class="evenement_icon">Deelnemen
                                     </button>
                                 </form>
@@ -390,9 +399,9 @@ if(isset($_POST['btnSubmitReactie_vt']))
                                 } ?> ></a>
                         </div>
 
-                        <div class="large-11 small-10 columns n_pad_left">
+                        <div class="large-11 small-10 columns n_pad_left evenement_reactie_desc">
                             <ul class="ul_reacties_evenementen">
-                                <li><?php echo htmlspecialchars($row['fk_user_name']).' '.htmlspecialchars($row['reactie_date']); ?></li>
+                                <li><?php echo htmlspecialchars($row['fk_user_name']).' ● '.htmlspecialchars($row['reactie_date']); ?></li>
                                 <li class="hide"><?php echo htmlspecialchars($row['fk_user_id']) ?></li>
                                 <li class="reactie_desc"><?php echo htmlspecialchars($row['reactie_description']); ?></li>
                             </ul>

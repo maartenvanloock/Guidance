@@ -19,11 +19,11 @@
 							<ul>
 								<li>
 									<a href="require/log_user.php" id="BtnLogoutsmall" class="Btnsmallnohover">
-										<img src="img/icons/logout.png" width="40" height="40">
+										<img src="img/icons/logout.png" width="35" height="35">
 									</a>
 									
 									<a href="profile_details.php?user=<?php echo $userid; ?>" id="BtnUserprofilesmall" class="Btnsmallnohover">
-										<img src="img/icons/user_profile.png" width="40" height="40">
+										<img src="img/icons/user_profile.png" width="35" height="35">
 									</a>
 								</li>
 							</ul>
@@ -99,7 +99,7 @@
 							</a>
 							<ul class="dropdown">
 								<li><a href="profile_details.php?user=<?php echo $_SESSION['userid']; ?>">Profile settings</a></li>
-								<li><a href="require/log_user.php">Sign out</a></li>
+								<li><a href="require/log_user.php">Log out</a></li>
 							</ul>
 						</li>
 	    			</ul>

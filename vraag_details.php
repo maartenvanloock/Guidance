@@ -244,7 +244,7 @@ else if(isset($_POST['btnSubmitVraag_vt_down']))
 {
     try
     {
-      $vraag_vt_down = new Ervaring_vt();
+      $vraag_vt_down = new Vraag_vt();
       $vraag_vt_down->User_id = $userid;
       $vraag_vt_down->Vraag_id = $_GET['id'];
       $vraag_vt_down->Vraag_st = "down";
@@ -324,7 +324,7 @@ if (isset($_POST['btnSubmitNewTags']) || isset($_POST['btnSubmitNewTagsSmall']))
   } 
 }
 
-/*---------------------Vraag markeren als beantwoorden----------------------*/
+/*---------------------Vraag markeren als beantwoord----------------------*/
 
 if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoordsmall']))
 {
@@ -332,6 +332,56 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
   {
       $sql_beantwoord = "update tbl_vragen set vraag_solved=vraag_solved+1 where vraag_id='".$_GET['id']."'";
       $result_beantwoord = $db->query($sql_beantwoord);
+  }
+  catch (Exception $e)
+  {
+      $feedback = $e->getMessage();
+  } 
+}
+
+/*---------------------Vraag markeren als gedupliceerd----------------------*/
+
+if (isset($_POST['btnSubmitDuplicate']))
+{
+  try
+  {   
+      $beantwoorde_vraag = $_POST['beantwoorde_vraag'];
+      $components = explode('?', $beantwoorde_vraag);
+      $beantwoorde_vraag_link = $components[1];
+
+      $timezone = date_default_timezone_get();
+      $duplicate_date = date('Y-m-d H:i:s', time() + 86400);
+
+      $sql_duplicate = "update tbl_vragen set vraag_solved=2 where vraag_id='".$_GET['id']."'";
+      $result_duplicate = $db->query($sql_duplicate);
+
+      $sql_duplicate_link = "insert into tbl_vraag_duplicate(duplicate_link, duplicate_date, fk_vraag_id, fk_user_id, fk_user_name) values ('".$beantwoorde_vraag_link."', '".$duplicate_date."', '".$_GET['id']."', '".$userid."', '".$username."')";
+      $result_duplicate = $db->query($sql_duplicate_link);
+  }
+  catch (Exception $e)
+  {
+      $feedback = $e->getMessage();
+  } 
+}
+
+/*---------------------Vraag markeren als gedupliceerd small----------------------*/
+
+if (isset($_POST['btnSubmitDuplicatesmall']))
+{
+  try
+  {   
+      $beantwoorde_vraag = $_POST['beantwoorde_vraag_small'];
+      $components = explode('?', $beantwoorde_vraag);
+      $beantwoorde_vraag_link = $components[1];
+
+      $timezone = date_default_timezone_get();
+      $duplicate_date = date('Y-m-d H:i:s', time() + 86400);
+
+      $sql_duplicate = "update tbl_vragen set vraag_solved=2 where vraag_id='".$_GET['id']."'";
+      $result_duplicate = $db->query($sql_duplicate);
+
+      $sql_duplicate_link = "insert into tbl_vraag_duplicate(duplicate_link, duplicate_date, fk_vraag_id, fk_user_id, fk_user_name) values ('".$beantwoorde_vraag_link."', '".$duplicate_date."', '".$_GET['id']."', '".$userid."', '".$username."')";
+      $result_duplicate = $db->query($sql_duplicate_link);
   }
   catch (Exception $e)
   {
@@ -366,10 +416,15 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -413,9 +468,11 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                         </div>
 
                                         <span>
-                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-up size-24"></i></button>
+                                            <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;"
+                                                    title="Je kan je eigen vraag niet upvoten" disabled><i class="fi-arrow-up size-24"></i></button>
                                             <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
-                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;" disabled><i class="fi-arrow-down size-24"></i></button>
+                                            <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;" 
+                                                    title="Je kan je eigen vraag niet downvoten" disabled><i class="fi-arrow-down size-24"></i></button>
                                         </span>
                                     </form>
                           <?php }
@@ -428,9 +485,11 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                       </div>
 
                                       <span>
-                                          <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-up size-24"></i></button>
+                                          <button type="submit" class="btnSubmitErvaring_vt_up" name="btnSubmitVraag_vt_up" style="background-color: #e6e6e6; color: #7b868c;"
+                                                  title="upvote deze vraag"><i class="fi-arrow-up size-24"></i></button>
                                           <p id="vt_ervaring"><?php echo $row['vraag_likes']; ?></p>
-                                          <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;"><i class="fi-arrow-down size-24"></i></button>
+                                          <button type="submit" class="btnSubmitErvaring_vt_down" name="btnSubmitVraag_vt_down" style="background-color: #e6e6e6; color: #7b868c;"
+                                                  title="downvote deze vraag"><i class="fi-arrow-down size-24"></i></button>
                                       </span>
                                   </form>
                           <?php } ?>
@@ -460,7 +519,20 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                       else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != true)
                                       { ?>
                                           <button style="margin: 0px; padding: 0px; background-color: #ffffff;" disabled>
-                                              <img src="img/icons/beantwoord.png" id="vraag_beantwoord" width="30" height="30" alt="Markeer deze vraag als beantwoord" title="Markeer deze vraag als beantwoord">
+                                              <img src="img/icons/beantwoord.png" id="vraag_beantwoord" width="30" height="30" alt="Er moet een reactie op je vraag geplaatst zijn voor je deze kunt markeren als beantwoord" 
+                                                   title="Er moet een reactie op je vraag geplaatst zijn voor je deze kunt markeren als beantwoord">
+                                          </button>
+                                <?php }
+                                      else if ($user_privilege == 'true' && $row_vraag['vraag_solved'] == 0)
+                                      { ?>
+                                          <button style="margin: 0px; padding: 0px; background-color: #ffffff;" disabled>
+                                              <img src="img/icons/duplicate.png" id="btnMarkeerDuplicate" name="btnMarkeerDuplicate" class="show_hide_duplicate_form" width="30" height="30" alt="Markeer deze vraag als duplicate" title="Markeer deze vraag als duplicate">
+                                          </button>
+                                <?php }
+                                      else if ($row_vraag['vraag_solved'] == 2)
+                                      { ?>
+                                          <button style="margin: 0px; padding: 0px; background-color: #ffffff;" disabled>
+                                              <img src="img/icons/duplicate_selected.png" width="30" height="30" alt="Deze vraag is gemarkeerd als gedupliceerd" title="Deze vraag is gemarkeerd als gedupliceerd">
                                           </button>
                                 <?php } ?>
                                 </form>
@@ -497,6 +569,20 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
 
                                             <div class="large-4 small-4 columns add_btn" style="padding-left: 0px;">
                                                 <button type="submit" class="button [radius round] right" id="btnSubmitNewTags" name="btnSubmitNewTags">Voeg tags toe</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="slidingDiv_duplicateform">
+                                    <div class="large-12 small-12 columns n_pad">
+                                        <form action="" method="post" data-abide>
+                                            <div class="large-8 small-8 columns n_m_btm">
+                                                <input type="text" id="beantwoorde_vraag" name="beantwoorde_vraag" placeholder="Geef hier de url link naar de vraag met het antwoord" required>
+                                            </div>
+
+                                            <div class="large-4 small-4 columns add_btn" style="padding-left: 0px;">
+                                                <button type="submit" class="button [radius round] right" id="btnSubmitDuplicate" name="btnSubmitDuplicate">Markeer als gedupliceerd</button>
                                             </div>
                                         </form>
                                     </div>
@@ -565,7 +651,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                             if ($row_ervaring_vt != false || $row['fk_user_id'] == $userid)
                             { ?>
                                 <div class="row n_marg_lr" style="margin-left: 0px; margin-right: 0px;">
-                                    <div class="large-12 small-12 columns" style="padding: 0px; margin-top: 20px; margin-top: 0px;">
+                                    <div class="large-12 small-12 columns" style="padding: 0px; margin-top: 0px;">
                                         <form action="" method="post" class="text-center" style="margin: 0px; margin-top: 15px; margin-left: 5px; margin-right: 5px;" data-abide>
                                             <div class="large-12 columns hide">
                                                 <input type="text" placeholder="<?php echo htmlspecialchars($row['fk_user_id']); ?>" value="<?php echo htmlspecialchars($row['fk_user_id']); ?>" 
@@ -592,7 +678,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                             else
                             { ?>
                                 <div class="row" style="margin-left: 0px; margin-right: 0px;">
-                                    <div class="large-12 columns" style="padding: 0px; margin-top: 20px;">
+                                    <div class="large-12 columns" style="padding: 0px; margin-top: 0px;">
                                         <form action="" method="post" class="text-center" style="margin: 0px; margin-top: 15px; margin-left: 5px; margin-right: 5px;" data-abide>
                                             <div class="row hide">
                                                 <input type="text" placeholder="<?php echo htmlspecialchars($row['fk_user_id']); ?>" value="<?php echo htmlspecialchars($row['fk_user_id']); ?>" 
@@ -625,7 +711,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                 <?php }
                                       else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != false)
                                       { ?>
-                                          <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right nieuwe_ervaring_s" 
+                                          <button type="submit" class="button [radius round] right nieuwe_ervaring_s" 
                                                   id="btnMarkeerBeantwoordsmall" name="btnMarkeerBeantwoordsmall" alt="Markeer deze vraag als beantwoord" 
                                                   title="Markeer deze vraag als beantwoord">
                                               <img src="img/icons/beantwoord_w_s.png" width="30" height="30" class="add_icon">Markeer als beantwoord
@@ -633,13 +719,36 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                 <?php }
                                       else if ($row_vraag['vraag_solved'] == 0 && $row_vraag['fk_user_id'] == $userid && $row_reacties_exist != true)
                                       { ?>
-                                          <button type="submit" href="#" class="show_hide_categorie_form button [radius round] right btnBeantwoord" 
+                                          <button type="submit" class="button [radius round] right btnBeantwoord" 
                                                   alt="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst"
                                                   title="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst" disabled>
                                                   <img src="img/icons/beantwoord_w_s.png" width="30" height="30" class="add_icon">Markeer als beantwoord
                                           </button>
                                 <?php } ?>
                             </form>
+                            <div class="large-12 small-12 columns" style="padding-left: 5px; padding-right: 5px;">
+                                <?php if ($user_privilege == 'true' && $row_vraag['vraag_solved'] == 0)
+                                      { ?>
+                                          <button class="show_hide_small_duplicateform button [radius round] right nieuwe_ervaring_s n_m_btm" 
+                                                  id="btnMarkeerDuplicatesmall" name="btnMarkeerDuplicatesmall" alt="Markeer deze vraag als gedupliceerd" 
+                                                  title="Markeer deze vraag als gedupliceerd" style="width: 100%;">
+                                              <img src="img/icons/duplicate_s_w.png" width="30" height="30" class="add_icon">Markeer als gedupliceerd
+                                          </button>
+                                <?php }
+                                      else if ($user_privilege == 'true' && $row_vraag['vraag_solved'] == 2)
+                                      { ?>
+                                          
+                                <?php } ?>
+
+                                      <div class="row" id="slidingDiv_small_duplicateform" style="margin-left: 5px; margin-right: 5px;">
+                                          <div class="large-12 small-12 columns n_pad">
+                                              <form action="" method="post" style="margin-bottom: 10px; margin-top: 20px;" data-abide>
+                                                  <input type="text" id="beantwoorde_vraag_small" name="beantwoorde_vraag_small" placeholder="Geef hier de url link naar de vraag met het antwoord" required>
+                                                  <button type="submit" class="button [radius round] right" id="btnSubmitDuplicatesmall" name="btnSubmitDuplicatesmall">Markeer als gedupliceerd</button>
+                                              </form>
+                                          </div>
+                                      </div>
+                            </div>
                     </div>
                 
     <!--reactie form-->
@@ -669,8 +778,17 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                     </div>
 
                                     <div class="large-8 columns">
-                                        <textarea type="text" placeholder="Geef hier je reactie in" 
-                                                  style="resize: vertical; height: 38px; border-radius: 3px;" id="reactie_description" name="reactie_description" required></textarea>
+                                      <?php  
+                                            if ($row_vraag['vraag_solved'] == 0 || $row_vraag['vraag_solved'] == 1)
+                                            { ?>
+                                                <textarea type="text" placeholder="Geef hier je reactie in" 
+                                                          style="resize: vertical; height: 38px; border-radius: 3px;" id="reactie_description" name="reactie_description" required></textarea>
+                                      <?php }
+                                            else if ($row_vraag['vraag_solved'] == 2) 
+                                            { ?>
+                                                <textarea type="text" placeholder="Geef hier je reactie in" 
+                                                          style="resize: vertical; height: 38px; border-radius: 3px;" id="reactie_description" name="reactie_description" disabled></textarea>
+                                      <?php } ?>
                                         <small class="error">Geef een reactie in</small>
                                         <ul class="chars_left hide">
                                           <li><p class="description_chars"></p></li>
@@ -686,9 +804,19 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                         <input type='text' id='vraag_id' name='vraag_id' value="<?php echo $_GET['id']; ?>"/>
                                     </div>
 
-                                    <div class="large-3 columns">
-                                        <button type="submit" href="#" class="button [radius round] right" id="btnSubmitReactie" name="btnSubmitReactie">Voeg reactie toe</button>
-                                    </div>
+                                  <?php  
+                                        if ($row_vraag['vraag_solved'] == 0 || $row_vraag['vraag_solved'] == 1)
+                                        { ?>
+                                            <div class="large-3 columns">
+                                                <button type="submit" href="#" class="button [radius round] right" id="btnSubmitReactie" name="btnSubmitReactie">Voeg reactie toe</button>
+                                            </div>
+                                  <?php }
+                                        else if ($row_vraag['vraag_solved'] == 2) 
+                                        { ?>
+                                             <div class="large-3 columns">
+                                                <button type="submit" href="#" class="button [radius round] right" id="btnSubmitReactie" name="btnSubmitReactie" disabled>Voeg reactie toe</button>
+                                            </div>
+                                  <?php } ?>
                                 </form>
                             </div>
                         </div>
@@ -730,6 +858,28 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
             <?php  
                     } ?>
 
+    <!--overzicht van het gedupliceerde vraag-->
+
+            <?php 
+
+                    if ($row_vraag['vraag_solved'] == 2)
+                    { 
+                      $sql_duplicate_antwoord = "select * from tbl_vraag_duplicate where fk_vraag_id='".$_GET['id']."'";
+                      $result_duplicate_antwoord = $db->query($sql_duplicate_antwoord);
+                      $row_duplicate_antwoord = mysqli_fetch_array($result_duplicate_antwoord); ?>
+
+                        <div class="row text-center">
+                            <div class="large-12 columns text-center">
+                               <div data-alert="" class="alert-box warning radius">
+                                   <p id="conf_message" style="font-size: 16px;">
+                                      <?php echo 'Deze vraag is gemarkeerd als gedupliceerd en zal verwijderd worden, maar een antwoord kan u <a href="vraag_details.php?'.$row_duplicate_antwoord['duplicate_link'].'" id="duplicate_link">hier</a> terug vinden'; ?>
+                                   </p>
+                               </div>
+                            </div>
+                        </div>
+            <?php  
+                    } ?>
+
     <!--overzicht van comments-->
 
                     <div class="large-12 small-12 columns n_pad m_btm_tw">
@@ -748,7 +898,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                         <div class="large-1 small-2 columns w_h_auto reactie_img_small_d">
 
                                             <a href="profile_details.php?user=<?php echo $row['fk_user_id']; ?>">
-                                            <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="reactie_profile_img"
+                                            <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="reactie_profile_img reactie_profile_img_vsmall"
                                     <?php 
                                             if ($row['fk_user_privilege'] == "true")
                                             { ?>
@@ -767,9 +917,9 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                         </div>
 
                                         <div class="large-12 small-12 columns reactie_like_d">
-                                            <form action="" method="post" class="n_m_btm" data-abide>
-                                                <ul class="small-block-grid-2" style="margin-bottom: 0px;">
-                                                    <li class="left n_pad" style="padding-bottom: 0; height: 30px; text-decoration: none; width: 100%;">
+                                            <form action="" method="post" class="n_m_btm" style="width: 100%;" data-abide>
+                                                <ul class="small-block-grid-2" style="margin-bottom: 0px; width: 100%;">
+                                                    <li class="left n_pad" style="padding-bottom: 0; padding-right: 0px; height: 30px; text-decoration: none; width: 100%;">
                                                         <div class="row hide">
                                                             <input type="text" placeholder="<?php echo htmlspecialchars($row['reactie_id']); ?>" value="<?php echo htmlspecialchars($row['reactie_id']); ?>" 
                                                                    id="reactie_id" name="reactie_id">
@@ -785,7 +935,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                                         
                                                         if ($row_vt != false || $row['fk_user_id'] == $userid)
                                                         { ?>
-                                                            <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
+                                                            <ul class="inline-list n_m_btm pre_v_small_vt" style="text-decoration: none; list-style: none;">
                                                                 <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;" disabled><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_down" name="btnSubmitReactie_vt_down" style="background-color: none; color: #7b868c;" disabled><i class="fi-dislike size-18" style="margin-right: 10px;"></i>dislike</button></li>
@@ -794,7 +944,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                                                         }
                                                         else if (empty($row_vt['fk_reactie_id']))
                                                         { ?>
-                                                            <ul class="inline-list n_m_btm" style="text-decoration: none; list-style: none;">
+                                                            <ul class="inline-list n_m_btm pre_v_small_vt" style="text-decoration: none; list-style: none;">
                                                                 <li><p class="n_m_btm"><?php echo htmlspecialchars($row['reactie_likes']).' likes'; ?></p></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_up" name="btnSubmitReactie_vt_up" style="color: #7b868c;"><i class="fi-like size-18" style="margin-right: 10px;"></i>like</button></li>
                                                                 <li><button type="submit" class="btnSubmitReactie_vt_down" name="btnSubmitReactie_vt_down" style="background-color: none; color: #7b868c;"><i class="fi-dislike size-18" style="margin-right: 10px;"></i>dislike</button></li>
@@ -811,7 +961,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                             }
                             else
                             { ?>
-                                <div class="row" style="text-align: center;">
+                                <div class="large-12 small-12 columns" style="text-align: center;">
                                     <p>er zijn nog geen antwoorden gegeven op deze vraag</p>
                                 </div>
                           <?php  
@@ -841,7 +991,7 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                       while ($row_find = mysqli_fetch_assoc($result_find))
                       { 
 
-                          $sql_find_er = "select * from tbl_vragen where vraag_id='".$row_find['fk_vraag_id']."' order by vraag_reacties desc";
+                          $sql_find_er = "select * from tbl_vragen where vraag_id='".$row_find['fk_vraag_id']."' order by vraag_likes desc";
                           $result_find_er = $db->query($sql_find_er);
                           $row_find_er = mysqli_fetch_assoc($result_find_er);  
 
@@ -937,6 +1087,80 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
                     } ?>
         </div>
 
+        <!--overzicht van gerelateerde vragen v_small-->
+        
+        <?php  
+
+            $sql_tags = "select * from tbl_tags_vragen where fk_vraag_id='".$_GET['id']."'";
+            $result_tags = $db->query($sql_tags);
+            $row_tags = mysqli_fetch_assoc($result_tags);
+
+            $sql_find = "select distinct(fk_vraag_id) from tbl_tags_vragen where tag_name='".$row_tags['tag_name']."' limit 3";
+            $result_find = $db->query($sql_find);
+
+            if(mysqli_num_rows($result_find) > 0)
+            {
+                while ($row_find = mysqli_fetch_assoc($result_find))
+                { 
+                    $sql_find_er = "select * from tbl_vragen where vraag_id='".$row_find['fk_vraag_id']."' order by vraag_reacties desc";
+                    $result_find_er = $db->query($sql_find_er);
+                    $row_find_er = mysqli_fetch_assoc($result_find_er);  
+
+                    $sql_user = "select * from tbl_users where user_id='".$row_find_er['fk_user_id']."'";
+                    $results_user = $db->query($sql_user);
+                    $row_user = mysqli_fetch_assoc($results_user); ?>
+                    
+                    <div class="large-12 columns dashboard_container dashboard_container_v_small" style="padding-left: 15px; padding-right: 15px;">
+                        <a href="vraag_details.php?id=<?php echo $row_find_er['vraag_id']; ?>&categorie_name=<?php echo $row_find_er['fk_categorie_name']; ?>" class="a_ervaring">
+                            <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_find_er['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                <ul class="small-block-grid-2 profile_info">
+                                    <li class="pre_img_d n_p_btm text-center" style="width: 100%; padding-right: 0; padding-bottom: 10px;">
+                                        <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
+                                    </li>
+                                    <li class="pre_det_d" style="width: 100%; padding-bottom: 0; padding-left: 0px;">
+                                        <p class="ervaring_title_pre" style="color: #7b868c;">
+                                            <?php 
+                                              if (strlen($row_find_er['vraag_title']) > 70)
+                                              {
+                                                  echo htmlspecialchars(substr($row_find_er['vraag_title'], 0, 70))."...";
+                                              }
+                                              else
+                                              {
+                                                  echo htmlspecialchars($row_find_er['vraag_title']);
+                                              } ?>
+                                        </p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row_find_er['fk_user_name']); ?></p>
+                                        <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                            <?php 
+                                              if (strlen($row_find_er['vraag_description']) > 118)
+                                              {
+                                                  echo htmlspecialchars(substr($row_find_er['vraag_description'], 0, 118))."...";
+                                              }
+                                              else
+                                              {
+                                                  echo htmlspecialchars($row_find_er['vraag_description']);
+                                              } ?>
+                                        </p>
+                                    </li>
+                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_find_er['vraag_date']; ?></li>
+                                    <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                        <img src="img/icons/like.png" class="p_r_t"><?php echo $row_find_er['vraag_likes']; ?>
+                                        <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_find_er['vraag_reacties']; ?>
+                                    </li>
+                                </ul>
+                            </div>
+                        </a>
+                    </div>
+      <?php 
+                } 
+            }
+            else
+            { ?>
+                <div class="large-12 small-12 columns" style="text-align: left; padding-left: 6px; padding-right: 0px;">
+                    <p>er zijn geen gerelateerde vragen gevonden</p>
+                </div>
+      <?php 
+            } ?>
             </div>
         </div>
     </div>
@@ -1027,6 +1251,8 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
         });
     </script>
 
+    <!--vraag als beantwoord of duplicate markeren-->
+
     <script type="text/javascript">
       $("#btnMarkeerBeantwoord")
       .mouseover(function () {
@@ -1034,6 +1260,14 @@ if (isset($_POST['btnMarkeerBeantwoord']) || isset($_POST['btnMarkeerBeantwoords
       })
       .mouseout(function () {
           $("#vraag_beantwoord").attr("src", "img/icons/beantwoord.png");
+      });
+
+      $("#btnMarkeerDuplicate")
+      .mouseover(function () {
+          $("#btnMarkeerDuplicate").attr("src", "img/icons/duplicate_selected.png");
+      })
+      .mouseout(function () {
+          $("#btnMarkeerDuplicate").attr("src", "img/icons/duplicate.png");
       });
     </script>
 

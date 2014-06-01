@@ -129,10 +129,15 @@ if (isset($_GET["zoek_filter"]))
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+    
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -159,8 +164,12 @@ if (isset($_GET["zoek_filter"]))
 
                 if (isset($_GET["zoek_filter"]))
                 { ?>  
-                    <div class="large-12 small-12 columns n_pad m_btm_tw">
+                    <div class="large-12 small-12 columns show-for-large-up n_pad m_btm_t">
                         <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;" class="show-for-medium-up">Ervaringen met de tag(s):<?php echo ' '.$zoek_words_s_r; ?></h4>
+                    </div>
+
+                    <div class="large-12 small-12 columns n_pad show-for-small-up hide-for-large-up text-center">
+                        <p class="title_small show-for-small-up">Ervaringen met de tag(s):<?php echo ' '.$zoek_words_s_r; ?></p>
                     </div>
 
         <?php       
@@ -179,7 +188,7 @@ if (isset($_GET["zoek_filter"]))
                             $results_user = $db->query($sql_user);
                             $row_user = mysqli_fetch_assoc($results_user); ?>
 
-                            <div class="large-4 columns dashboard_container">
+                            <div class="large-4 columns dashboard_container dashboard_container_b">
                                 <a href="ervaring_details.php?id=<?php echo $row_s['ervaring_id']; ?>&categorie_name=<?php echo $row_s['fk_categorie_name']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_s['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                     <ul class="small-block-grid-2 profile_info">
@@ -217,14 +226,70 @@ if (isset($_GET["zoek_filter"]))
                                     </ul>
                                 </div></a>
                             </div>
+
+                            <div class="large-4 columns dashboard_container dashboard_container_v_small">
+                                <a href="ervaring_details.php?id=<?php echo $row_s['ervaring_id']; ?>&categorie_name=<?php echo $row_s['fk_categorie_name']; ?>" class="a_ervaring">
+                                    <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_s['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                        <ul class="small-block-grid-2 profile_info">
+                                            <li class="pre_img_d n_p_btm text-center" style="width: 100%; padding-right: 0; padding-bottom: 10px;">
+                                              <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
+                                            </li>
+                                            <li class="pre_det_d" style="width: 100%; padding-bottom: 0; padding-left: 0px;">
+                                                <p class="ervaring_title_pre" style="color: #7b868c;">
+                                                    <?php 
+                                                    if (strlen($row_s['ervaring_title']) > 70)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_s['ervaring_title'], 0, 70))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                      echo htmlspecialchars($row_s['ervaring_title']);
+                                                    } ?>
+                                                </p>
+                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row_s['fk_user_name']); ?></p>
+                                                <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                                    <?php 
+                                                    if (strlen($row_s['ervaring_description']) > 118)
+                                                    {
+                                                      echo htmlspecialchars(substr($row_s['ervaring_description'], 0, 118))."...";
+                                                    }
+                                                    else
+                                                    {
+                                                      echo htmlspecialchars($row_s['ervaring_description']);
+                                                    } ?>
+                                                </p>
+                                            </li>
+                                            <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_s['ervaring_date']; ?></li>
+                                            <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                                <img src="img/icons/like.png" class="p_r_t"><?php echo $row_s['ervaring_likes']; ?>
+                                                <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_s['ervaring_reacties']; ?>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </a>
+                            </div>
         <?php  
                         }
-                    } ?>
+                    }
+                    else
+                    { ?>
+                        <div class="small-12 large-centered columns show-for-large-up n_pad" style="padding-left: 6px; margin-top: 5%; text-align: left;">
+                            <p><?php echo 'Er zijn geen ervaringen gevonden met de tag(s): '.$zoek_words_s_r; ?></p>
+                        </div>
+
+                        <div class="small-12 large-centered columns show-for-small-up hide-for-large-up text-center n_pad" style="margin-top: 5%; text-align: center;">
+                            <p><?php echo 'Er zijn geen ervaringen gevonden met de tag(s): '.$zoek_words_s_r; ?></p>
+                        </div>
+        <?php       }?>
 
     <!--overzicht van vragen met gekozen zoek filter-->
 
-                    <div class="large-12 small-12 columns n_pad m_tp_t m_btm_t">
+                    <div class="large-12 small-12 columns show-for-large-up n_pad m_tp_t m_btm_t">
                         <h4 style="color: #7b868c; margin-top: 0px; margin-left: 5px; padding-top: 0px;" class="show-for-medium-up">Vragen met de tag(s):<?php echo ' '.$zoek_words_s_r; ?></h4>
+                    </div>
+
+                    <div class="large-12 small-12 columns n_pad show-for-small-up hide-for-large-up text-center">
+                        <p class="title_small show-for-small-up">Vragen met de tag(s):<?php echo ' '.$zoek_words_s_r; ?></p>
                     </div>
 
         <?php       $sql_vragen = "select distinct fk_vraag_id from tbl_tags_vragen where ".$zoek_words_s." LIMIT $start_from, $item_per_page";
@@ -242,7 +307,7 @@ if (isset($_GET["zoek_filter"]))
                             $results_user = $db->query($sql_user);
                             $row_user = mysqli_fetch_assoc($results_user); ?>
 
-                            <div class="large-4 columns dashboard_container">
+                            <div class="large-4 columns dashboard_container dashboard_container_b">
                                 <a href="vraag_details.php?id=<?php echo $row_v['vraag_id']; ?>&categorie_name=<?php echo $row_v['fk_categorie_name']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_v['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                     <ul class="small-block-grid-2 profile_info">
@@ -278,11 +343,64 @@ if (isset($_GET["zoek_filter"]))
                                             <img src="img/icons/reacties.png" style="padding-right: 10px; padding-left: 15px;"><?php echo $row_v['vraag_reacties']; ?>
                                         </li>
                                     </ul>
-                                </div></a>
+                                </div>
+                                </a>
+                            </div>
+
+                            <div class="large-4 columns dashboard_container dashboard_container_v_small">
+                                <a href="vraag_details.php?id=<?php echo $row_v['vraag_id']; ?>&categorie_name=<?php echo $row_v['fk_categorie_name']; ?>" class="a_ervaring">
+                                <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row_v['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                    <ul class="small-block-grid-2 profile_info">
+                                        <li class="pre_img_d n_p_btm text-center" style="width: 100%; padding-right: 0; padding-bottom: 10px;">
+                                            <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
+                                        </li>
+                                        <li class="pre_det_d" style="width: 100%; padding-bottom: 0; padding-left: 0px;">
+                                            <p class="ervaring_title_pre" style="color: #7b868c;">
+                                                <?php 
+                                                if (strlen($row_v['vraag_title']) > 70)
+                                                {
+                                                    echo htmlspecialchars(substr($row_v['vraag_title'], 0, 70))."...";
+                                                }
+                                                else
+                                                {
+                                                    echo htmlspecialchars($row_v['vraag_title']);
+                                                } ?>
+                                            </p>
+                                            <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row_v['fk_user_name']); ?></p>
+                                            <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                                <?php 
+                                                if (strlen($row_v['vraag_description']) > 118)
+                                                {
+                                                    echo htmlspecialchars(substr($row_v['vraag_description'], 0, 118))."...";
+                                                }
+                                                else
+                                                {
+                                                    echo htmlspecialchars($row_v['vraag_description']);
+                                                } ?>
+                                            </p>
+                                        </li>
+                                        <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row_v['vraag_date']; ?></li>
+                                        <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                            <img src="img/icons/like.png" class="p_r_t"><?php echo $row_v['vraag_likes']; ?>
+                                            <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row_v['vraag_reacties']; ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                                </a>
                             </div>
         <?php  
                         }
                     }
+                    else
+                    { ?>
+                        <div class="small-12 large-centered columns show-for-large-up n_pad" style="padding-left: 6px; margin-top: 5%; text-align: left;">
+                            <p><?php echo 'Er zijn geen vragen gevonden met de tag(s): '.$zoek_words_s_r; ?></p>
+                        </div>
+
+                        <div class="small-12 large-centered columns show-for-small-up hide-for-large-up n_pad text-center" style="margin-top: 5%; text-align: center;">
+                            <p><?php echo 'Er zijn geen vragen gevonden met de tag(s): '.$zoek_words_s_r; ?></p>
+                        </div>
+        <?php       } 
                 } ?>
         </div>
     </div>

@@ -221,10 +221,15 @@ $start_from = ($page-1) * $item_per_page;
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -541,13 +546,32 @@ $start_from = ($page-1) * $item_per_page;
               
               if(mysqli_num_rows($results) > 0)
               {
+                $sql_remove_duplicate = "select * from tbl_vraag_duplicate";
+                $results_remove_duplicate = $db->query($sql_remove_duplicate);
+                $row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate);
+                $duplicate_date = date('Y-m-d H:i:s', time());
+
+                while ($row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate))
+                {
+                    if ($row_remove_duplicate['duplicate_date'] > $duplicate_date)
+                    {
+                        /*echo $row_remove_duplicate['fk_vraag_id'].' is nog niet gepasseerd';*/
+                    }
+                    else if ($row_remove_duplicate['duplicate_date'] < $duplicate_date)
+                    {
+                        $sql_remove_duplicatevraag = "delete from tbl_vragen where vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
+                        $sql_remove_duplicatevraag = "delete from tbl_vraag_duplicate where fk_vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
+                        $results_remove_duplicatevraag = $db->multi_query($sql_remove_duplicatevraag);
+                    }
+                }
+
                 while ($row = mysqli_fetch_assoc($results))
                 { 
                   $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
                   $results_user = $db->query($sql_user);
                   $row_user = mysqli_fetch_assoc($results_user); ?>
-                    <div class="large-4 columns dashboard_container">
-                            <a href="vraag_details.php?id=<?php echo $row['vraag_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
+                    <div class="large-4 columns dashboard_container dashboard_container_b">
+                            <a href="vraag_details.php?id=<?php echo $row['vraag_id']; ?>" class="a_ervaring">
                             <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                                 <ul class="small-block-grid-2 profile_info">
                                     <li class="n_p_btm" style="width: 12%; padding-right: 0;">
@@ -584,7 +608,50 @@ $start_from = ($page-1) * $item_per_page;
                                         <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row['vraag_reacties']; ?>
                                     </li>
                                 </ul>
-                            </div></a>
+                            </div>
+                            </a>
+                    </div>
+
+                    <div class="large-4 columns dashboard_container dashboard_container_v_small">
+                            <a href="vraag_details.php?id=<?php echo $row['vraag_id']; ?>" class="a_ervaring">
+                            <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                <ul class="small-block-grid-2 profile_info">
+                                    <li class="pre_img_d n_p_btm text-center" style="width: 100%; padding-right: 0; padding-bottom: 10px;">
+                                      <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
+                                    </li>
+                                    <li class="pre_det_d" style="width: 100%; padding-bottom: 0; padding-left: 0px;">
+                                        <p class="ervaring_title_pre" style="color: #7b868c;">
+                                            <?php 
+                                            if (strlen($row['vraag_title']) > 70)
+                                            {
+                                              echo htmlspecialchars(substr($row['vraag_title'], 0, 70))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['vraag_title']);
+                                            } ?>
+                                        </p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row['fk_user_name']); ?></p>
+                                        <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                            <?php 
+                                            if (strlen($row['vraag_description']) > 118)
+                                            {
+                                              echo htmlspecialchars(substr($row['vraag_description'], 0, 118))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['vraag_description']);
+                                            } ?>
+                                        </p>
+                                    </li>
+                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['vraag_date']; ?></li>
+                                    <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                        <img src="img/icons/like.png" class="p_r_t"><?php echo $row['vraag_likes']; ?>
+                                        <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row['vraag_reacties']; ?>
+                                    </li>
+                                </ul>
+                            </div>
+                            </a>
                     </div>
                 <?php 
                 } 

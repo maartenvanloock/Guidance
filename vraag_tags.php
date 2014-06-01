@@ -94,7 +94,11 @@ $start_from = ($page-1) * $item_per_page;
   </head>
 
   <body>
-  
+    
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>

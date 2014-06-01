@@ -79,9 +79,14 @@ if(isset($_POST['btnSubmitEditInformatie']))
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
-  <body>
+  <body>   
   
     <!--navigation-->
 
@@ -110,7 +115,7 @@ if(isset($_POST['btnSubmitEditInformatie']))
                 <div class="large-2 small-2 columns right" style="padding: 0px; width: auto; height: auto;">
                     <?php  
 
-                    if($user_privilege == 'true') 
+                    if($user_privilege == 'true' && $row['fk_user_id'] == $userid) 
                     { ?>
                       <a class="btnEdit" name="btnEdit"><i class="fi-widget size-21 style_1"></i></a> 
               <?php 

@@ -1,0 +1,132 @@
+/*-----------------------------overig-------------------------------------*/
+
+body
+{
+	font-family: 'Open Sans', sans-serif !important;
+	background-size: 100% 100%;
+	background-color: #5db0c6 !important;
+	color: #7b868c;
+	height: auto;
+}
+a
+{
+	color: #5db0c6;
+	font-family: 'Open Sans', sans-serif;
+	font-style: italic;
+}
+h1
+{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+}
+h2
+{
+	color: #7b868c;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+}
+h3
+{
+	color: #7b868c;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+}
+h4
+{
+	text-align: left;
+	margin-left: 0;
+	float: left;
+}
+h6
+{
+	text-align: center;
+    color: #333333;
+}
+input
+{
+	border-radius: 3px;
+	font-family: 'Open Sans', sans-serif;
+	font-style: italic;
+}
+footer
+{
+	min-width: 100%;
+	height: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #ffffff;
+}
+.text-center
+{
+	margin-bottom: 0;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+#pre_m_d
+{
+	color: #ffffff; 
+	font-family: 'Open Sans', sans-serif; 
+	font-weight: 600; 
+	font-size: 22px; 
+	margin-top: 30px; 
+	margin-bottom: 30px;
+}
+#btnSignup
+{
+	background-color: #5db0c6; 
+	border-radius: 3px; 
+	border: solid 2px #ffffff; 
+	font-family: 'Open Sans', sans-serif; 
+	font-weight: 600; 
+	font-size: 18px; 
+	width: 50%; 
+	margin-bottom: 20px;
+}
+.row_v_align {
+  display: table;
+}
+.v_align {
+  display: table-cell;
+  vertical-align: middle;
+}
+#pre_panel
+{
+	margin-top: 15%;
+}
+
+/*-----------------------------media only-------------------------------------*/
+
+@media only screen and (max-width: 20em) { 
+
+#platform_img
+{
+
+}
+#pre_m_d
+{
+	font-size: 20px; 
+}
+#btnSignup
+{
+	width: 100%;
+}
+
+}
+
+@media only screen and (max-width: 40em) { 
+
+#platform_img
+{
+
+}
+#pre_m_d
+{
+	font-size: 18px; 
+}
+#btnSignup
+{
+	width: 100%;
+}
+
+}

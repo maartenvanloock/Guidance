@@ -22,6 +22,12 @@ $(document).ready(function(){
       $("#slidingDiv_evenementform").hide();
       $(".show_hide_evenement_form").show();
 
+      $("#slidingDiv_duplicateform").hide();
+      $(".show_hide_duplicate_form").show();
+
+      $("#slidingDiv_small_duplicateform").hide();
+      $(".show_hide_small_duplicateform").show();
+
       $(".show_hide_ervaring_form").click(function(){
       $("#slidingDiv_ervaringform").slideToggle();
       });
@@ -48,6 +54,14 @@ $(document).ready(function(){
 
       $(".show_hide_evenement_form").click(function(){
       $("#slidingDiv_evenementform").slideToggle();
+      });
+
+      $(".show_hide_duplicate_form").click(function(){
+      $("#slidingDiv_duplicateform").slideToggle();
+      });
+
+      $(".show_hide_small_duplicateform").click(function(){
+      $("#slidingDiv_small_duplicateform").slideToggle();
       });
 
   });

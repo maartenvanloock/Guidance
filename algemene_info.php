@@ -132,10 +132,15 @@ $start_from = ($page-1) * $item_per_page;
       <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
+
+    <!--google analytics-->
+
+    <?php include_once("require/analyticstracking.php") ?>
+
   </head>
 
   <body>
-  
+    
     <!--navigation-->
 
     <?php include("require/include_header_norm.php"); ?>
@@ -305,9 +310,29 @@ $start_from = ($page-1) * $item_per_page;
                     <div class="large-4 columns algemene_info_container">
                             <a href="algemene_info_details.php?id=<?php echo $row['informatieblok_id']; ?>" class="a_ervaring">
                                 <div class="panel ervaring_panel m_btm_t">
-                                    <p class="informatieblok_title" style="color: #7b868c;"><?php echo $row['informatieblok_title']; ?></p>
+                                    <p class="informatieblok_title" style="color: #7b868c;">
+                                      <?php 
+                                          if (strlen($row['informatieblok_title']) > 40)
+                                          {
+                                            echo substr($row['informatieblok_title'], 0, 40)."...";
+                                          }
+                                          else
+                                          {
+                                            echo $row['informatieblok_title'];
+                                          } ?>
+                                    </p>
                                     <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gepost door: '.$row['fk_user_name']); ?></p>
-                                    <p class="informatieblok_desc" style="color: #a5b1b8;"><?php echo strip_tags(substr($row['informatieblok_description'], 0, 250))."..."; ?></p>      
+                                    <p class="informatieblok_desc" style="color: #a5b1b8;">
+                                      <?php 
+                                          if (strlen($row['informatieblok_description']) > 250)
+                                          {
+                                            echo strip_tags(substr($row['informatieblok_description'], 0, 250))."...";
+                                          }
+                                          else
+                                          {
+                                            echo strip_tags($row['informatieblok_description']);
+                                          } ?>
+                                    </p>      
                                 </div>
                             </a>
                     </div>

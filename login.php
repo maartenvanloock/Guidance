@@ -63,8 +63,8 @@ if(isset($_POST['btnLogIn']))
     <!--header-->
 
     <?php include("require/include_header.php"); ?>
-    <div class="row row_center">
-        <div class="large-6 small-8 large-centered small-centered columns" id="login_form">
+    <div class="row">
+        <div class="large-3 small-10 large-centered small-centered columns" id="login_form_d">
             <h2>Log in</h2>
             
             <!--log in form-->
