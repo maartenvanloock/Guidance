@@ -722,7 +722,7 @@ if (isset($_POST['btnSubmitDuplicatesmall']))
                                           <button type="submit" class="button [radius round] right btnBeantwoord" 
                                                   alt="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst"
                                                   title="Je kan deze ervaring nog niet als beantwoord markeren, want er zijn nog geen reacties geplaatst" disabled>
-                                                  <img src="img/icons/beantwoord_w_s.png" width="30" height="30" class="add_icon">Markeer als beantwoord
+                                                  <img src="img/icons/beantwoord.png" width="30" height="30" class="add_icon">Markeer als beantwoord
                                           </button>
                                 <?php } ?>
                             </form>

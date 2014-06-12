@@ -145,15 +145,36 @@ $start_from = ($page-1) * $item_per_page;
                     $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
                     $results_user = $db->query($sql_user);
                     $row_user = mysqli_fetch_assoc($results_user); ?>
-                    <div class="large-4 columns dashboard_container">
+
+                    <div class="large-4 columns dashboard_container dashboard_container_b">
                         <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>&categorie_name=<?php echo $row['fk_categorie_name']; ?>" class="a_ervaring">
                         <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
                             <ul class="small-block-grid-2 profile_info">
                                 <li style="width: 12%; padding-bottom: 0; padding-right: 0;"><img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="ervaring_profile_pre"></li>
                                 <li style="width:88%; padding-left: 10; padding-bottom: 0;">
-                                    <p class="ervaring_title_pre" style="color: #7b868c;"><?php echo $row['ervaring_title']; ?></p>
+                                    <p class="ervaring_title_pre" style="color: #7b868c;">
+                                        <?php 
+                                            if (strlen($row['ervaring_title']) > 70)
+                                            {
+                                              echo htmlspecialchars(substr($row['ervaring_title'], 0, 70))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['ervaring_title']);
+                                            } ?>
+                                    </p>
                                     <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo $row['fk_user_name']; ?></p>
-                                    <p class="ervaring_desc_pre" style="color: #a5b1b8;"><?php echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."..."; ?></p>
+                                    <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                        <?php 
+                                            if (strlen($row['ervaring_description']) > 118)
+                                            {
+                                              echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['ervaring_description']);
+                                            } ?>
+                                    </p>
                                 </li>
                                 <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['ervaring_date']; ?></li>
                                 <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
@@ -162,6 +183,48 @@ $start_from = ($page-1) * $item_per_page;
                                 </li>
                             </ul>
                         </div></a>
+                    </div>
+
+                    <div class="large-4 columns dashboard_container dashboard_container_v_small">
+                        <a href="ervaring_details.php?id=<?php echo $row['ervaring_id']; ?>" class="a_ervaring">
+                            <div class="panel ervaring_panel" style="border-bottom: 10px solid <?php echo $row['fk_categorie_color']; ?>; margin-bottom: 10px;">
+                                <ul class="small-block-grid-2 profile_info">
+                                    <li class="pre_img_d n_p_btm text-center" style="width: 100%; padding-right: 0; padding-bottom: 10px;">
+                                      <img src="<?php echo $row_user['user_profile_path']; ?>" width="40" height="40" class="vraag_profile_pre">
+                                    </li>
+                                    <li class="pre_det_d" style="width: 100%; padding-bottom: 0; padding-left: 0px;">
+                                        <p class="ervaring_title_pre" style="color: #7b868c;">
+                                            <?php 
+                                            if (strlen($row['ervaring_title']) > 70)
+                                            {
+                                              echo htmlspecialchars(substr($row['ervaring_title'], 0, 70))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['ervaring_title']);
+                                            } ?>
+                                        </p>
+                                        <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row['fk_user_name']); ?></p>
+                                        <p class="ervaring_desc_pre" style="color: #a5b1b8;">
+                                            <?php 
+                                            if (strlen($row['ervaring_description']) > 118)
+                                            {
+                                              echo htmlspecialchars(substr($row['ervaring_description'], 0, 118))."...";
+                                            }
+                                            else
+                                            {
+                                              echo htmlspecialchars($row['ervaring_description']);
+                                            } ?>
+                                        </p>
+                                    </li>
+                                    <li class="left ervaring_date_pre" style="padding-bottom: 0; width: 100px;"><?php echo $row['ervaring_date']; ?></li>
+                                    <li class="right ervaring_likes_pre" style="padding-bottom:0; width: auto;">
+                                        <img src="img/icons/like.png" class="p_r_t"><?php echo $row['ervaring_likes']; ?>
+                                        <img src="img/icons/reacties.png" class="p_r_t" style="padding-left: 15px;"><?php echo $row['ervaring_reacties']; ?>
+                                    </li>
+                                </ul>
+                            </div>
+                        </a>
                     </div>
     <?php       }
             }

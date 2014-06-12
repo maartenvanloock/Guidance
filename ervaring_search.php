@@ -246,7 +246,7 @@ if (isset($_GET["zoek_filter"]))
                                                       echo htmlspecialchars($row_s['ervaring_title']);
                                                     } ?>
                                                 </p>
-                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gevraagd door: '.$row_s['fk_user_name']); ?></p>
+                                                <p class="ervaring_username_pre" style="color: #7b868c;"><?php echo htmlspecialchars('gepost door: '.$row_s['fk_user_name']); ?></p>
                                                 <p class="ervaring_desc_pre" style="color: #a5b1b8;">
                                                     <?php 
                                                     if (strlen($row_s['ervaring_description']) > 118)

@@ -167,15 +167,48 @@ $start_from = ($page-1) * $item_per_page;
                 <div class="large-9 columns">
                         <dl class="sub-nav">
                           <dt>Filter:</dt>
-                              <dd><a href="evenement.php?filter=datum" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                              <dd 
+                              <?php if (isset($_GET["filter"]))
+                                    { 
+                                          $categorie_filter_large = $_GET["filter"];
+
+                                        if($categorie_filter_large == "datum")
+                                        {
+                                            echo 'class="active"';
+                                        } 
+                                    } ?> >
+                                  <a href="evenement.php?filter=datum" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                                      onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                                     class="filter_ervaring_fi">Datum</a></dd>
-                              <dd><a href="evenement.php?filter=aantal_aanwezigen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                                     class="filter_ervaring_fi">Datum</a>
+                              </dd>
+                              <dd
+                              <?php if (isset($_GET["filter"]))
+                                    { 
+                                          $categorie_filter_large = $_GET["filter"];
+
+                                        if($categorie_filter_large == "aantal_aanwezigen")
+                                        {
+                                            echo 'class="active"';
+                                        } 
+                                    } ?> >
+                                  <a href="evenement.php?filter=aantal_aanwezigen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                                      onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                                     class="filter_ervaring_fi">Aantal aanwezigen</a></dd>
-                              <dd><a href="evenement.php?filter=aantal_reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                                     class="filter_ervaring_fi">Aantal aanwezigen</a>
+                              </dd>
+                              <dd 
+                              <?php if (isset($_GET["filter"]))
+                                    { 
+                                          $categorie_filter_large = $_GET["filter"];
+
+                                        if($categorie_filter_large == "aantal_reacties")
+                                        {
+                                            echo 'class="active"';
+                                        } 
+                                    } ?> >
+                                  <a href="evenement.php?filter=aantal_reacties" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                                      onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                                     class="filter_ervaring_fi">Aantal reacties</a></dd>
+                                     class="filter_ervaring_fi">Aantal reacties</a>
+                              </dd>
                         </dl>
                 </div>
 
@@ -304,7 +337,7 @@ $start_from = ($page-1) * $item_per_page;
 
                 if($filter == "datum")
                 {
-                  $sql = "select * from tbl_evenementen order by evenement_date desc";
+                  $sql = "select * from tbl_evenementen order by evenement_date asc";
                   $results = $db->query($sql);
                 }
                 else if($filter == "aantal_aanwezigen")

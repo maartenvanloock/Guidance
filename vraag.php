@@ -246,16 +246,50 @@ $start_from = ($page-1) * $item_per_page;
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="vraag.php?filter=eigen_vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd 
+                      <?php if (isset($_GET["filter"]))
+                            { 
+                                  $categorie_filter_large = $_GET["filter"];
+
+                                if($categorie_filter_large == "eigen_vragen")
+                                {
+                                    echo 'class="active"';
+                                } 
+                            } ?> >
+                          <a href="vraag.php?filter=eigen_vragen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Eigen vragen</a></dd>
+                             class="filter_ervaring_fi">Eigen vragen</a>
+                      </dd>
                       <?php } ?>
-                      <dd><a href="vraag.php?filter=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd 
+                      <?php if (isset($_GET["filter"]))
+                            { 
+                                  $categorie_filter_large = $_GET["filter"];
+
+                                if($categorie_filter_large == "beantwoord")
+                                {
+                                    echo 'class="active"';
+                                } 
+                            } ?> >
+                          <a href="vraag.php?filter=beantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Beantwoord</a></dd>
-                      <dd><a href="vraag.php?filter=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                             class="filter_ervaring_fi">Beantwoord</a>
+                      </dd>
+                      <dd 
+                      <?php if (isset($_GET["filter"]))
+                            { 
+                                  $categorie_filter_large = $_GET["filter"];
+
+                                if($categorie_filter_large == "onbeantwoord")
+                                {
+                                    echo 'class="active"';
+                                } 
+                            } ?> >
+                          <a href="vraag.php?filter=onbeantwoord" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Onbeantwoord</a></dd>
+                             class="filter_ervaring_fi">Onbeantwoord</a>
+                      </dd>
+                      
                       <?php  
                           $sql = "select * from tbl_categorie_vragen";
                           $result = $db->query($sql);
@@ -548,8 +582,7 @@ $start_from = ($page-1) * $item_per_page;
               {
                 $sql_remove_duplicate = "select * from tbl_vraag_duplicate";
                 $results_remove_duplicate = $db->query($sql_remove_duplicate);
-                $row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate);
-                $duplicate_date = date('Y-m-d H:i:s', time());
+                $duplicate_date = Date('Y-m-d H:i:s', time());
 
                 while ($row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate))
                 {
@@ -560,7 +593,8 @@ $start_from = ($page-1) * $item_per_page;
                     else if ($row_remove_duplicate['duplicate_date'] < $duplicate_date)
                     {
                         $sql_remove_duplicatevraag = "delete from tbl_vragen where vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
-                        $sql_remove_duplicatevraag = "delete from tbl_vraag_duplicate where fk_vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
+                        $sql_remove_duplicatevraag .= "delete from tbl_vraag_duplicate where fk_vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
+                        $sql_remove_duplicatevraag .= "delete from tbl_tags_vragen where fk_vraag_id='".$row_remove_duplicate['fk_vraag_id']."';";
                         $results_remove_duplicatevraag = $db->multi_query($sql_remove_duplicatevraag);
                     }
                 }

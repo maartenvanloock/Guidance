@@ -226,9 +226,20 @@ $start_from = ($page-1) * $item_per_page;
                       <dt>Filter:</dt>
                       <?php if($user_privilege == 'false')
                       {?>
-                      <dd><a href="ervaring.php?filter=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
+                      <dd 
+                      <?php if (isset($_GET["filter"]))
+                            { 
+                                  $categorie_filter_large = $_GET["filter"];
+
+                                if($categorie_filter_large == "eigen_ervaringen")
+                                {
+                                    echo 'class="active"';
+                                } 
+                            } ?> >
+                          <a href="ervaring.php?filter=eigen_ervaringen" onMouseOver="this.style.backgroundColor='#5db0c6', this.style.color='#ffffff'"
                              onMouseOut="this.style.backgroundColor='#f9f9f9', this.style.color='#7b868c'" 
-                             class="filter_ervaring_fi">Eigen ervaringen</a></dd>
+                             class="filter_ervaring_fi">Eigen ervaringen</a>
+                      </dd>
                       <?php } ?>
       
                       <?php  
@@ -462,6 +473,27 @@ $start_from = ($page-1) * $item_per_page;
 
             <?php 
 
+              $sql_remove_duplicate = "select * from tbl_ervaring_duplicate";
+              $results_remove_duplicate = $db->query($sql_remove_duplicate);
+              $duplicate_date = date('Y-m-d H:i:s', time());
+
+              while ($row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate))
+              {
+                  if ($row_remove_duplicate['duplicate_date'] > $duplicate_date)
+                  {
+                      /*echo $row_remove_duplicate['fk_ervaring_id'].' is nog niet gepasseerd';*/
+                  }
+                  else if ($row_remove_duplicate['duplicate_date'] < $duplicate_date)
+                  {
+                      $sql_remove_duplicate_ervaring = "delete from tbl_ervaringen where ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
+                      $sql_remove_duplicate_ervaring .= "delete from tbl_ervaring_duplicate where fk_ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
+                      $sql_remove_duplicate_ervaring .= "delete from tbl_tags where fk_ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
+                      $sql_remove_duplicate_ervaring .= "delete from tbl_reacties where fk_ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
+                      $sql_remove_duplicate_ervaring .= "delete from tbl_ervaringen_vt where fk_ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
+                      $results_remove_duplicate_ervaring = $db->multi_query($sql_remove_duplicate_ervaring);
+                  }
+              }
+
               if (isset($_GET["filter"]))
               { 
                 $filter  = $_GET["filter"];
@@ -482,27 +514,9 @@ $start_from = ($page-1) * $item_per_page;
                 $sql = "select * from tbl_ervaringen order by ervaring_id desc LIMIT $start_from, $item_per_page";
                 $results = $db->query($sql);
               }
-              
+
               if(mysqli_num_rows($results) > 0)
               {
-                $sql_remove_duplicate = "select * from tbl_ervaring_duplicate";
-                $results_remove_duplicate = $db->query($sql_remove_duplicate);
-                $duplicate_date = date('Y-m-d H:i:s', time());
-
-                while ($row_remove_duplicate = mysqli_fetch_assoc($results_remove_duplicate))
-                {
-                    if ($row_remove_duplicate['duplicate_date'] > $duplicate_date)
-                    {
-                        /*echo $row_remove_duplicate['fk_ervaring_id'].' is nog niet gepasseerd';*/
-                    }
-                    else if ($row_remove_duplicate['duplicate_date'] < $duplicate_date)
-                    {
-                        $sql_remove_duplicate_ervaring = "delete from tbl_ervaringen where ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
-                        $sql_remove_duplicate_ervaring = "delete from tbl_ervaring_duplicate where fk_ervaring_id='".$row_remove_duplicate['fk_ervaring_id']."';";
-                        $results_remove_duplicate_ervaring = $db->multi_query($sql_remove_duplicate_ervaring);
-                    }
-                }
-
                 while ($row = mysqli_fetch_assoc($results))
                 { 
                   $sql_user = "select * from tbl_users where user_id='".$row['fk_user_id']."'";
